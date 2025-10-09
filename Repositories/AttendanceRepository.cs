@@ -1,16 +1,12 @@
-﻿using AttendanceManagementSystem.Interfaces.Repositories;
-using AttendanceManagementSystem.Models.Base;
-using Dapper;
-using DevExpress.XtraEditors;
+﻿using Dapper;
+using SeamsApp.Models.Base;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using ZXing.QrCode.Internal;
 
-namespace AttendanceManagementSystem.Data.Repositories
+namespace SeamsApp.Data.Repositories
 {
     public class AttendanceRepository : IAttendanceRepository
     {
