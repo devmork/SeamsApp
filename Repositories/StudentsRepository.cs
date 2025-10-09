@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AttendanceManagementSystem.Interfaces.Repositories;
-using AttendanceManagementSystem.Models.Base;
 using Dapper;
 
-namespace AttendanceManagementSystem.Data.Repositories
+namespace SeamsApp.Data.Repositories
 {
     public class StudentsRepository : IStudentsRepository
     {
@@ -20,7 +17,7 @@ namespace AttendanceManagementSystem.Data.Repositories
                 connection.Open();
                 string sql = "SELECT Id, FirstName, MiddleName, LastName, SchoolStudentId, Course, YearLevel, Email FROM Student;";
                 var students = connection.Query<Student>(sql).ToList();
-                return students;
+                return students!;
             }
         }
         public void AddStudent(Student student)

@@ -1,14 +1,11 @@
-﻿using AttendanceManagementSystem.Interfaces.Repositories;
-using AttendanceManagementSystem.Models.Derived;
-using Dapper;
+﻿using Dapper;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AttendanceManagementSystem.Data.Repositories
+namespace SeamsApp.Data.Repositories
 {
     public class UserRepository : IUserRepository
     {

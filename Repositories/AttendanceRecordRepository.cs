@@ -1,17 +1,11 @@
-﻿using AttendanceManagementSystem.Data;
-using AttendanceManagementSystem.DTO;
-using AttendanceManagementSystem.Interfaces.Repositories;
-using AttendanceManagementSystem.Models;
-using AttendanceManagementSystem.Models.Base;
-using Dapper;
+﻿using Dapper;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AttendanceManagementSystem.Repositories
+namespace SeamsApp.Repositories
 {
     public class AttendanceRecordRepository : IAttendanceRecordRepository
     {
