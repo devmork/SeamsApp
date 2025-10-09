@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Models.Base;
 
 namespace SeamsApp.Data.Repositories
 {

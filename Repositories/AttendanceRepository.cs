@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Models.Base;
 using System;
 using System.Collections.Generic;

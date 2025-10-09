@@ -1,4 +1,6 @@
 ﻿using Dapper;
+using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
