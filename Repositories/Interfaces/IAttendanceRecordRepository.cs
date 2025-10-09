@@ -1,12 +1,11 @@
-﻿using AttendanceManagementSystem.DTO;
-using AttendanceManagementSystem.Models;
+﻿using SeamsApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AttendanceManagementSystem.Interfaces.Repositories
+namespace SeamsApp.Interfaces.Repositories
 {
     public interface IAttendanceRecordRepository
     {
@@ -15,7 +14,7 @@ namespace AttendanceManagementSystem.Interfaces.Repositories
         int GetTotalAbsent(string schoolStudentId);
         int GetTotalPresent(string schoolStudentId);
         int GetTotalAttendance();
-        List<AttendanceRecordsDTO> GetStudentAttendanceRecords(string schoolStudentId);
+        //List<AttendanceRecordsDTO> GetStudentAttendanceRecords(string schoolStudentId);
         void ResetAttendaceRecord(string schoolStudentId);
     }
 }
