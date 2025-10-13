@@ -13,7 +13,7 @@ namespace SeamsApp.Data.Repositories
     {
         public void AddUser(User user)
         {
-            using (var connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 string sql = @"INSERT INTO Users (UserName, Email, Password)
@@ -28,7 +28,7 @@ namespace SeamsApp.Data.Repositories
         }
         public User GetUserByEmail(string email, string password)
         {
-            using (var connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 string sql = "SELECT Email, Password FROM Users WHERE Email = @Email AND Password = @Password;";

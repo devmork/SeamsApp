@@ -54,7 +54,7 @@ namespace SeamsApp.Repositories
             parameters.Add("Timestamp", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
             parameters.Add("Status", 1);
 
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 connection.Execute(sql, parameters);
@@ -71,7 +71,7 @@ namespace SeamsApp.Repositories
             parameters.Add("AttendanceId", attendanceId);
             parameters.Add("SchoolStudentId", schoolStudentId);
 
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 return connection.ExecuteScalar<int>(sql, parameters) > 0;
@@ -86,7 +86,7 @@ namespace SeamsApp.Repositories
             var parameters = new DynamicParameters();
             parameters.Add("SchoolStudentId", schoolStudentId);
 
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
 
@@ -98,7 +98,7 @@ namespace SeamsApp.Repositories
         {
             string getAttendaceCountSQL = @"SELECT COUNT(AttendanceId) FROM Attendance";
 
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 return connection.ExecuteScalar<int>(getAttendaceCountSQL);
@@ -115,7 +115,7 @@ namespace SeamsApp.Repositories
             var parameters = new DynamicParameters();
             parameters.Add("SchoolStudentId", schoolStudentId);
             
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 return connection.ExecuteScalar<int>(sql, parameters);
@@ -131,7 +131,7 @@ namespace SeamsApp.Repositories
             var parameters = new DynamicParameters();
             parameters.Add("SchoolStudentId", schoolStudentId);
 
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 return connection.Query<AttendanceRecordsDTO>(sql, parameters).ToList();
@@ -146,7 +146,7 @@ namespace SeamsApp.Repositories
             var paramaters = new DynamicParameters();
             paramaters.Add("SchoolStudentId", schoolStudentId);
 
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 connection.Execute(sql, paramaters);
