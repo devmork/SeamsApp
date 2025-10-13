@@ -30,7 +30,7 @@ namespace SeamsApp.Data.Repositories
             parameters.Add("EndTime", attendance.EndTime.ToString("hh:mm tt"));
             parameters.Add("Status", 1); // Active status
 
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 connection.Execute(sql, parameters);
@@ -41,7 +41,7 @@ namespace SeamsApp.Data.Repositories
             string sql = @"SELECT * FROM Attendance
                            WHERE Status = 1";
 
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 var attendance = connection.Query<Attendance>(sql).ToList();
@@ -56,7 +56,7 @@ namespace SeamsApp.Data.Repositories
             var parameters = new DynamicParameters();
             parameters.Add("AttendanceId", attendanceId);
 
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 connection.Execute(sql, parameters);
@@ -83,7 +83,7 @@ namespace SeamsApp.Data.Repositories
             parameters.Add("StartTime", attendance.StartTime.ToString("hh:mm tt"));
             parameters.Add("EndTime", attendance.EndTime.ToString("hh:mm tt"));
 
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 connection.Execute(sql, parameters);

@@ -14,7 +14,7 @@ namespace SeamsApp.Data.Repositories
     {
         public List<Student> GetAllStudent()
         {
-            using (var connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 string sql = "SELECT Id, FirstName, MiddleName, LastName, SchoolStudentId, Course, YearLevel, Email FROM Student;";
@@ -24,7 +24,7 @@ namespace SeamsApp.Data.Repositories
         }
         public void AddStudent(Student student)
         {
-            using (var connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 string sql = @"INSERT INTO Student (FirstName, MiddleName, LastName, SchoolStudentId, Course, YearLevel, Email, QRCode)
@@ -44,7 +44,7 @@ namespace SeamsApp.Data.Repositories
         }
         public void UpdateStudent(Student student)
         {
-            using (var connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 string sql = @"UPDATE Student 
@@ -68,7 +68,7 @@ namespace SeamsApp.Data.Repositories
         } 
         public int GetTotalStudents()
         {
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 string sql = @"SELECT COUNT(SchoolStudentId) FROM Student";
@@ -77,7 +77,7 @@ namespace SeamsApp.Data.Repositories
         }
         public Student GetStudentById(string schoolStudentId)
         {
-            using (SQLiteConnection connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 string sql = "SELECT SchoolStudentId, FirstName, MiddleName, LastName, QRCode, Course, YearLevel FROM Student WHERE SchoolStudentId = @SchoolStudentId";
@@ -88,7 +88,7 @@ namespace SeamsApp.Data.Repositories
         }
         public bool CheckDuplicateSchoolId(string schoolStudentId, int id)
         {
-            using (var connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 var query = @"SELECT COUNT(1) 
@@ -111,7 +111,7 @@ namespace SeamsApp.Data.Repositories
             var parameters = new DynamicParameters();
             parameters.Add("SchoolStudentId", schoolStudentId);
 
-            using (var connection = new SQLiteConnection(SQLiteDataAccess.LoadConnectionString()))
+            using ()
             {
                 connection.Open();
                 return connection.Query<Student>(sql, parameters).ToList();
