@@ -6,7 +6,7 @@ namespace SeamsApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AttendanceRecord : ControllerBase
+    public class AttendanceRecordController : ControllerBase
     {
         // GET: api/<AttendanceRecord>
         [HttpGet]

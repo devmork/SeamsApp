@@ -10,14 +10,10 @@ namespace SeamsApp.Interfaces.Repositories
 {
     public interface IStudentsRepository
     {
-        List<Student> GetAllStudent();
-        List<Student> GetStudentQRCode(string schoolStudentId);
-        void AddStudent(Student student);
-        void UpdateStudent(Student student);
-        int GetTotalStudents();
-
-        Student GetStudentById(string schoolStudentId);
-        bool CheckDuplicateSchoolId(string schoolStudentId, int id);
-
+        Task<List<Student>> GetAllStudent();
+        Task<int> AddStudent(Student student);
+        Task<int> UpdateStudent(Student student);
+        Task<Student> GetStudentById(string schoolStudentID);
+        Task<Student> GetStudentQRCode(string schoolStudentID);
     }
 }

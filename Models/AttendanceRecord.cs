@@ -10,13 +10,9 @@ namespace SeamsApp.Models
     {
         public int AttendanceRecordID { get; set; }
         public int AttendanceID { get; set; }
-        public string? AttendanceName { get; set; }
-        public string? LogType { get; set; }
-        public string? SchoolStudentID { get; set; }
-        public string? Name { get; set; }
-        public string? Course { get; set; }
-        public string? YearLevel { get; set; }
-        public DateOnly Timestamp { get; set; }
+        public int StudentID { get; set; }
+        public DateTime Timestamp { get; set; }
         public int Status { get; set; }
+
     }
 }

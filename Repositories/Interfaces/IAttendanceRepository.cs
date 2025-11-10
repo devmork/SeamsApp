@@ -9,9 +9,9 @@ namespace SeamsApp.Interfaces.Repositories
 {
     public interface IAttendanceRepository
     {
-        void AddAttendance(Attendance attendance);
-        List<Attendance> GetAllAttendance();
-        void UpdateAttendance(Attendance attendance);
-        void DeleteAttendance(int attendanceId);
+        Task<int> AddAttendance(Attendance attendance);
+        Task<List<Attendance>> GetAllAttendance();
+        Task<int> DeleteAttendance(int attendanceID);
+        Task<int> UpdateAttendance(Attendance attendance);
     }
 }
