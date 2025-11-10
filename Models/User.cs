@@ -9,13 +9,15 @@ namespace SeamsApp.Models
 {
     public class User
     {
-        public Guid Id { get; set; }
+        public Guid UserID { get; set; }
         [Required]
         public string? UserName { get; set; }
         [EmailAddress]
         public string? Email { get; set; }
         [Required]
-        public string? Password { get; set; }
+        public string? PasswordHash { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
         public string? Role { get; set; }
     }
 }
