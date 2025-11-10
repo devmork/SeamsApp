@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Models.Base;
 using System;
@@ -14,9 +15,15 @@ namespace SeamsApp.Data.Repositories
         // STATUS 0 - DELETED
         // STATUS 1 - ACTIVE
         // STATUS 2 - INACTIVE
-        public void AddAttendance(Attendance attendance)
+
+        private readonly string _connectionString;
+        public AttendanceRepository(IConfiguration configuration)
         {
-            string sql =
+            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+        }
+        public async Task<int> AddAttendance(Attendance attendance)
+        {
+            string query =
                      @"INSERT INTO Attendance
                      (AttendanceName, AttendanceLocation, LogType, Date, StartTime, EndTime, Status)
                      VALUES (@AttendanceName, @AttendanceLocation, @LogType, @Date, @StartTime, @EndTime, @Status)";
@@ -28,43 +35,41 @@ namespace SeamsApp.Data.Repositories
             parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
             parameters.Add("StartTime", attendance.StartTime.ToString("hh:mm tt"));
             parameters.Add("EndTime", attendance.EndTime.ToString("hh:mm tt"));
-            parameters.Add("Status", 1); // Active status
+            parameters.Add("Status", 1);
 
-            using ()
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                connection.Execute(sql, parameters);
+                return await connection.ExecuteScalarAsync<int>(query, parameters);
             }
         }
-        public List<Attendance> GetAllAttendance()
+        public async Task<List<Attendance>> GetAllAttendance()
         {
-            string sql = @"SELECT * FROM Attendance
+            string query = @"SELECT * FROM Attendance
                            WHERE Status = 1";
 
-            using ()
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var attendance = connection.Query<Attendance>(sql).ToList();
-                return attendance;
+                var attendance = await connection.QueryAsync<Attendance>(query);
+                return attendance.ToList();
             }
         }
-        public void DeleteAttendance(int attendanceId)
+        public async Task<int> DeleteAttendance(int attendanceID)
         {
-            string sql = @"UPDATE Attendance 
+            string query = @"UPDATE Attendance 
                            SET Status = 0
-                           WHERE AttendanceId = @AttendanceId ";
-            var parameters = new DynamicParameters();
-            parameters.Add("AttendanceId", attendanceId);
+                           WHERE AttendanceID = @AttendanceID";
 
-            using ()
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                connection.Execute(sql, parameters);
+                return await connection.ExecuteScalarAsync<int>(query, new { AttendanceID = attendanceID});
             }
         }
-        public void UpdateAttendance(Attendance attendance)
+        public async Task<int> UpdateAttendance(Attendance attendance)
         {
-            string sql =
+            string query =
                        @"UPDATE Attendance 
                        SET AttendanceName = @AttendanceName, 
                            AttendanceLocation = @AttendanceLocation, 
@@ -72,10 +77,10 @@ namespace SeamsApp.Data.Repositories
                            Date = @Date, 
                            StartTime = @StartTime, 
                            EndTime = @EndTime
-                       WHERE AttendanceId = @AttendanceId";
+                       WHERE AttendanceID = @AttendanceID";
 
             var parameters = new DynamicParameters();
-            parameters.Add("AttendanceId", attendance.AttendanceId);
+            parameters.Add("AttendanceID", attendance.AttendanceID);
             parameters.Add("AttendanceName", attendance.AttendanceName);
             parameters.Add("AttendanceLocation", attendance.AttendanceLocation);
             parameters.Add("LogType", attendance.LogType);
@@ -83,10 +88,10 @@ namespace SeamsApp.Data.Repositories
             parameters.Add("StartTime", attendance.StartTime.ToString("hh:mm tt"));
             parameters.Add("EndTime", attendance.EndTime.ToString("hh:mm tt"));
 
-            using ()
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                connection.Execute(sql, parameters);
+                return await connection.ExecuteScalarAsync<int>(query, parameters);
             }
         }
     }

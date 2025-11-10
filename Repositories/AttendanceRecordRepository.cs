@@ -1,4 +1,6 @@
 ﻿using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Models;
 using System;
@@ -15,141 +17,57 @@ namespace SeamsApp.Repositories
         // STATUS 1 - PRESENT
         // STATUS 2 - ABSENT
         // STATUS 3 - RESETTED
-        public void RecordStudentAttendance(AttendanceRecord attendanceRecord)
+
+        private readonly string _connectionString;
+        public AttendanceRecordRepository(IConfiguration configuration)
         {
-            string sql = @"
+            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+        }
+        public async Task<int> RecordStudentAttendance(AttendanceRecord attendanceRecord)
+        {
+            string query = @"
                             INSERT INTO AttendanceRecords 
                             (
-                                AttendanceId,
-                                AttendanceName,
-                                LogType,
-                                SchoolStudentId,
-                                Name,
-                                Course,
-                                YearLevel,
+                                AttendanceID,
+                                SchoolStudentID,
                                 Timestamp,
                                 Status
                             )
                             VALUES 
                             (
-                                @AttendanceId,
-                                @AttendanceName,
-                                @LogType,
-                                @SchoolStudentId,
-                                @Name,
-                                @Course,
-                                @YearLevel,
+                                @AttendanceID,
+                                @SchoolStudentID,
                                 @Timestamp,
                                 @Status
                             )";
 
             var parameters = new DynamicParameters();
-            parameters.Add("AttendanceId", attendanceRecord.AttendanceID);
-            parameters.Add("AttendanceName", attendanceRecord.AttendanceName);
-            parameters.Add("LogType", attendanceRecord.LogType);
-            parameters.Add("SchoolStudentId", attendanceRecord.SchoolStudentID);
-            parameters.Add("Name", attendanceRecord.Name);  
-            parameters.Add("Course", attendanceRecord.Course);
-            parameters.Add("YearLevel", attendanceRecord.YearLevel);
+            parameters.Add("AttendanceID", attendanceRecord.AttendanceID);
+            parameters.Add("StudentID", attendanceRecord.StudentID);
             parameters.Add("Timestamp", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
             parameters.Add("Status", 1);
 
-            using ()
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                connection.Execute(sql, parameters);
+                return await connection.ExecuteScalarAsync<int>(query, parameters);
             }
         }
-        public bool CheckDuplicateAttendance(int attendanceId, string schoolStudentId)
+        public async Task<bool> CheckDuplicateAttendance(int attendanceID, string schoolStudentID)
         {
             string sql = @"SELECT COUNT(*) FROM AttendanceRecords 
-                           WHERE AttendanceId = @AttendanceId 
-                           AND SchoolStudentId = @SchoolStudentId 
+                           WHERE AttendanceID = @AttendanceID 
+                           AND SchoolStudentID = @SchoolStudentID 
                            AND DATE(Timestamp) = DATE('now')";
 
             var parameters = new DynamicParameters();
-            parameters.Add("AttendanceId", attendanceId);
-            parameters.Add("SchoolStudentId", schoolStudentId);
+            parameters.Add("AttendanceID", attendanceID);
+            parameters.Add("SchoolStudentID", schoolStudentID);
 
-            using ()
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return connection.ExecuteScalar<int>(sql, parameters) > 0;
-            }
-        }
-        public int GetTotalAbsent(string schoolStudentId)
-        {
-            int allAttendanceId = GetTotalAttendance();
-            string presentAttendanceIdSQL = @"SELECT COUNT(*) FROM AttendanceRecords 
-                                              WHERE SchoolStudentId = @SchoolStudentId AND Status = 2";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("SchoolStudentId", schoolStudentId);
-
-            using ()
-            {
-                connection.Open();
-
-                int presentAttendanceIdCount = connection.ExecuteScalar<int>(presentAttendanceIdSQL, parameters);
-                return allAttendanceId - presentAttendanceIdCount;
-            }
-        }
-        public int GetTotalAttendance()
-        {
-            string getAttendaceCountSQL = @"SELECT COUNT(AttendanceId) FROM Attendance";
-
-            using ()
-            {
-                connection.Open();
-                return connection.ExecuteScalar<int>(getAttendaceCountSQL);
-            }
-        }
-        public int GetTotalPresent(string schoolStudentId)
-        {
-            string sql = @"
-                            SELECT COUNT(AttendanceId)
-                            FROM AttendanceRecords
-                            WHERE SchoolStudentId = @SchoolStudentId
-                            AND Status = 1";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("SchoolStudentId", schoolStudentId);
-            
-            using ()
-            {
-                connection.Open();
-                return connection.ExecuteScalar<int>(sql, parameters);
-            }
-        }
-        public List<AttendanceRecordsDTO> GetStudentAttendanceRecords(string schoolStudentId)
-        {
-            string sql = @"SELECT AttendanceName, LogType, TimeStamp 
-                           FROM AttendanceRecords 
-                           WHERE SchoolStudentId = @SchoolStudentId 
-                           AND Status = 1";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("SchoolStudentId", schoolStudentId);
-
-            using ()
-            {
-                connection.Open();
-                return connection.Query<AttendanceRecordsDTO>(sql, parameters).ToList();
-            }
-        }
-        public void ResetAttendaceRecord(string schoolStudentId)
-        {
-            string sql = @"UPDATE AttendanceRecords
-                           SET Status = 2
-                           WHERE SchoolStudentId = @SchoolStudentId";
-
-            var paramaters = new DynamicParameters();
-            paramaters.Add("SchoolStudentId", schoolStudentId);
-
-            using ()
-            {
-                connection.Open();
-                connection.Execute(sql, paramaters);
+                return await connection.ExecuteScalarAsync<int>(sql, parameters) > 0;
             }
         }
     }

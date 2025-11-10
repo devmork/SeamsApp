@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Data.SqlClient;
 using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Models.Base;
 
@@ -12,109 +13,89 @@ namespace SeamsApp.Data.Repositories
 {
     public class StudentsRepository : IStudentsRepository
     {
-        public List<Student> GetAllStudent()
+        private readonly string _connectionString;
+        public StudentsRepository(IConfiguration configuration)
         {
-            using ()
-            {
-                connection.Open();
-                string sql = "SELECT Id, FirstName, MiddleName, LastName, SchoolStudentId, Course, YearLevel, Email FROM Student;";
-                var students = connection.Query<Student>(sql).ToList();
-                return students!;
-            }
+            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
         }
-        public void AddStudent(Student student)
+        public async Task<List<Student>> GetAllStudent()
         {
-            using ()
-            {
-                connection.Open();
-                string sql = @"INSERT INTO Student (FirstName, MiddleName, LastName, SchoolStudentId, Course, YearLevel, Email, QRCode)
-                             VALUES (@FirstName, @MiddleName, @LastName, @SchoolStudentId, @Course, @YearLevel, @Email, @QRCode)";
+            string query = "SELECT StudentID, FirstName, MiddleName, LastName, SchoolStudentID, Course, YearLevel, Email FROM Students;";
 
-                var parameters = new DynamicParameters();
-                parameters.Add("@FirstName", student.FirstName);
-                parameters.Add("@MiddleName", student.MiddleName);
-                parameters.Add("@LastName", student.LastName);
-                parameters.Add("@SchoolStudentId", student.SchoolStudentId);
-                parameters.Add("@Course", student.Course);
-                parameters.Add("@YearLevel", student.YearLevel);
-                parameters.Add("@Email", student.Email);
-                parameters.Add("@QRCode", student.QRCode);
-                connection.Execute(sql, parameters);
-            }
-        }
-        public void UpdateStudent(Student student)
-        {
-            using ()
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                string sql = @"UPDATE Student 
+                var students = await connection.QueryAsync<Student>(query);
+                return students.ToList();
+            }
+        }
+        public async Task<int> AddStudent(Student student)
+        {
+            string query = @"INSERT INTO Students (FirstName, MiddleName, LastName, SchoolStudentID, Course, YearLevel, Email, QRCode)
+                             VALUES (@FirstName, @MiddleName, @LastName, @SchoolStudentID, @Course, @YearLevel, @Email, @QRCode)";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@FirstName", student.FirstName);
+            parameters.Add("@MiddleName", student.MiddleName);
+            parameters.Add("@LastName", student.LastName);
+            parameters.Add("@SchoolStudentID", student.SchoolStudentID);
+            parameters.Add("@Course", student.Course);
+            parameters.Add("@YearLevel", student.YearLevel);
+            parameters.Add("@Email", student.Email);
+            parameters.Add("@QRCode", student.QRCode);
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                return await connection.ExecuteScalarAsync<int>(query, parameters);
+            }
+        }
+        public async Task<int> UpdateStudent(Student student)
+        {
+            string query = @"UPDATE Students 
                              SET FirstName = @FirstName, MiddleName = @MiddleName, LastName = @LastName, 
-                                 SchoolStudentId = @SchoolStudentId, Course = @Course, YearLevel = @YearLevel, 
+                                 SchoolStudentID = @SchoolStudentID, Course = @Course, YearLevel = @YearLevel, 
                                  Email = @Email, QRCode = @QRCode
-                             WHERE Id = @Id";
+                             WHERE StudentID = @StudentID";
 
-                var parameters = new DynamicParameters();
-                parameters.Add("@Id", student.Id);
-                parameters.Add("@FirstName", student.FirstName);
-                parameters.Add("@MiddleName", student.MiddleName);
-                parameters.Add("@LastName", student.LastName);
-                parameters.Add("@SchoolStudentId", student.SchoolStudentId);
-                parameters.Add("@Course", student.Course);
-                parameters.Add("@YearLevel", student.YearLevel);
-                parameters.Add("@Email", student.Email);
-                parameters.Add("@QRCode", student.QRCode);
-                connection.Execute(sql, parameters);
+            var parameters = new DynamicParameters();
+            parameters.Add("@StudentID", student.StudentID);
+            parameters.Add("@FirstName", student.FirstName);
+            parameters.Add("@MiddleName", student.MiddleName);
+            parameters.Add("@LastName", student.LastName);
+            parameters.Add("@SchoolStudentID", student.SchoolStudentID);
+            parameters.Add("@Course", student.Course);
+            parameters.Add("@YearLevel", student.YearLevel);
+            parameters.Add("@Email", student.Email);
+            parameters.Add("@QRCode", student.QRCode);
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                return await connection.ExecuteScalarAsync<int>(query, parameters);
             }
         } 
-        public int GetTotalStudents()
+        public async Task<Student> GetStudentById(string schoolStudentID)
         {
-            using ()
-            {
-                connection.Open();
-                string sql = @"SELECT COUNT(SchoolStudentId) FROM Student";
-                return connection.ExecuteScalar<int>(sql);
-            }
-        }
-        public Student GetStudentById(string schoolStudentId)
-        {
-            using ()
-            {
-                connection.Open();
-                string sql = "SELECT SchoolStudentId, FirstName, MiddleName, LastName, QRCode, Course, YearLevel FROM Student WHERE SchoolStudentId = @SchoolStudentId";
-                var parameters = new DynamicParameters();
-                parameters.Add("SchoolStudentId", schoolStudentId);
-                return connection.QueryFirstOrDefault<Student>(sql, parameters);
-            }
-        }
-        public bool CheckDuplicateSchoolId(string schoolStudentId, int id)
-        {
-            using ()
-            {
-                connection.Open();
-                var query = @"SELECT COUNT(1) 
-                              FROM Student 
-                              WHERE SchoolStudentId = @SchoolStudentId
-                              AND Id != @Id";
+            string query = @"SELECT SchoolStudentID, FirstName, MiddleName, LastName, QRCode, Course, YearLevel FROM Students 
+                             WHERE SchoolStudentID = @SchoolStudentID";
 
-                var parameters = new DynamicParameters();
-                parameters.Add("SchoolStudentId", schoolStudentId);
-                parameters.Add("Id", id);
-
-                var count = connection.ExecuteScalar<int>(query, parameters);
-                return count > 0;
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var student = await connection.QueryFirstOrDefaultAsync<Student>(query, new { SchoolStudentID = schoolStudentID});
+                return student!;
             }
         }
-        public List<Student> GetStudentQRCode(string schoolStudentId)
+        public async Task<Student> GetStudentQRCode(string schoolStudentId)
         {
-            string sql = "SELECT QRCode FROM Student WHERE SchoolStudentId = @SchoolStudentId";
+            string query = @"SELECT QRCode FROM Students WHERE SchoolStudentID = @SchoolStudentID";
             
-            var parameters = new DynamicParameters();
-            parameters.Add("SchoolStudentId", schoolStudentId);
-
-            using ()
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return connection.Query<Student>(sql, parameters).ToList();
+                var student = await connection.QueryFirstOrDefaultAsync<Student>(query, new { SchoolStudentID = schoolStudentId});
+                return student!;
             }
         }
     }

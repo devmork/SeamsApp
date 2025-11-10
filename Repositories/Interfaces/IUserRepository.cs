@@ -9,7 +9,10 @@ namespace SeamsApp.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        User GetUserByEmail(string email, string password);
-        void AddUser(User user);
+        Task<int> AddUser(User user);
+        Task<User> GetUserById(int userId);
+        Task<List<string>> GetAllUsernames();
+        Task<User> GetByUsername(string identifier);
+
     }
 }

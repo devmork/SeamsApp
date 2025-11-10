@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,21 +9,19 @@ namespace SeamsApp.Models.Base
 {
     public class Attendance
     {
-        public int AttendanceId { get; set; }
+        public int AttendanceID { get; set; }
+        [Required]
         public string? AttendanceName { get; set; }
+        [Required]
         public string? AttendanceLocation { get; set; }
+        [Required]
         public string ?LogType { get; set; }
+        [Required]
         public DateOnly Date { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
-
-        public string AttendanceInfo
-        {
-            get
-            {
-                return $"{AttendanceId} - {AttendanceName} - {AttendanceLocation}";
-            }
-        }
+        [Required]
+        public TimeOnly StartTime { get; set; }
+        [Required]
+        public TimeOnly EndTime { get; set; }
 
     }
 }
