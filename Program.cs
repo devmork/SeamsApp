@@ -3,15 +3,18 @@ using SeamsApp.Interfaces.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<IStudentsRepository, StudentsRepository>();
-builder.Services.AddOutputCache();
+builder.Services.AddOutputCache(options =>
+{
+    options.DefaultExpirationTimeSpan = TimeSpan.FromSeconds(15);
+});
 builder.Services.AddCors();
-// Configure the HTTP request pipeline.
+builder.Services.AddProblemDetails();
+
+
 
 var app = builder.Build();
 app.UseSwagger();
