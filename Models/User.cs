@@ -9,7 +9,7 @@ namespace SeamsApp.Models
 {
     public class User
     {
-        public Guid UserID { get; set; }
+        public int UserID { get; set; }
         [Required]
         public string? UserName { get; set; }
         [EmailAddress]
