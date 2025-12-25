@@ -11,28 +11,49 @@ using SeamsApp.Models.Base;
 
 namespace SeamsApp.Data.Repositories
 {
-    public class StudentsRepository : IStudentsRepository
+    public class StudentRepository : IStudentRepository
     {
+        // 1 - Active, 0 - Deleted
         private readonly string _connectionString;
-        public StudentsRepository(IConfiguration configuration)
+        public StudentRepository(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")!;
         }
-        public async Task<List<Student>> GetAllStudent()
+        public async Task<IEnumerable<Student>> GetAllStudentAsync()
         {
-            string query = "SELECT StudentID, FirstName, MiddleName, LastName, SchoolStudentID, Course, YearLevel, Email FROM Students;";
+            string query = "SELECT * FROM Students";
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 var students = await connection.QueryAsync<Student>(query);
                 return students.ToList();
             }
         }
-        public async Task<int> AddStudent(Student student)
+        public async Task<int> AddStudentAsync(Student student)
         {
-            string query = @"INSERT INTO Students (FirstName, MiddleName, LastName, SchoolStudentID, Course, YearLevel, Email, QRCode)
-                             VALUES (@FirstName, @MiddleName, @LastName, @SchoolStudentID, @Course, @YearLevel, @Email, @QRCode)";
+            string query = @"INSERT INTO Students (
+                                    FirstName, 
+                                    MiddleName, 
+                                    LastName, 
+                                    SchoolStudentID, 
+                                    Course, 
+                                    YearLevel, 
+                                    Email, 
+                                    QRCode,
+                                    Status,
+                                    AddedAt)
+                             VALUES (
+                                    @FirstName, 
+                                    @MiddleName, 
+                                    @LastName, 
+                                    @SchoolStudentID, 
+                                    @Course, 
+                                    @YearLevel, 
+                                    @Email, 
+                                    @QRCode,
+                                    @Status,
+                                    @AddedAt)";
 
             var parameters = new DynamicParameters();
             parameters.Add("@FirstName", student.FirstName);
@@ -43,19 +64,26 @@ namespace SeamsApp.Data.Repositories
             parameters.Add("@YearLevel", student.YearLevel);
             parameters.Add("@Email", student.Email);
             parameters.Add("@QRCode", student.QRCode);
+            parameters.Add("@Status", student.Status);
+            parameters.Add("@AddedAt", student.AddedAt);
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 return await connection.ExecuteScalarAsync<int>(query, parameters);
             }
         }
-        public async Task<int> UpdateStudent(Student student)
+        public async Task<int> UpdateStudentAsync(Student student)
         {
             string query = @"UPDATE Students 
-                             SET FirstName = @FirstName, MiddleName = @MiddleName, LastName = @LastName, 
-                                 SchoolStudentID = @SchoolStudentID, Course = @Course, YearLevel = @YearLevel, 
-                                 Email = @Email, QRCode = @QRCode
+                             SET FirstName = @FirstName, 
+                                 MiddleName = @MiddleName, 
+                                 LastName = @LastName, 
+                                 SchoolStudentID = @SchoolStudentID, 
+                                 Course = @Course, 
+                                 YearLevel = @YearLevel, 
+                                 Email = @Email, 
+                                 QRCode = @QRCode
                              WHERE StudentID = @StudentID";
 
             var parameters = new DynamicParameters();
@@ -75,9 +103,9 @@ namespace SeamsApp.Data.Repositories
                 return await connection.ExecuteScalarAsync<int>(query, parameters);
             }
         } 
-        public async Task<Student> GetStudentById(string schoolStudentID)
+        public async Task<Student> GetStudentByIdAsync(string schoolStudentID)
         {
-            string query = @"SELECT SchoolStudentID, FirstName, MiddleName, LastName, QRCode, Course, YearLevel FROM Students 
+            string query = @"SELECT * FROM Students 
                              WHERE SchoolStudentID = @SchoolStudentID";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -87,7 +115,7 @@ namespace SeamsApp.Data.Repositories
                 return student!;
             }
         }
-        public async Task<Student> GetStudentQRCode(string schoolStudentId)
+        public async Task<Student> GetStudentQRCodeAsync(string schoolStudentId)
         {
             string query = @"SELECT QRCode FROM Students WHERE SchoolStudentID = @SchoolStudentID";
             
