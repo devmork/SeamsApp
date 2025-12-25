@@ -25,5 +25,9 @@ namespace SeamsApp.Models.Base
         public string? Email { get; set; }
         [Required]
         public byte[]? QRCode { get; set; }
+        public int Status { get; set; } = 1;
+        public DateTime AddedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
     }
 }
