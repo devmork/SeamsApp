@@ -120,12 +120,14 @@ parameters.Add("@UpdatedAt", student.UpdatedAt);
         }
         public async Task<Student> GetStudentQRCodeAsync(string schoolStudentId)
         {
-            string query = @"SELECT QRCode FROM Students WHERE SchoolStudentID = @SchoolStudentID";
+            string query = @"SELECT QRCode FROM Students
+WHERE SchoolStudentId = @SchoolStudentId
+                             AND Status = 1";
             
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var student = await connection.QueryFirstOrDefaultAsync<Student>(query, new { SchoolStudentID = schoolStudentId});
+                var student = await connection.QueryFirstOrDefaultAsync<Student>(query, new { SchoolStudentId = schoolStudentId});
                 return student!;
             }
         }
