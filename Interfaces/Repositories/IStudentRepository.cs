@@ -12,9 +12,9 @@ namespace SeamsApp.Interfaces.Repositories
     {
         Task<IEnumerable<Student>> GetAllStudentAsync();
         Task<int> AddStudentAsync(Student student);
-        Task<int> UpdateStudentAsync(Student student);
-        Task<int> DeleteStudentByIdAsync(string schoolStudentId);
-        Task<Student> GetStudentByIdAsync(string schoolStudentId);
+        Task<int> UpdateStudentByIdAsync(Student student);
+        Task<int> DeleteStudentByIdAsync(int studentId);
+        Task<Student> GetStudentByIdAsync(int studentId);
         Task<Student> GetStudentQRCodeAsync(string schoolStudentId);
     }
 }
