@@ -36,7 +36,7 @@ namespace SeamsApp.Data.Repositories
                                     FirstName, 
                                     MiddleName, 
                                     LastName, 
-                                    SchoolStudentID, 
+                                    SchoolStudentId, 
                                     Course, 
                                     YearLevel, 
                                     Email, 
@@ -47,7 +47,7 @@ namespace SeamsApp.Data.Repositories
                                     @FirstName, 
                                     @MiddleName, 
                                     @LastName, 
-                                    @SchoolStudentID, 
+                                    @SchoolStudentId, 
                                     @Course, 
                                     @YearLevel, 
                                     @Email, 
@@ -59,7 +59,7 @@ namespace SeamsApp.Data.Repositories
             parameters.Add("@FirstName", student.FirstName);
             parameters.Add("@MiddleName", student.MiddleName);
             parameters.Add("@LastName", student.LastName);
-            parameters.Add("@SchoolStudentID", student.SchoolStudentID);
+            parameters.Add("@SchoolStudentId", student.SchoolStudentId);
             parameters.Add("@Course", student.Course);
             parameters.Add("@YearLevel", student.YearLevel);
             parameters.Add("@Email", student.Email);
