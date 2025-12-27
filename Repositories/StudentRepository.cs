@@ -111,7 +111,7 @@ namespace SeamsApp.Data.Repositories
         {
             string query = @"SELECT * FROM Students 
                              WHERE SchoolStudentId = @SchoolStudentId
-                             AND Status  = 1";
+                             AND Status = 1";
 
             using (var connection = new SqlConnection(_connectionString))
             {
