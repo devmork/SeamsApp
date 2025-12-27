@@ -13,13 +13,15 @@ namespace SeamsApp.Data.Repositories
 {
     public class StudentRepository : IStudentRepository
     {
-        // 1 - Active, 0 - Deleted
+        // 1 - Active
+        // 0 - Deleted
+
         private readonly string _connectionString;
         public StudentRepository(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")!;
         }
-        public async Task<IEnumerable<Student>> GetAllStudentAsync()
+        public async Task<IEnumerable<Student>> GetAllStudentAsync() 
         {
             string query = @"SELECT * FROM Students
                              WHERE Status = 1";
@@ -28,7 +30,7 @@ namespace SeamsApp.Data.Repositories
             {
                 connection.Open();
                 return await connection.QueryAsync<Student>(query);
-                            }
+            }
         }
         public async Task<int> AddStudentAsync(Student student)
         {
@@ -84,7 +86,7 @@ namespace SeamsApp.Data.Repositories
                                  YearLevel = @YearLevel, 
                                  Email = @Email, 
                                  QRCode = @QRCode,
-                                 UpdatedAt = @UpdatedAt
+                                 UpdatedAt = @UpdatedAt 
                              WHERE StudentId = @StudentId";
 
             var parameters = new DynamicParameters();
@@ -97,7 +99,7 @@ namespace SeamsApp.Data.Repositories
             parameters.Add("@YearLevel", student.YearLevel);
             parameters.Add("@Email", student.Email);
             parameters.Add("@QRCode", student.QRCode);
-parameters.Add("@UpdatedAt", student.UpdatedAt);
+            parameters.Add("@UpdatedAt", student.UpdatedAt);
 
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -121,7 +123,7 @@ parameters.Add("@UpdatedAt", student.UpdatedAt);
         public async Task<Student> GetStudentQRCodeAsync(string schoolStudentId)
         {
             string query = @"SELECT QRCode FROM Students
-WHERE SchoolStudentId = @SchoolStudentId
+                             WHERE SchoolStudentId = @SchoolStudentId
                              AND Status = 1";
             
             using (var connection = new SqlConnection(_connectionString))
@@ -129,6 +131,18 @@ WHERE SchoolStudentId = @SchoolStudentId
                 connection.Open();
                 var student = await connection.QueryFirstOrDefaultAsync<Student>(query, new { SchoolStudentId = schoolStudentId});
                 return student!;
+            }
+        }
+        public Task<int> DeleteStudentByIdAsync(string schoolStudentId)
+        {
+            string query = @"UPDATE Students 
+                             SET Status = 0 
+                             WHERE SchoolStudentId = @SchoolStudentId";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                return connection.ExecuteScalarAsync<int>(query, new { SchoolStudentId = schoolStudentId });
             }
         }
     }
