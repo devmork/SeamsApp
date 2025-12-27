@@ -9,14 +9,14 @@ namespace SeamsApp.Models.Base
 {
     public class Student
     {
-        public int StudentID { get; set; }
+        public int StudentId { get; set; }
         [Required]
         public string? FirstName { get; set; }
         public string? MiddleName { get; set; }
         [Required]
         public string? LastName { get; set; }
         [Required]
-        public string? SchoolStudentID { get; set; }
+        public string? SchoolStudentId { get; set; }
         [Required]
         public string? YearLevel { get; set; }
         [Required]
