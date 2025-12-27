@@ -79,25 +79,27 @@ namespace SeamsApp.Data.Repositories
                              SET FirstName = @FirstName, 
                                  MiddleName = @MiddleName, 
                                  LastName = @LastName, 
-                                 SchoolStudentID = @SchoolStudentID, 
+                                 SchoolStudentId = @SchoolStudentId, 
                                  Course = @Course, 
                                  YearLevel = @YearLevel, 
                                  Email = @Email, 
-                                 QRCode = @QRCode
-                             WHERE StudentID = @StudentID";
+                                 QRCode = @QRCode,
+                                 UpdatedAt = @UpdatedAt
+                             WHERE StudentId = @StudentId";
 
             var parameters = new DynamicParameters();
-            parameters.Add("@StudentID", student.StudentID);
+            parameters.Add("@StudentId", student.StudentId);
             parameters.Add("@FirstName", student.FirstName);
             parameters.Add("@MiddleName", student.MiddleName);
             parameters.Add("@LastName", student.LastName);
-            parameters.Add("@SchoolStudentID", student.SchoolStudentID);
+            parameters.Add("@SchoolStudentId", student.SchoolStudentId);
             parameters.Add("@Course", student.Course);
             parameters.Add("@YearLevel", student.YearLevel);
             parameters.Add("@Email", student.Email);
             parameters.Add("@QRCode", student.QRCode);
+parameters.Add("@UpdatedAt", student.UpdatedAt);
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 return await connection.ExecuteScalarAsync<int>(query, parameters);
