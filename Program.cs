@@ -35,7 +35,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "LazaPee",
+        Title = "SEAMS",
         Version = "v1"
     });
 
