@@ -105,15 +105,16 @@ parameters.Add("@UpdatedAt", student.UpdatedAt);
                 return await connection.ExecuteScalarAsync<int>(query, parameters);
             }
         } 
-        public async Task<Student> GetStudentByIdAsync(string schoolStudentID)
+        public async Task<Student> GetStudentByIdAsync(string schoolStudentId)
         {
             string query = @"SELECT * FROM Students 
-                             WHERE SchoolStudentID = @SchoolStudentID";
+                             WHERE SchoolStudentId = @SchoolStudentId
+                             AND Status  = 1";
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var student = await connection.QueryFirstOrDefaultAsync<Student>(query, new { SchoolStudentID = schoolStudentID});
+                var student = await connection.QueryFirstOrDefaultAsync<Student>(query, new { SchoolStudentId = schoolStudentId});
                 return student!;
             }
         }
