@@ -21,14 +21,14 @@ namespace SeamsApp.Data.Repositories
         }
         public async Task<IEnumerable<Student>> GetAllStudentAsync()
         {
-            string query = "SELECT * FROM Students";
+            string query = @"SELECT * FROM Students
+                             WHERE Status = 1";
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var students = await connection.QueryAsync<Student>(query);
-                return students.ToList();
-            }
+                return await connection.QueryAsync<Student>(query);
+                            }
         }
         public async Task<int> AddStudentAsync(Student student)
         {
