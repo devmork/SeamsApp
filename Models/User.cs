@@ -9,15 +9,26 @@ namespace SeamsApp.Models
 {
     public class User
     {
-        public int UserID { get; set; }
-        [Required]
+        [Key]
+        public int UserId { get; set; }
+
+        [Required(ErrorMessage = "Username is required.")]
+        [StringLength(50, MinimumLength = 3,
+            ErrorMessage = "Username must be between 3 and 50 characters.")]
         public string? UserName { get; set; }
-        [EmailAddress]
+
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address format.")]
+        [StringLength(255, ErrorMessage = "Email cannot exceed 255 characters.")]
         public string? Email { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Password is required.")]
         public string? PasswordHash { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public string? Role { get; set; }
+
+        [DataType(DataType.DateTime)]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [DataType(DataType.DateTime)]
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }
