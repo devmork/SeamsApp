@@ -133,16 +133,16 @@ namespace SeamsApp.Data.Repositories
                 return student!;
             }
         }
-        public Task<int> DeleteStudentByIdAsync(string schoolStudentId)
+        public Task<int> DeleteStudentByIdAsync(int studentId)
         {
             string query = @"UPDATE Students 
                              SET Status = 0 
-                             WHERE SchoolStudentId = @SchoolStudentId";
+                             WHERE StudentId = @StudentId";
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return connection.ExecuteScalarAsync<int>(query, new { SchoolStudentId = schoolStudentId });
+                return connection.ExecuteScalarAsync<int>(query, new { StudentId = studentId });
             }
         }
     }
