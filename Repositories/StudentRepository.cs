@@ -75,7 +75,7 @@ namespace SeamsApp.Data.Repositories
                 return await connection.ExecuteScalarAsync<int>(query, parameters);
             }
         }
-        public async Task<int> UpdateStudentAsync(Student student)
+        public async Task<int> UpdateStudentByIdAsync(Student student)
         {
             string query = @"UPDATE Students 
                              SET FirstName = @FirstName, 
