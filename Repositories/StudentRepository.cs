@@ -107,16 +107,16 @@ namespace SeamsApp.Data.Repositories
                 return await connection.ExecuteScalarAsync<int>(query, parameters);
             }
         } 
-        public async Task<Student> GetStudentByIdAsync(string schoolStudentId)
+        public async Task<Student> GetStudentByIdAsync(int studentId)
         {
             string query = @"SELECT * FROM Students 
-                             WHERE SchoolStudentId = @SchoolStudentId
+                             WHERE StudentId = @StudentId
                              AND Status = 1";
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var student = await connection.QueryFirstOrDefaultAsync<Student>(query, new { SchoolStudentId = schoolStudentId});
+                var student = await connection.QueryFirstOrDefaultAsync<Student>(query, new { StudentId = studentId});
                 return student!;
             }
         }
