@@ -9,6 +9,10 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// REGISTER SERVICES
+
+// REGISTER REPOSITORIES
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
