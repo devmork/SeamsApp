@@ -1,6 +1,8 @@
-﻿namespace SeamsApp.Services
+﻿using SeamsApp.Interfaces.Services;
+
+namespace SeamsApp.Services
 {
-    public class OfficerService
+    public class OfficerService : IOfficerService
     {
     }
 }
