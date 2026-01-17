@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SeamsApp.Data.Repositories;
 using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Repositories;
 using SeamsApp.Utilities;
 using System.Text;
 
@@ -12,6 +13,15 @@ var builder = WebApplication.CreateBuilder(args);
 // REGISTER SERVICES
 
 // REGISTER REPOSITORIES
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+
+// REGISTER SERVICES
+
 
 
 builder.Services.AddControllers();
