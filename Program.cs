@@ -10,8 +10,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// REGISTER SERVICES
-
 // REGISTER REPOSITORIES
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -85,9 +83,10 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
-app.MapControllers();
-app.UseOutputCache();
 app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseOutputCache();
+app.MapControllers();
 app.Run();
