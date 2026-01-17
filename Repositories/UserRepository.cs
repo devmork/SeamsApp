@@ -11,80 +11,70 @@ using static Dapper.SqlMapper;
 
 namespace SeamsApp.Data.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly string _connectionString;
         public UserRepository(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+
         }
-        public async Task<int> AddUser(User user)
+        public async Task<int> CreateUserAsync(User user)
         {
-            var query = @"
-                INSERT INTO [dbo].[Users]
-                (UserName, Email, PasswordHash, CreatedAt)
-                VALUES
-                (@UserName, @Email, @PasswordHash, @CreatedAt)
-                SELECT SCOPE_IDENTITY();
-            ";
+            var sql = @"INSERT INTO Users (
+                                UserName, 
+                                Email, 
+                                PasswordHash,
+                                CreatedAt) 
+                        VALUES (
+                                @UserName, 
+                                @Email, 
+                                @PasswordHash,
+                                @CreatedAt);
+                        SELECT CAST(SCOPE_IDENTITY() as int)";
 
             var parameters = new DynamicParameters();
-            parameters.Add("@UserName", user.UserName);
-            parameters.Add("@Email", user.Email);
-            parameters.Add("@PasswordHash", user.PasswordHash);
-            parameters.Add("@CreatedAt", DateTime.Now);
+            parameters.Add("UserName", user.UserName);
+            parameters.Add("Email", user.Email);
+            parameters.Add("PasswordHash", user.PasswordHash);
+            parameters.Add("CreatedAt", user.CreatedAt);
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+
+            using (var connection = new SqlConnection(_connectionString))
             {
-                await connection.OpenAsync();
-                var newUserId = await connection.ExecuteScalarAsync<int>(query, parameters, commandType: System.Data.CommandType.Text);
-                return newUserId;
+                return await connection.ExecuteScalarAsync<int>(sql, parameters);
             }
         }
 
-        public async Task<User> GetUserById(int userID)
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            var sql = @"
-                SELECT * FROM [dbo].[Users]
-                WHERE UserID = @UserID;
-            ";
+            var sql = @"SELECT * FROM Users";
 
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserID", userID);
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
-                await connection.OpenAsync();
-                var user = await connection.QueryFirstOrDefaultAsync<User>(sql, parameters, commandType: System.Data.CommandType.Text);
+                var users = await connection.QueryAsync<User>(sql);
+                return users;
+            }
+        }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            var sql = @"SELECT * FROM Users WHERE Email = @Email";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var user = await connection.QueryFirstOrDefaultAsync<User>(sql, new { Email = email });
                 return user!;
             }
         }
 
-        public async Task<List<string>> GetAllUsernames()
+        public async Task<User> GetUserByIdAsync(int userId)
         {
-            var query = @"SELECT UserName FROM [dbo].[Users];";
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            var sql = @"SELECT * FROM Users WHERE UserId = @UserId";
+            using (var connection = new SqlConnection(_connectionString))
             {
-                await connection.OpenAsync();
-                var userNames = await connection.QueryAsync<string>(query, commandType: System.Data.CommandType.Text);
-                return userNames.ToList();
-            }
-        }
-
-        public async Task<User> GetByUsername(string identifier)
-        {
-            var query = @"SELECT * FROM [dbo].[Users] 
-                          WHERE UserName = @UserID";
-            
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserID", identifier);
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var userName = await connection.QueryFirstOrDefaultAsync<User>(query, parameters, commandType: System.Data.CommandType.Text);
-                return userName!;
+                var user = await connection.QueryFirstOrDefaultAsync<User>(sql, new { UserId = userId });
+                return user!;
             }
         }
     }
