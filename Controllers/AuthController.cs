@@ -46,5 +46,35 @@ namespace SeamsApp.Controllers
                 return Unauthorized(new { Error = ex.Message });
             }
         }
+        
+        [HttpGet("all-users")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllProducts() 
+        {
+            try
+            {
+                var users = await _authService.GetAllUsersAsync();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("user{userId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsreById(int userId)
+        {
+            try
+            {
+                var user = await _authService.GetUserByIdAsync(userId);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }
