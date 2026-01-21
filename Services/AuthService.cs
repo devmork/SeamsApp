@@ -41,7 +41,7 @@ namespace SeamsApp.Services
             int userId = await _userRepository.CreateUserAsync(user);
             user.UserId = userId;
 
-            var userRole = new UserRole { UserId = user.UserId, RoleId = 3 };
+            var userRole = new UserRole { UserId = user.UserId };
             await _userRoleRepository.AssignRoleAsync(userRole);
 
             return _mapper.Map<CreateUserDTO>(user);
