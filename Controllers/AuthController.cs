@@ -33,7 +33,7 @@ namespace SeamsApp.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO dto)
         {
             try
