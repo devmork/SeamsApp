@@ -24,7 +24,7 @@ builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 
 // REGISTER SERVICES
 
-
+builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
