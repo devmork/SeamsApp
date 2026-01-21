@@ -49,7 +49,7 @@ namespace SeamsApp.Controllers
             }
         }
         
-        [HttpGet("all-users")]
+        [HttpGet("All Users")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsers() 
         {
