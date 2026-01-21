@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SeamsApp.DTOs.Auth;
 using SeamsApp.Interfaces.Services;
+using SeamsApp.Utilities;
 
 namespace SeamsApp.Controllers
 {
@@ -68,8 +69,24 @@ namespace SeamsApp.Controllers
         {
             try
             {
-var userId = ClaimsUtility.GetUserIdFromClaims(HttpContext);
+                var userId = ClaimsUtility.GetUserIdFromClaims(HttpContext);
                 var user = await _authService.GetUserByIdAsync(userId);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("Email")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByEmail()
+        {
+            try
+            {
+                var userEmail = ClaimsUtility.GetUserEmailFromClaims(HttpContext);
+                var user = await _authService.GetUserByEmailAsync(userEmail!);
                 return Ok(user);
             }
             catch (Exception ex)
