@@ -9,6 +9,7 @@ namespace SeamsApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -50,49 +51,28 @@ namespace SeamsApp.Controllers
         
         [HttpGet("all-users")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllProducts() 
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsers() 
         {
-            try
-            {
-                var users = await _authService.GetAllUsersAsync();
-                return Ok(users);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var users = await _authService.GetAllUsersAsync();
+            return Ok(users);
         }
 
         [HttpGet("Id")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserById()
         {
-            try
-            {
-                var userId = ClaimsUtility.GetUserIdFromClaims(HttpContext);
-                var user = await _authService.GetUserByIdAsync(userId);
-                return Ok(user);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var userId = ClaimsUtility.GetUserIdFromClaims(HttpContext);
+            var user = await _authService.GetUserByIdAsync(userId);
+            return Ok(user);
         }
 
         [HttpGet("Email")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByEmail()
         {
-            try
-            {
-                var userEmail = ClaimsUtility.GetUserEmailFromClaims(HttpContext);
-                var user = await _authService.GetUserByEmailAsync(userEmail!);
-                return Ok(user);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var userEmail = ClaimsUtility.GetUserEmailFromClaims(HttpContext);
+            var user = await _authService.GetUserByEmailAsync(userEmail!);
+            return Ok(user);
         }
     }
 }
