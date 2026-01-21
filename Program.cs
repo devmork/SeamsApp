@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SeamsApp.Data.Repositories;
 using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Interfaces.Services;
+using SeamsApp.Models;
 using SeamsApp.Repositories;
+using SeamsApp.Services;
 using SeamsApp.Utilities;
 using System.Text;
 
@@ -20,6 +24,10 @@ builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 
 // REGISTER SERVICES
 
+
+builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 
 builder.Services.AddControllers();
