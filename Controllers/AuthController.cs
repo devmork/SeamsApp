@@ -62,12 +62,13 @@ namespace SeamsApp.Controllers
             }
         }
 
-        [HttpGet("user{userId}")]
+        [HttpGet("Id")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsreById(int userId)
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserById()
         {
             try
             {
+var userId = ClaimsUtility.GetUserIdFromClaims(HttpContext);
                 var user = await _authService.GetUserByIdAsync(userId);
                 return Ok(user);
             }
