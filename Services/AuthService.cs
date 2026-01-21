@@ -11,12 +11,12 @@ namespace SeamsApp.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserRoleRepository _userRoleRepository;
-        private readonly JwtService _jwtService;
+        private readonly IJwtService _jwtService;
         private readonly IMapper _mapper;
         private readonly IPasswordHasher<User> _passwordHasher;
         public AuthService(IUserRepository userRepository,
                             IUserRoleRepository userRoleRepository,
-                            JwtService jwtService,
+                            IJwtService jwtService,
                             IMapper mapper,
                             IPasswordHasher<User> passwordHasher)
         {
