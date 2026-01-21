@@ -17,5 +17,6 @@ namespace SeamsApp.DTOs.Student
         public string? Course { get; set; }
         [EmailAddress]
         public string? Email { get; set; }
+        public byte[]? QRCode { get; set; }
     }
 }
