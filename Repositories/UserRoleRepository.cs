@@ -33,7 +33,7 @@ namespace SeamsApp.Repositories
         public async Task<List<string>> GetUserRolesAsync(int userId)
         {
             var sql = @"
-                        SELECT r.Name
+                        SELECT r.RoleName
                         FROM  Roles r
                         INNER JOIN UserRoles ur
                             ON r.RoleId = ur.RoleId 
