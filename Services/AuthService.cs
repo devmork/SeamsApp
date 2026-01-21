@@ -87,8 +87,6 @@ namespace SeamsApp.Services
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
             return _mapper.Map<UserDTO>(user);
-        }
-
-        
+        }        
     }
 }
