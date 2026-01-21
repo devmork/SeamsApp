@@ -18,7 +18,7 @@ namespace SeamsApp.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] CreateUserDTO dto)
         {
             try
