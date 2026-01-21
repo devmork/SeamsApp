@@ -86,7 +86,10 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddCors();
 builder.Services.AddProblemDetails();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(option =>
+{
+    option.AddProfile<AutoMapperProfiles>();
+});
 
 var app = builder.Build();
 app.UseSwagger();
