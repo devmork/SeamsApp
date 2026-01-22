@@ -16,7 +16,6 @@ namespace SeamsApp.Controllers
     [Authorize]
     public class StudentController : ControllerBase
     {
-
         private readonly IStudentService _studentService;
 
         public StudentController(IStudentService studentService)
@@ -24,14 +23,14 @@ namespace SeamsApp.Controllers
             _studentService = studentService;
         }
 
-/// <summary>
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="studentCreationDTO"></param>
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles ="Admin")]
-[ProducesResponseType(typeof(StudentCreationDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StudentCreationDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> CreateStudent([FromBody] StudentCreationDTO studentCreationDTO)
@@ -40,14 +39,14 @@ namespace SeamsApp.Controllers
             return Ok(product);
         }
 
-/// <summary>
+        /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         [HttpGet("All-Students")]
-[Authorize(Roles = "Admin, Officer")]
+        [Authorize(Roles = "Admin, Officer")]
         [OutputCache]
-[ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<StudentDTO>>> GetAllStudents()
         {
@@ -55,7 +54,7 @@ namespace SeamsApp.Controllers
             return Ok(students);
         }
 
-/// <summary>
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="studentId"></param>
@@ -68,14 +67,14 @@ namespace SeamsApp.Controllers
             return Ok(student);
         }
 
-/// <summary>
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="studentId"></param>
         /// <returns></returns>
         [HttpGet("ById")]
         [Authorize(Roles = "Admin, Officer")]
-[ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> GetStudentById(int studentId)
@@ -84,8 +83,17 @@ namespace SeamsApp.Controllers
             return Ok(student);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="studentUpdateDTO"></param>
+        /// <param name="studentId"></param>
+        /// <returns></returns>
         [HttpPut("ById/{studentId:int}")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(StudentUpdateDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> UpdateStudent(StudentUpdateDTO studentUpdateDTO, int studentId)
         {
             var student = await _studentService.UpdateStudentByIdAsync(studentUpdateDTO, studentId);
