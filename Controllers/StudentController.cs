@@ -40,8 +40,15 @@ namespace SeamsApp.Controllers
             return Ok(product);
         }
 
+/// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("All-Students")]
+[Authorize(Roles = "Admin, Officer")]
         [OutputCache]
+[ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<StudentDTO>>> GetAllStudents()
         {
             var students = await _studentService.GetAllStudentAsync();
