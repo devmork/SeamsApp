@@ -93,6 +93,8 @@ builder.Services.AddSwaggerGen(options =>
             Array.Empty<string>()
         }
     });
+
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "SeamsApp.xml"));
 });
 builder.Services.AddProblemDetails();
 builder.Services.AddAutoMapper(option =>
