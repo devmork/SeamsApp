@@ -68,8 +68,16 @@ namespace SeamsApp.Controllers
             return Ok(student);
         }
 
+/// <summary>
+        /// 
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <returns></returns>
         [HttpGet("ById")]
         [Authorize(Roles = "Admin, Officer")]
+[ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> GetStudentById(int studentId)
         {
             var student = await _studentService.GetStudentByIdAsync(studentId);
