@@ -55,6 +55,11 @@ namespace SeamsApp.Controllers
             return Ok(students);
         }
 
+/// <summary>
+        /// 
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <returns></returns>
         [HttpDelete("ById/{studentId:int}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<int>> DeleteStudent(int studentId)
