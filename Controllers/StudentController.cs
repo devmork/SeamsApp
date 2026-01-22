@@ -18,13 +18,22 @@ namespace SeamsApp.Controllers
     {
 
         private readonly IStudentService _studentService;
+
         public StudentController(IStudentService studentService)
         {
             _studentService = studentService;
         }
 
+/// <summary>
+        /// 
+        /// </summary>
+        /// <param name="studentCreationDTO"></param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize(Roles ="Admin")]
+[ProducesResponseType(typeof(StudentCreationDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> CreateStudent([FromBody] StudentCreationDTO studentCreationDTO)
         {
             var product = await _studentService.AddStudentAsync(studentCreationDTO);
