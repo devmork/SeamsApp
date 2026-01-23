@@ -19,6 +19,11 @@ namespace SeamsApp.Controllers
             _authService = service;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] CreateUserDTO dto)
@@ -34,6 +39,11 @@ namespace SeamsApp.Controllers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO dto)
@@ -49,6 +59,10 @@ namespace SeamsApp.Controllers
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("All Users")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsers() 
@@ -57,6 +71,10 @@ namespace SeamsApp.Controllers
             return Ok(users);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("Id")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserById()
@@ -66,6 +84,10 @@ namespace SeamsApp.Controllers
             return Ok(user);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("Email")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByEmail()
