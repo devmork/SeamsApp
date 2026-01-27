@@ -3,11 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Ignore JWT key file 
-Jwt.Key
-
-# Ignore environment files
+# Ignore sensitive config files
+appsettings.Development.json
+appsettings.Local.json
 .env
+
 
 # User-specific files
 *.rsuser
