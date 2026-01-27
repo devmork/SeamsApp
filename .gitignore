@@ -4,7 +4,10 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # Ignore JWT key file 
-jwt.key
+JWT.key
+
+# Ignore environment files
+.env
 
 # User-specific files
 *.rsuser
