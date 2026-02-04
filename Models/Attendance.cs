@@ -15,13 +15,14 @@ namespace SeamsApp.Models.Base
         [Required]
         public string? AttendanceLocation { get; set; }
         [Required]
-        public string ?LogType { get; set; }
+        public string? LogType { get; set; }
         [Required]
         public DateOnly Date { get; set; }
         [Required]
         public TimeOnly StartTime { get; set; }
         [Required]
         public TimeOnly EndTime { get; set; }
-
+        public DateTime CreatedAt { get; set; }
+        public int Status { get; set; } // Added: Matches DB for soft deletes
     }
 }
