@@ -5,11 +5,10 @@ namespace SeamsApp.Interfaces.Services
 {
     public interface IAttendanceService
     {
-        Task<int> CreateAttendance(CreateAttendanceDTO createAttendanceDTO);
+        Task<int> CreateAttendanceAsync(CreateAttendanceDTO createAttendanceDTO);
         Task<IEnumerable<AttendanceDTO>> GetAllAttendanceAsync(); // Fixed: no id, returns DTOs
         Task<AttendanceDTO?> GetAttendanceByIdAsync(int id); // Fixed: returns DTO
-        Task<bool> RecordStudentAttendance(int attendanceId, int studentId);
-        Task<bool> DeleteAttendance(int attendanceId); // Renamed for clarity (not student-specific)
-        Task<bool> UpdateAttendance(int id, UpdateAttendanceDTO updateAttendanceDTO);
+        Task<bool> DeleteAttendanceAsync(int attendanceId); // Renamed for clarity (not student-specific)
+        Task<bool> UpdateAttendanceAsync(int id, UpdateAttendanceDTO updateAttendanceDTO);
     }
 }
