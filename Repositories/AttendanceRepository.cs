@@ -75,15 +75,14 @@ parameters.Add("LogType", attendance.LogType);
             }
         }
 
-        public async Task<Attendance?> GetAttendanceById(int id)
+        public async Task<Attendance?> GetAttendanceById(int attendanceId)
         {
-            const string query = @"
-                SELECT * FROM Attendance
-                WHERE AttendanceID = @AttendanceID AND Status = 1";
+            const string query = @"                SELECT * FROM Attendance
+                WHERE AttendanceId = @AttendanceId AND Status = 1";
 
             using (var connection = new SqlConnection(_connectionString))
             {
-                return await connection.QuerySingleOrDefaultAsync<Attendance>(query, new { AttendanceID = id });
+                return await connection.QuerySingleOrDefaultAsync<Attendance>(query, new { AttendanceId = attendanceId });
             }
         }
 
