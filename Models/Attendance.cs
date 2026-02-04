@@ -9,20 +9,19 @@ namespace SeamsApp.Models.Base
 {
     public class Attendance
     {
-        public int AttendanceID { get; set; }
+        public int AttendanceId { get; set; }
         [Required]
-        public string? AttendanceName { get; set; }
-        [Required]
-        public string? AttendanceLocation { get; set; }
-        [Required]
-        public string? LogType { get; set; }
-        [Required]
+        public string? Name { get; set; }
+        public string? Note { get; set; }
         public DateOnly Date { get; set; }
+        public string? LogType { get; set; }  
+        public int Semester { get; set; }
         [Required]
         public TimeOnly StartTime { get; set; }
         [Required]
         public TimeOnly EndTime { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public int Status { get; set; } // Added: Matches DB for soft deletes
+        public int Status { get; set; } = 1;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }
