@@ -50,9 +50,9 @@ namespace SeamsApp.Data.Repositories
             parameters.Add("Name", attendance.Name);
             parameters.Add("Note", attendance.Note);
             parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
-parameters.Add("LogType", attendance.LogType);
+            parameters.Add("LogType", attendance.LogType);
             parameters.Add("Semester", attendance.Semester);
-            parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm"));
+            parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm")); 
             parameters.Add("EndTime", attendance.EndTime.ToString("HH:mm"));
             parameters.Add("Status", attendance.Status);
             parameters.Add("CreatedAt", attendance.CreatedAt);
@@ -66,7 +66,7 @@ parameters.Add("LogType", attendance.LogType);
         public async Task<IEnumerable<Attendance>> GetAllAttendance()
         {
             const string query = @"SELECT * FROM Attendance
-                WHERE Status = 1";
+                                   WHERE Status = 1";                   
 
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -78,8 +78,8 @@ parameters.Add("LogType", attendance.LogType);
         public async Task<Attendance?> GetAttendanceById(int attendanceId)
         {
             const string query = @"SELECT * FROM Attendance
-                WHERE AttendanceId = @AttendanceId AND Status = 1";
-
+                                   WHERE AttendanceId = @AttendanceId AND Status = 1";
+                    
             using (var connection = new SqlConnection(_connectionString))
             {
                 return await connection.QuerySingleOrDefaultAsync<Attendance>(query, new { AttendanceId = attendanceId });
@@ -89,9 +89,9 @@ parameters.Add("LogType", attendance.LogType);
         public async Task<int> DeleteAttendance(int attendanceId)
         {
             const string query = @"UPDATE Attendance 
-                SET Status = 0
+                                   SET Status = 0
                                    WHERE AttendanceId = @AttendanceId";
-
+                
             using (var connection = new SqlConnection(_connectionString))
             {
                 return await connection.ExecuteAsync(query, new { AttendanceId = attendanceId });
@@ -101,22 +101,22 @@ parameters.Add("LogType", attendance.LogType);
         public async Task<int> UpdateAttendance(Attendance attendance)
         {
             const string query = @"UPDATE Attendance
-                SET 
+                                   SET 
                                     Name = @Name,
                                     Note = @Note,
                                     Date = @Date, 
-                    LogType = @LogType, 
-                    Semester = @Semester, 
-                    StartTime = @StartTime, 
-                    EndTime = @EndTime
-                WHERE AttendanceId = @AttendanceId";
+                                    LogType = @LogType,
+                                    Semester = @Semester,
+                                    StartTime = @StartTime, 
+                                    EndTime = @EndTime
+                                WHERE AttendanceId = @AttendanceId";
 
             var parameters = new DynamicParameters();
             parameters.Add("AttendanceId", attendance.AttendanceId);
             parameters.Add("Name", attendance.Name);
             parameters.Add("Note", attendance.Note);
             parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
-parameters.Add("LogType", attendance.LogType);
+            parameters.Add("LogType", attendance.LogType);
             parameters.Add("Semester", attendance.Semester);
             parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm"));
             parameters.Add("EndTime", attendance.EndTime.ToString("HH:mm"));
@@ -125,40 +125,6 @@ parameters.Add("LogType", attendance.LogType);
             using (var connection = new SqlConnection(_connectionString))
             {
                 return await connection.ExecuteAsync(query, parameters);
-            }
-        }
-
-        public async Task<bool> CheckDuplicateRecord(int attendanceId, int studentId)
-        {
-            const string sql = @"
-                SELECT COUNT(*)
-                FROM AttendanceRecord
-                WHERE AttendanceID = @AttendanceID AND StudentID = @StudentID AND Status = 1"; // Added Status check
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                int count = await connection.ExecuteScalarAsync<int>(sql, new { AttendanceID = attendanceId, StudentID = studentId });
-                return count > 0;
-            }
-        }
-
-        public async Task<int> RecordStudentAttendance(AttendanceRecord record)
-        {
-            const string sql = @"
-                INSERT INTO AttendanceRecord
-                (AttendanceID, StudentID, Timestamp, Status)
-                OUTPUT INSERTED.AttendanceRecordID
-                VALUES (@AttendanceID, @StudentID, @Timestamp, @Status)";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("AttendanceID", record.AttendanceID);
-            parameters.Add("StudentID", record.StudentID);
-            parameters.Add("Timestamp", record.Timestamp);
-            parameters.Add("Status", record.Status);
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                return await connection.ExecuteScalarAsync<int>(sql, parameters);
             }
         }
     }
