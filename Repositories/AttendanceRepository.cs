@@ -77,7 +77,7 @@ parameters.Add("LogType", attendance.LogType);
 
         public async Task<Attendance?> GetAttendanceById(int attendanceId)
         {
-            const string query = @"                SELECT * FROM Attendance
+            const string query = @"SELECT * FROM Attendance
                 WHERE AttendanceId = @AttendanceId AND Status = 1";
 
             using (var connection = new SqlConnection(_connectionString))
