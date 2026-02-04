@@ -56,7 +56,7 @@ namespace SeamsApp.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var newId = await _attendanceService.CreateAttendance(createAttendanceDTO);
+            var newId = await _attendanceService.CreateAttendanceAsync(createAttendanceDTO);
             return CreatedAtAction(nameof(GetAttendanceById), new { id = newId }, newId);
         }
 
@@ -68,7 +68,7 @@ namespace SeamsApp.Controllers
         [ProducesResponseType(500)]
         public async Task<ActionResult> UpdateAttendance(int id, [FromBody] UpdateAttendanceDTO updateAttendanceDTO)
         {
-            var success = await _attendanceService.UpdateAttendance(id, updateAttendanceDTO);
+            var success = await _attendanceService.UpdateAttendanceAsync(id, updateAttendanceDTO);
             if (!success)
             {
                 return NotFound();
@@ -84,7 +84,7 @@ namespace SeamsApp.Controllers
         [ProducesResponseType(500)]
         public async Task<ActionResult> DeleteAttendance(int id)
         {
-            var success = await _attendanceService.DeleteAttendance(id);
+            var success = await _attendanceService.DeleteAttendanceAsync(id);
             if (!success)
             {
                 return NotFound();
@@ -92,20 +92,20 @@ namespace SeamsApp.Controllers
             return NoContent();
         }
 
-        // POST: api/attendance/5/record/10
-        // Added for completeness: Records student attendance
-        [HttpPost("{attendanceId}/record/{studentId}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(409)] // Conflict if duplicate
-        [ProducesResponseType(500)]
-        public async Task<ActionResult<bool>> RecordStudentAttendance(int attendanceId, int studentId)
-        {
-            var success = await _attendanceService.RecordStudentAttendance(attendanceId, studentId);
-            if (!success)
-            {
-                return Conflict("Attendance already recorded for this student.");
-            }
-            return Ok(true);
-        }
+        //// POST: api/attendance/5/record/10
+        //// Added for completeness: Records student attendance
+        //[HttpPost("{attendanceId}/record/{studentId}")]
+        //[ProducesResponseType(200)]
+        //[ProducesResponseType(409)] // Conflict if duplicate
+        //[ProducesResponseType(500)]
+        //public async Task<ActionResult<bool>> RecordStudentAttendance(int attendanceId, int studentId)
+        //{
+        //    var success = await _attendanceService.RecordStudentAttendance(attendanceId, studentId);
+        //    if (!success)
+        //    {
+        //        return Conflict("Attendance already recorded for this student.");
+        //    }
+        //    return Ok(true);
+        //}
     }
 }
