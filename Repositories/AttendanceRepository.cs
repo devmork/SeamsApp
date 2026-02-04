@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Models;
 using SeamsApp.Models.Base;
 using System;
 using System.Collections.Generic;
@@ -17,67 +18,85 @@ namespace SeamsApp.Data.Repositories
         // STATUS 2 - INACTIVE
 
         private readonly string _connectionString;
+
         public AttendanceRepository(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")!;
         }
+
         public async Task<int> AddAttendance(Attendance attendance)
         {
-            string query =
-                     @"INSERT INTO Attendance
-                     (AttendanceName, AttendanceLocation, LogType, Date, StartTime, EndTime, Status)
-                     VALUES (@AttendanceName, @AttendanceLocation, @LogType, @Date, @StartTime, @EndTime, @Status)";
+            const string query = @"
+                INSERT INTO Attendance 
+                (AttendanceName, AttendanceLocation, LogType, Date, StartTime, EndTime, CreatedAt, Status)
+                OUTPUT INSERTED.AttendanceID
+                VALUES (@AttendanceName, @AttendanceLocation, @LogType, @Date, @StartTime, @EndTime, @CreatedAt, @Status)";
 
             var parameters = new DynamicParameters();
             parameters.Add("AttendanceName", attendance.AttendanceName);
             parameters.Add("AttendanceLocation", attendance.AttendanceLocation);
             parameters.Add("LogType", attendance.LogType);
             parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
-            parameters.Add("StartTime", attendance.StartTime.ToString("hh:mm tt"));
-            parameters.Add("EndTime", attendance.EndTime.ToString("hh:mm tt"));
-            parameters.Add("Status", 1);
+            parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm")); // Changed to 24-hour for consistency
+            parameters.Add("EndTime", attendance.EndTime.ToString("HH:mm")); // Changed to 24-hour
+            parameters.Add("CreatedAt", attendance.CreatedAt);
+            parameters.Add("Status", attendance.Status);
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
                 return await connection.ExecuteScalarAsync<int>(query, parameters);
             }
         }
+
         public async Task<List<Attendance>> GetAllAttendance()
         {
-            string query = @"SELECT * FROM Attendance
-                           WHERE Status = 1";
+            const string query = @"
+                SELECT * FROM Attendance
+                WHERE Status = 1";
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
                 var attendance = await connection.QueryAsync<Attendance>(query);
                 return attendance.ToList();
             }
         }
-        public async Task<int> DeleteAttendance(int attendanceID)
-        {
-            string query = @"UPDATE Attendance 
-                           SET Status = 0
-                           WHERE AttendanceID = @AttendanceID";
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+        public async Task<Attendance?> GetAttendanceById(int id)
+        {
+            const string query = @"
+                SELECT * FROM Attendance
+                WHERE AttendanceID = @AttendanceID AND Status = 1";
+
+            using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
-                return await connection.ExecuteScalarAsync<int>(query, new { AttendanceID = attendanceID});
+                return await connection.QuerySingleOrDefaultAsync<Attendance>(query, new { AttendanceID = id });
             }
         }
+
+        public async Task<int> DeleteAttendance(int attendanceID)
+        {
+            const string query = @"
+                UPDATE Attendance 
+                SET Status = 0
+                WHERE AttendanceID = @AttendanceID";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                return await connection.ExecuteAsync(query, new { AttendanceID = attendanceID });
+            }
+        }
+
         public async Task<int> UpdateAttendance(Attendance attendance)
         {
-            string query =
-                       @"UPDATE Attendance 
-                       SET AttendanceName = @AttendanceName, 
-                           AttendanceLocation = @AttendanceLocation, 
-                           LogType = @LogType, 
-                           Date = @Date, 
-                           StartTime = @StartTime, 
-                           EndTime = @EndTime
-                       WHERE AttendanceID = @AttendanceID";
+            const string query = @"
+                UPDATE Attendance 
+                SET AttendanceName = @AttendanceName, 
+                    AttendanceLocation = @AttendanceLocation, 
+                    LogType = @LogType, 
+                    Date = @Date, 
+                    StartTime = @StartTime, 
+                    EndTime = @EndTime
+                WHERE AttendanceID = @AttendanceID";
 
             var parameters = new DynamicParameters();
             parameters.Add("AttendanceID", attendance.AttendanceID);
@@ -85,15 +104,49 @@ namespace SeamsApp.Data.Repositories
             parameters.Add("AttendanceLocation", attendance.AttendanceLocation);
             parameters.Add("LogType", attendance.LogType);
             parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
-            parameters.Add("StartTime", attendance.StartTime.ToString("hh:mm tt"));
-            parameters.Add("EndTime", attendance.EndTime.ToString("hh:mm tt"));
+            parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm")); // 24-hour
+            parameters.Add("EndTime", attendance.EndTime.ToString("HH:mm")); // 24-hour
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
-                return await connection.ExecuteScalarAsync<int>(query, parameters);
+                return await connection.ExecuteAsync(query, parameters);
+            }
+        }
+
+        public async Task<bool> CheckDuplicateRecord(int attendanceId, int studentId)
+        {
+            const string sql = @"
+                SELECT COUNT(*)
+                FROM AttendanceRecord
+                WHERE AttendanceID = @AttendanceID AND StudentID = @StudentID AND Status = 1"; // Added Status check
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                int count = await connection.ExecuteScalarAsync<int>(sql, new { AttendanceID = attendanceId, StudentID = studentId });
+                return count > 0;
+            }
+        }
+
+        public async Task<int> RecordStudentAttendance(AttendanceRecord record)
+        {
+            const string sql = @"
+                INSERT INTO AttendanceRecord
+                (AttendanceID, StudentID, Timestamp, Status)
+                OUTPUT INSERTED.AttendanceRecordID
+                VALUES (@AttendanceID, @StudentID, @Timestamp, @Status)";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("AttendanceID", record.AttendanceID);
+            parameters.Add("StudentID", record.StudentID);
+            parameters.Add("Timestamp", record.Timestamp);
+            parameters.Add("Status", record.Status);
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                return await connection.ExecuteScalarAsync<int>(sql, parameters);
             }
         }
     }
 }
+
 

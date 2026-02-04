@@ -1,3 +1,4 @@
+using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +14,8 @@ using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
+SqlMapper.AddTypeHandler(new DateOnlyHandler());
+SqlMapper.AddTypeHandler(new TimeOnlyHandler());
 
 // REGISTER REPOSITORIES
 
@@ -28,6 +31,7 @@ builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 
 
 builder.Services.AddControllers();
