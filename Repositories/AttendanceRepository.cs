@@ -63,16 +63,15 @@ parameters.Add("LogType", attendance.LogType);
             }
         }
 
-        public async Task<List<Attendance>> GetAllAttendance()
+        public async Task<IEnumerable<Attendance>> GetAllAttendance()
         {
-            const string query = @"
-                SELECT * FROM Attendance
+            const string query = @"                SELECT * FROM Attendance
                 WHERE Status = 1";
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 var attendance = await connection.QueryAsync<Attendance>(query);
-                return attendance.ToList();
+                return [.. attendance];
             }
         }
 
