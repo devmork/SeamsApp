@@ -100,24 +100,27 @@ parameters.Add("LogType", attendance.LogType);
 
         public async Task<int> UpdateAttendance(Attendance attendance)
         {
-            const string query = @"
-                UPDATE Attendance 
-                SET AttendanceName = @AttendanceName, 
-                    AttendanceLocation = @AttendanceLocation, 
+            const string query = @"UPDATE Attendance
+                SET 
+                                    Name = @Name,
+                                    Note = @Note,
+                                    Date = @Date, 
                     LogType = @LogType, 
-                    Date = @Date, 
+                    Semester = @Semester, 
                     StartTime = @StartTime, 
                     EndTime = @EndTime
-                WHERE AttendanceID = @AttendanceID";
+                WHERE AttendanceId = @AttendanceId";
 
             var parameters = new DynamicParameters();
-            parameters.Add("AttendanceID", attendance.AttendanceID);
-            parameters.Add("AttendanceName", attendance.AttendanceName);
-            parameters.Add("AttendanceLocation", attendance.AttendanceLocation);
-            parameters.Add("LogType", attendance.LogType);
+            parameters.Add("AttendanceId", attendance.AttendanceId);
+            parameters.Add("Name", attendance.Name);
+            parameters.Add("Note", attendance.Note);
             parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
-            parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm")); // 24-hour
-            parameters.Add("EndTime", attendance.EndTime.ToString("HH:mm")); // 24-hour
+parameters.Add("LogType", attendance.LogType);
+            parameters.Add("Semester", attendance.Semester);
+            parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm"));
+            parameters.Add("EndTime", attendance.EndTime.ToString("HH:mm"));
+            parameters.Add("UpdatedAt", attendance.UpdatedAt);
 
             using (var connection = new SqlConnection(_connectionString))
             {
