@@ -15,7 +15,6 @@ namespace SeamsApp.Data.Repositories
     {
         // STATUS 0 - DELETED
         // STATUS 1 - ACTIVE
-        // STATUS 2 - INACTIVE
 
         private readonly string _connectionString;
 
@@ -26,21 +25,37 @@ namespace SeamsApp.Data.Repositories
 
         public async Task<int> AddAttendance(Attendance attendance)
         {
-            const string query = @"
-                INSERT INTO Attendance 
-                (AttendanceName, AttendanceLocation, LogType, Date, StartTime, EndTime, CreatedAt, Status)
-                OUTPUT INSERTED.AttendanceID
-                VALUES (@AttendanceName, @AttendanceLocation, @LogType, @Date, @StartTime, @EndTime, @CreatedAt, @Status)";
+            const string query = @" INSERT INTO Attendance (
+                                        Name,
+                                        Note,
+                                        Date, 
+                                        LogType, 
+                                        Semester,                                        
+                                        StartTime, 
+                                        EndTime,
+                                        Status,
+                                        CreatedAt)
+                                    VALUES (
+                                        @Name, 
+                                        @Note, 
+                                        @Date, 
+                                        @LogType,
+                                        @Semester,  
+                                        @StartTime, 
+                                        @EndTime, 
+                                        @Status,
+                                        @CreatedAt)";
 
             var parameters = new DynamicParameters();
-            parameters.Add("AttendanceName", attendance.AttendanceName);
-            parameters.Add("AttendanceLocation", attendance.AttendanceLocation);
-            parameters.Add("LogType", attendance.LogType);
+            parameters.Add("Name", attendance.Name);
+            parameters.Add("Note", attendance.Note);
             parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
-            parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm")); // Changed to 24-hour for consistency
-            parameters.Add("EndTime", attendance.EndTime.ToString("HH:mm")); // Changed to 24-hour
-            parameters.Add("CreatedAt", attendance.CreatedAt);
+parameters.Add("LogType", attendance.LogType);
+            parameters.Add("Semester", attendance.Semester);
+            parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm"));
+            parameters.Add("EndTime", attendance.EndTime.ToString("HH:mm"));
             parameters.Add("Status", attendance.Status);
+            parameters.Add("CreatedAt", attendance.CreatedAt);
 
             using (var connection = new SqlConnection(_connectionString))
             {
