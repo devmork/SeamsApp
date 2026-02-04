@@ -86,16 +86,15 @@ parameters.Add("LogType", attendance.LogType);
             }
         }
 
-        public async Task<int> DeleteAttendance(int attendanceID)
+        public async Task<int> DeleteAttendance(int attendanceId)
         {
-            const string query = @"
-                UPDATE Attendance 
+            const string query = @"UPDATE Attendance 
                 SET Status = 0
-                WHERE AttendanceID = @AttendanceID";
+                                   WHERE AttendanceId = @AttendanceId";
 
             using (var connection = new SqlConnection(_connectionString))
             {
-                return await connection.ExecuteAsync(query, new { AttendanceID = attendanceID });
+                return await connection.ExecuteAsync(query, new { AttendanceId = attendanceId });
             }
         }
 
