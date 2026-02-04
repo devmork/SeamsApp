@@ -18,7 +18,7 @@ namespace SeamsApp.Services
             _mapper = mapper;
         }
 
-        public async Task<int> CreateAttendance(CreateAttendanceDTO createAttendanceDTO)
+        public async Task<int> CreateAttendanceAsync(CreateAttendanceDTO createAttendanceDTO)
         {
             if (createAttendanceDTO == null)
                 throw new ArgumentNullException(nameof(createAttendanceDTO));
@@ -34,13 +34,13 @@ namespace SeamsApp.Services
             return newId;
         }
 
-        public async Task<bool> DeleteAttendance(int attendanceId)
+        public async Task<bool> DeleteAttendanceAsync(int attendanceId)
         {
             int rowsAffected = await _attendanceRepository.DeleteAttendance(attendanceId);
             return rowsAffected > 0;
         }
 
-        public async Task<List<AttendanceDTO>> GetAllAttendanceAsync()
+        public async Task<IEnumerable<AttendanceDTO>> GetAllAttendanceAsync()
         {
             var attendanceList = await _attendanceRepository.GetAllAttendance();
             return _mapper.Map<List<AttendanceDTO>>(attendanceList);
@@ -56,25 +56,7 @@ namespace SeamsApp.Services
             return _mapper.Map<AttendanceDTO>(attendance);
         }
 
-        public async Task<bool> RecordStudentAttendance(int attendanceId, int studentId)
-        {
-            bool alreadyRecorded = await _attendanceRepository.CheckDuplicateRecord(attendanceId, studentId);
-            if (alreadyRecorded)
-                return false;
-
-            var record = new AttendanceRecord
-            {
-                AttendanceID = attendanceId,
-                StudentID = studentId,
-                Timestamp = DateTime.UtcNow, // Fixed: Use Timestamp (matches DB)
-                Status = 1 // Added: Set active status
-            };
-
-            int newRecordId = await _attendanceRepository.RecordStudentAttendance(record);
-            return newRecordId > 0;
-        }
-
-        public async Task<bool> UpdateAttendance(int id, UpdateAttendanceDTO updateAttendanceDTO)
+        public async Task<bool> UpdateAttendanceAsync(int id, UpdateAttendanceDTO updateAttendanceDTO)
         {
             if (updateAttendanceDTO == null)
                 throw new ArgumentNullException(nameof(updateAttendanceDTO));
