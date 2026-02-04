@@ -65,7 +65,7 @@ parameters.Add("LogType", attendance.LogType);
 
         public async Task<IEnumerable<Attendance>> GetAllAttendance()
         {
-            const string query = @"                SELECT * FROM Attendance
+            const string query = @"SELECT * FROM Attendance
                 WHERE Status = 1";
 
             using (var connection = new SqlConnection(_connectionString))
