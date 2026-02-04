@@ -11,11 +11,9 @@ namespace SeamsApp.Interfaces.Repositories
     public interface IAttendanceRepository
     {
         Task<int> AddAttendance(Attendance attendance);
-        Task<List<Attendance>> GetAllAttendance();
-        Task<Attendance?> GetAttendanceById(int id); // Added for efficiency
-        Task<int> DeleteAttendance(int attendanceID);
+        Task<IEnumerable<Attendance>> GetAllAttendance();
+        Task<Attendance?> GetAttendanceById(int attendanceId);
+        Task<int> DeleteAttendance(int attendanceId);
         Task<int> UpdateAttendance(Attendance attendance);
-        Task<bool> CheckDuplicateRecord(int attendanceId, int studentId);
-        Task<int> RecordStudentAttendance(AttendanceRecord record);
     }
 }
