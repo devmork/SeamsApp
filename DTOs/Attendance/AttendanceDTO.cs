@@ -1,12 +1,16 @@
-﻿namespace SeamsApp.DTOs.Attendance
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SeamsApp.DTOs.Attendance
 {
     public class AttendanceDTO
     {
-        public string AttendanceName { get; set; } = string.Empty;
-        public string AttendanceLocation { get; set; } = string.Empty;
-        public string LogType { get; set; } = string.Empty;
+        public string? Name { get; set; }
+        public string? Note { get; set; }
         public DateOnly Date { get; set; }
+        public string? LogType { get; set; }
+        public int Semester { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
+        public int Status { get; set; }
     }
 }
