@@ -6,11 +6,11 @@ namespace SeamsApp.DTOs.Attendance
     {
         public string? Name { get; set; }
         public string? Note { get; set; }
-        public DateOnly Date { get; set; }
+        public DateTime Date { get; set; }
         public string? LogType { get; set; }
         public int Semester { get; set; }
-        public TimeOnly StartTime { get; set; }
-        public TimeOnly EndTime { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public int Status { get; set; }
     }
 }
