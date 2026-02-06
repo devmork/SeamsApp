@@ -13,13 +13,13 @@ namespace SeamsApp.Models.Base
         [Required]
         public string? Name { get; set; }
         public string? Note { get; set; }
-        public DateOnly Date { get; set; }
+        public DateTime Date { get; set; }
         public string? LogType { get; set; }  
         public int Semester { get; set; }
         [Required]
-        public TimeOnly StartTime { get; set; }
+        public DateTime StartTime { get; set; }
         [Required]
-        public TimeOnly EndTime { get; set; }
+        public DateTime EndTime { get; set; }
         public int Status { get; set; } = 1;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
