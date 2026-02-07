@@ -23,13 +23,7 @@ namespace SeamsApp.Services
             if (createAttendanceDTO == null)
                 throw new ArgumentNullException(nameof(createAttendanceDTO));
 
-            if (createAttendanceDTO.StartTime >= createAttendanceDTO.EndTime)
-                throw new ArgumentException("Start time must be earlier than end time.");
-
             var attendance = _mapper.Map<Attendance>(createAttendanceDTO);
-            attendance.CreatedAt = DateTime.UtcNow;
-            attendance.Status = 1; // Added: Set active status
-
             int newId = await _attendanceRepository.AddAttendance(attendance);
             return newId;
         }
