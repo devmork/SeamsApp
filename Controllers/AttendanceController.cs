@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SeamsApp.DTOs.Attendance;
 using SeamsApp.Interfaces.Services;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SeamsApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AttendanceController : ControllerBase
     {
         private readonly IAttendanceService _attendanceService;
@@ -17,8 +17,11 @@ namespace SeamsApp.Controllers
             _attendanceService = attendanceService;
         }
 
-        // GET: api/attendance
-        // Returns list of active attendance records
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin, Officer, Student")]
         [HttpGet]
         [ProducesResponseType(typeof(List<AttendanceDTO>), 200)]
         [ProducesResponseType(500)]
@@ -28,8 +31,12 @@ namespace SeamsApp.Controllers
             return Ok(attendanceList);
         }
 
-        // GET: api/attendance/5
-        // Returns attendance record by ID
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin, Officer")]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(AttendanceDTO), 200)]
         [ProducesResponseType(404)]
@@ -44,24 +51,36 @@ namespace SeamsApp.Controllers
             return Ok(attendance);
         }
 
-        // POST: api/attendance
-        // Added for completeness: Creates a new attendance
-        [HttpPost]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="createAttendanceDTO"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
+        [HttpPost("create-attendance")]
         [ProducesResponseType(typeof(int), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         public async Task<ActionResult<int>> CreateAttendance([FromBody] CreateAttendanceDTO createAttendanceDTO)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                var newId = await _attendanceService.CreateAttendanceAsync(createAttendanceDTO);
+                return Ok(newId);
             }
-            var newId = await _attendanceService.CreateAttendanceAsync(createAttendanceDTO);
-            return CreatedAtAction(nameof(GetAttendanceById), new { id = newId }, newId);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
         }
 
-        // PUT: api/attendance/5
-        // Added for completeness: Updates an attendance
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updateAttendanceDTO"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
@@ -76,8 +95,12 @@ namespace SeamsApp.Controllers
             return NoContent();
         }
 
-        // DELETE: api/attendance/5
-        // Added for completeness: Deletes (soft) an attendance
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
@@ -90,22 +113,6 @@ namespace SeamsApp.Controllers
                 return NotFound();
             }
             return NoContent();
-        }
-
-        //// POST: api/attendance/5/record/10
-        //// Added for completeness: Records student attendance
-        //[HttpPost("{attendanceId}/record/{studentId}")]
-        //[ProducesResponseType(200)]
-        //[ProducesResponseType(409)] // Conflict if duplicate
-        //[ProducesResponseType(500)]
-        //public async Task<ActionResult<bool>> RecordStudentAttendance(int attendanceId, int studentId)
-        //{
-        //    var success = await _attendanceService.RecordStudentAttendance(attendanceId, studentId);
-        //    if (!success)
-        //    {
-        //        return Conflict("Attendance already recorded for this student.");
-        //    }
-        //    return Ok(true);
-        //}
+        }        
     }
 }
