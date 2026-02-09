@@ -11,7 +11,7 @@ namespace SeamsApp.Interfaces.Repositories
     public interface IStudentRepository
     {
         Task<IEnumerable<Student>> GetAllStudentAsync();
-        Task<int> AddStudentAsync(Student student);
+        Task<Student> RegisterStudentAsync(Student student);
         Task<int> UpdateStudentByIdAsync(Student student);
         Task<int> DeleteStudentByIdAsync(int studentId);
         Task<Student> GetStudentByIdAsync(int studentId);
