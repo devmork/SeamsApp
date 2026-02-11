@@ -32,7 +32,7 @@ namespace SeamsApp.Data.Repositories
                 return await connection.QueryAsync<Student>(query);
             }
         }
-        public async Task<int> AddStudentAsync(Student student)
+        public async Task<Student> RegisterStudentAsync(Student student)
         {
             string query = @"INSERT INTO Students (
                                     FirstName, 
@@ -72,7 +72,7 @@ namespace SeamsApp.Data.Repositories
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return await connection.ExecuteScalarAsync<int>(query, parameters);
+                return await connection.ExecuteScalarAsync<Student>(query, parameters);
             }
         }
         public async Task<int> UpdateStudentByIdAsync(Student student)
