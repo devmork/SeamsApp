@@ -41,7 +41,7 @@ namespace SeamsApp.Services
             int userId = await _userRepository.CreateUserAsync(user);
             user.UserId = userId;
 
-            var userRole = new UserRole { UserId = user.UserId };
+            var userRole = new UserRole { UserId = user.UserId, RoleId = 3 };
             await _userRoleRepository.AssignRoleAsync(userRole);
 
             return _mapper.Map<CreateUserDTO>(user);
@@ -87,6 +87,16 @@ namespace SeamsApp.Services
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
             return _mapper.Map<UserDTO>(user);
-        }        
+        } 
+        
+        public async Task AssignRoleAsync(int userId, int roleId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null) throw new ArgumentException ("User not found.");
+
+            //Assign role to user
+            var newRole = new UserRole { UserId = userId, RoleId = roleId };
+            await _userRoleRepository.AssignRoleAsync(newRole);
+        }
     }
 }

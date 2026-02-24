@@ -96,5 +96,24 @@ namespace SeamsApp.Controllers
             var user = await _authService.GetUserByEmailAsync(userEmail!);
             return Ok(user);
         }
+
+        /// <summary>
+        /// Assigns role to a user (e.g., Admin, User). Only accessible by Admins.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("AssignRole")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AssignRole([FromBody] AssignRoleDTO dto)
+        {
+            try
+            {
+                await _authService.AssignRoleAsync(dto.UserId, dto.RoleId);
+                return Ok(new { Message = "Role has been assigned to the user successfully." });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+        }
     }
 }
