@@ -13,6 +13,5 @@ namespace SeamsApp.Interfaces.Repositories
         Task<User> GetUserByIdAsync(int userId);
         Task<int> CreateUserAsync(User user);
         Task<IEnumerable<User>> GetAllUsersAsync();
-
     }
 }
