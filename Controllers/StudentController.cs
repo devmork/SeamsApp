@@ -35,7 +35,7 @@ namespace SeamsApp.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> CreateStudent([FromBody] StudentCreationDTO studentCreationDTO)
         {
-            var product = await _studentService.AddStudentAsync(studentCreationDTO);
+            var product = await _studentService.RegisterStudentAsync(studentCreationDTO);
             return Ok(product);
         }
 
