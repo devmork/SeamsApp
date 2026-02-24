@@ -15,10 +15,11 @@ namespace SeamsApp.Services
             _studentRepository = studentRepository;
             _mapper = mapper;
         }
-        public async Task<int> AddStudentAsync(StudentCreationDTO studentCreationDTO)
+        public async Task<int> RegisterStudentAsync(StudentCreationDTO studentCreationDTO)
         {
             var student = _mapper.Map<Student>(studentCreationDTO);
-            return await _studentRepository.AddStudentAsync(student);
+            var registeredStudent = await _studentRepository.RegisterStudentAsync(student);
+            return registeredStudent.StudentId;
         }
         public async Task<int> DeleteStudentByIdAsync(int studentId)
         {

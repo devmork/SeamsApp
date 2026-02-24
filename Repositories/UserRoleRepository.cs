@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Models;
+using System.Diagnostics;
 
 namespace SeamsApp.Repositories
 {
@@ -54,6 +55,16 @@ namespace SeamsApp.Repositories
             {
                 var userRoles = await connection.QueryAsync<UserRole>(sql, new { UserId = userId });
                 return userRoles!;
+            }
+        }
+
+        //New method for removing roles
+        public async Task RemoveRoleAsync(int userId, int roleId)
+        {
+            var sql = "DELETE FROM UserRoles WHERE UserId = @UserId AND RoleId = @RoleId";
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.ExecuteAsync(sql, new { UserId = userId, RoleId = roleId });
             }
         }
     }
