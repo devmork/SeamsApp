@@ -11,18 +11,8 @@ namespace SeamsApp.Models
     {
         [Key]
         public int UserId { get; set; }
-
-        [Required(ErrorMessage = "Username is required.")]
-        [StringLength(50, MinimumLength = 3,
-            ErrorMessage = "Username must be between 3 and 50 characters.")]
         public string? UserName { get; set; }
-
-        [Required(ErrorMessage = "Email is required.")]
-        [EmailAddress(ErrorMessage = "Invalid email address format.")]
-        [StringLength(255, ErrorMessage = "Email cannot exceed 255 characters.")]
         public string? Email { get; set; }
-
-        [Required(ErrorMessage = "Password is required.")]
         public string? PasswordHash { get; set; }
 
         [DataType(DataType.DateTime)]
