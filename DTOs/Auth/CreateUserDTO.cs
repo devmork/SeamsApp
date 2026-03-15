@@ -12,7 +12,7 @@ namespace SeamsApp.DTOs.Auth
         public string? Email { get; set; }
 
         // SCHOOL INFORMATION
-        public string? StudentId { get; set; }
+        public string? SchoolStudentId { get; set; }
         public string? YearLevel { get; set; }
         public string? Course { get; set; }
 
