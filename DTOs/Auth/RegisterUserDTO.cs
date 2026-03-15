@@ -2,7 +2,7 @@
 
 namespace SeamsApp.DTOs.Auth
 {
-    public class CreateUserDTO
+    public class RegisterUserDTO
     {
         // PERSONAL INFORMATION
         public string? FirstName { get; set; }

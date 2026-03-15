@@ -27,7 +27,7 @@ namespace SeamsApp.Services
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<CreateUserDTO> CreateUserAsync(CreateUserDTO createUserDTO)
+        public async Task<RegisterUserDTO> CreateUserAsync(RegisterUserDTO createUserDTO)
         {
             var existingUser = await _userRepository.GetUserByEmailAsync(createUserDTO.Email);
             if (existingUser != null)
@@ -44,7 +44,7 @@ namespace SeamsApp.Services
             var userRole = new UserRole { UserId = user.UserId, RoleId = 3 };
             await _userRoleRepository.AssignRoleAsync(userRole);
 
-            return _mapper.Map<CreateUserDTO>(user);
+            return _mapper.Map<RegisterUserDTO>(user);
         }
         public async Task<LoginResponseDTO> LoginAsync(string email, string password)
         {
