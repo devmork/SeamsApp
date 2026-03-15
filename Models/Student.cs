@@ -9,21 +9,22 @@ namespace SeamsApp.Models.Base
 {
     public class Student
     {
-        public int StudentId { get; set; }
-        [Required]
+        public int Id { get; set; }
+
+        // PERSONAL INFORMATION
         public string? FirstName { get; set; }
         public string? MiddleName { get; set; }
-        [Required]
         public string? LastName { get; set; }
-        [Required]
-        public string? SchoolStudentId { get; set; }
-        [Required]
-        public string? YearLevel { get; set; }
-        [Required]
-        public string? Course { get; set; }
-        [EmailAddress]
+        public string? Suffix { get; set; }
         public string? Email { get; set; }
-        [Required]
+
+        // SCHOOL INFORMATION
+        public string? StudentId { get; set; }
+        public string? YearLevel { get; set; }
+        public string? Course { get; set; }
+
+        // PHOTO URL
+        public string? PhotoUrl { get; set; }
         public byte[]? QRCode { get; set; }
         public int Status { get; set; } = 1;
         public DateTime AddedAt { get; set; } = DateTime.UtcNow;
