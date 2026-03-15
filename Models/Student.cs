@@ -9,7 +9,7 @@ namespace SeamsApp.Models.Base
 {
     public class Student
     {
-        public int Id { get; set; }
+        public int StudentId { get; set; }
 
         // PERSONAL INFORMATION
         public string? FirstName { get; set; }
@@ -19,14 +19,14 @@ namespace SeamsApp.Models.Base
         public string? Email { get; set; }
 
         // SCHOOL INFORMATION
-        public string? StudentId { get; set; }
+        public string? SchoolStudentId { get; set; }
         public string? YearLevel { get; set; }
         public string? Course { get; set; }
 
         // PHOTO URL
         public string? PhotoUrl { get; set; }
         public byte[]? QRCode { get; set; }
-        public int Status { get; set; } = 1;
+        public int Status { get; set; } = 1; // 1 - Pending, 2 - Approved, 3 - Rejected, 4 - Deleted
         public DateTime AddedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
