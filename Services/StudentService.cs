@@ -15,24 +15,22 @@ namespace SeamsApp.Services
             _studentRepository = studentRepository;
             _mapper = mapper;
         }
-        public async Task<int> RegisterStudentAsync(StudentCreationDTO studentCreationDTO)
-        {
-            var student = _mapper.Map<Student>(studentCreationDTO);
-            var registeredStudent = await _studentRepository.RegisterStudentAsync(student);
-            return registeredStudent.StudentId;
-        }
         public async Task<int> DeleteStudentByIdAsync(int studentId)
         {
             var student = await _studentRepository.DeleteStudentByIdAsync(studentId);
             return student;
         }
 
-        public async Task<IEnumerable<StudentDTO>> GetAllStudentAsync()
+        public async Task<IEnumerable<StudentDTO>> GetAllPendingStudentAsync()
         {
-            var students = await _studentRepository.GetAllStudentAsync();
+            var students = await _studentRepository.GetAllPendingStudentAsync();
             return _mapper.Map<IEnumerable<StudentDTO>>(students);
         }
-
+        public async Task<IEnumerable<StudentDTO>> GetAllApprovedStudentAsync()
+        {
+            var students = await _studentRepository.GetAllApprovedStudentAsync();
+            return _mapper.Map<IEnumerable<StudentDTO>>(students);
+        }
         public async Task<StudentDTO> GetStudentByIdAsync(int studentId)
         {
             var student = await _studentRepository.GetStudentByIdAsync(studentId);
@@ -43,11 +41,10 @@ namespace SeamsApp.Services
         {
             throw new NotImplementedException();
         }
-
         public Task<int> UpdateStudentByIdAsync(StudentUpdateDTO studentUpdateDTO, int studentId)
         {
             var product = _mapper.Map<Student>(studentUpdateDTO);
             return _studentRepository.UpdateStudentByIdAsync(product);
-        }
+        }    
     }
 }
