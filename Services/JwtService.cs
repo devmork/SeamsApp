@@ -11,27 +11,24 @@ namespace SeamsApp.Services
     public class JwtService : IJwtService
     {
         private readonly IConfiguration _configuration;
-        private readonly IUserRepository _userRepository;
-        private readonly IUserRoleRepository _userRoleRepository;
-        private readonly IRoleRepository _roleRepository;
 
-        public JwtService(IConfiguration configuration, IUserRepository userRepository, IUserRoleRepository userRoleRepository, IRoleRepository roleRepository)
+        public JwtService(IConfiguration configuration)
         {
             _configuration = configuration;
-            _userRepository = userRepository;
-            _userRoleRepository = userRoleRepository;
-            _roleRepository = roleRepository;
         }
         public async Task<string> GenerateTokenAsync(User user)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Email, user.Email ?? "")
+                new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new(ClaimTypes.Email, user.Email ?? "")
             };
 
-            var userRoles = await _userRoleRepository.GetUserRolesAsync(user.UserId);
-            claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
+            if (!string.IsNullOrEmpty(user.UserRole))
+            {
+                claims.Add(new Claim(ClaimTypes.Role, user.UserRole));
+            }
+
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? ""));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
