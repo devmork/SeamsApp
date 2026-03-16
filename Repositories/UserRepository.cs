@@ -19,32 +19,32 @@ namespace SeamsApp.Data.Repositories
             _connectionString = configuration.GetConnectionString("DefaultConnection")!;
 
         }
-        public async Task<int> CreateUserAsync(User user)
-        {
-            var sql = @"INSERT INTO Users (
-                                UserName, 
-                                Email, 
-                                PasswordHash,
-                                CreatedAt) 
-                        VALUES (
-                                @UserName, 
-                                @Email, 
-                                @PasswordHash,
-                                @CreatedAt);
-                        SELECT CAST(SCOPE_IDENTITY() as int)";
+        //public async Task<int> CreateUserAsync(User user)
+        //{
+        //    var sql = @"INSERT INTO Users (
+        //                        UserName, 
+        //                        Email, 
+        //                        PasswordHash,
+        //                        CreatedAt) 
+        //                VALUES (
+        //                        @UserName, 
+        //                        @Email, 
+        //                        @PasswordHash,
+        //                        @CreatedAt);
+        //                SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            var parameters = new DynamicParameters();
-            parameters.Add("UserName", user.UserName);
-            parameters.Add("Email", user.Email);
-            parameters.Add("PasswordHash", user.PasswordHash);
-            parameters.Add("CreatedAt", user.CreatedAt);
+        //    var parameters = new DynamicParameters();
+        //    parameters.Add("UserName", user.UserName);
+        //    parameters.Add("Email", user.Email);
+        //    parameters.Add("PasswordHash", user.PasswordHash);
+        //    parameters.Add("CreatedAt", user.CreatedAt);
 
 
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                return await connection.ExecuteScalarAsync<int>(sql, parameters);
-            }
-        }
+        //    using (var connection = new SqlConnection(_connectionString))
+        //    {
+        //        return await connection.ExecuteScalarAsync<int>(sql, parameters);
+        //    }
+        //}
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
