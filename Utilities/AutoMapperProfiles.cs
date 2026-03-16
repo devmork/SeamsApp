@@ -13,7 +13,6 @@ namespace SeamsApp.Utilities
         {
             // STUDENT
             CreateMap<Student, StudentDTO>();
-            CreateMap<StudentCreationDTO, Student>();
             CreateMap<StudentUpdateDTO, Student>();
 
 
