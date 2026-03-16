@@ -27,7 +27,6 @@ namespace SeamsApp.Services
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName ?? ""),
                 new Claim(ClaimTypes.Email, user.Email ?? "")
             };
 
