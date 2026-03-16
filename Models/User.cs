@@ -13,6 +13,7 @@ namespace SeamsApp.Models
         public int UserId { get; set; }
         public int StudentId { get; set; }
         public string? Email { get; set; }
+        public string? UserRole { get; set; }
         public string? PasswordHash { get; set; }
 
         [DataType(DataType.DateTime)]
