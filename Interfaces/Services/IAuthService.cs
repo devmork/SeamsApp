@@ -9,6 +9,5 @@ namespace SeamsApp.Interfaces.Services
         //Task<RegisterUserDTO> CreateUserAsync(RegisterUserDTO createUserDTO);
         Task<IEnumerable<UserDTO>> GetAllUsersAsync();
         Task<LoginResponseDTO> LoginAsync(string email, string password);
-        Task AssignRoleAsync(int userId, int roleId);
     }
 }
