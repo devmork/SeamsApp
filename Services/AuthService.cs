@@ -27,25 +27,25 @@ namespace SeamsApp.Services
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<RegisterUserDTO> CreateUserAsync(RegisterUserDTO createUserDTO)
-        {
-            var existingUser = await _userRepository.GetUserByEmailAsync(createUserDTO.Email);
-            if (existingUser != null)
-            {
-                throw new ArgumentException("User already exists.");
-            }
+        //public async Task<RegisterUserDTO> CreateUserAsync(RegisterUserDTO createUserDTO)
+        //{
+        //    var existingUser = await _userRepository.GetUserByEmailAsync(createUserDTO.Email);
+        //    if (existingUser != null)
+        //    {
+        //        throw new ArgumentException("User already exists.");
+        //    }
 
-            var user = _mapper.Map<User>(createUserDTO);
-            user.PasswordHash = _passwordHasher.HashPassword(user, createUserDTO.Password);
+        //    var user = _mapper.Map<User>(createUserDTO);
+        //    user.PasswordHash = _passwordHasher.HashPassword(user, createUserDTO.Password);
 
-            int userId = await _userRepository.CreateUserAsync(user);
-            user.UserId = userId;
+        //    int userId = await _userRepository.CreateUserAsync(user);
+        //    user.UserId = userId;
 
-            var userRole = new UserRole { UserId = user.UserId, RoleId = 3 };
-            await _userRoleRepository.AssignRoleAsync(userRole);
+        //    var userRole = new UserRole { UserId = user.UserId, RoleId = 3 };
+        //    await _userRoleRepository.AssignRoleAsync(userRole);
 
-            return _mapper.Map<RegisterUserDTO>(user);
-        }
+        //    return _mapper.Map<RegisterUserDTO>(user);
+        //}
         public async Task<LoginResponseDTO> LoginAsync(string email, string password)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
