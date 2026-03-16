@@ -38,22 +38,24 @@ namespace SeamsApp.Data.Repositories
                                     FirstName, 
                                     MiddleName, 
                                     LastName, 
+                                    Suffix,
+                                    Email,
                                     SchoolStudentId, 
-                                    Course, 
                                     YearLevel, 
-                                    Email, 
-                                    QRCode,
+                                    Course, 
+                                    PhotoUrl,
                                     Status,
                                     AddedAt)
                              VALUES (
                                     @FirstName, 
                                     @MiddleName, 
                                     @LastName, 
+                                    @Suffix,   
+                                    @Email,
                                     @SchoolStudentId, 
-                                    @Course, 
                                     @YearLevel, 
-                                    @Email, 
-                                    @QRCode,
+                                    @Course, 
+                                    @PhotoUrl,
                                     @Status,
                                     @AddedAt)";
 
@@ -61,18 +63,21 @@ namespace SeamsApp.Data.Repositories
             parameters.Add("@FirstName", student.FirstName);
             parameters.Add("@MiddleName", student.MiddleName);
             parameters.Add("@LastName", student.LastName);
-            parameters.Add("@SchoolStudentId", student.SchoolStudentId);
-            parameters.Add("@Course", student.Course);
-            parameters.Add("@YearLevel", student.YearLevel);
+            parameters.Add("@Suffix", student.Suffix);
             parameters.Add("@Email", student.Email);
-            parameters.Add("@QRCode", student.QRCode);
+
+            parameters.Add("@SchoolStudentId", student.SchoolStudentId);
+            parameters.Add("@YearLevel", student.YearLevel);
+            parameters.Add("@Course", student.Course);
+            parameters.Add("@PhotoUrl", student.PhotoUrl);
             parameters.Add("@Status", student.Status);
-            parameters.Add("@AddedAt", student.AddedAt);
+            parameters.Add("@SubmittedAt", student.SubmmittedAt);
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return await connection.ExecuteScalarAsync<Student>(query, parameters);
+                await connection.ExecuteAsync(query, parameters);
+                return student;
             }
         }
         public async Task<int> UpdateStudentByIdAsync(Student student)
