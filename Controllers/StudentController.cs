@@ -29,9 +29,9 @@ namespace SeamsApp.Controllers
         /// <returns></returns>
         [HttpGet("PendingStudents")]
         [Authorize(Roles = "Admin, Officer")]
-[OutputCache]
+        [OutputCache]
         [ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
-                [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<StudentDTO>>> GetPendingStudents()
         {
             var students = await _studentService.GetAllPendingStudentAsync();
@@ -42,14 +42,14 @@ namespace SeamsApp.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [HttpGet("All-Students")]
+        [HttpGet("ApprovedStudents")]
         [Authorize(Roles = "Admin, Officer")]
         [OutputCache]
         [ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetAllStudents()
+        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetApprovedStudents()
         {
-            var students = await _studentService.GetAllStudentAsync();
+            var students = await _studentService.GetAllApprovedStudentAsync();
             return Ok(students);
         }
 
