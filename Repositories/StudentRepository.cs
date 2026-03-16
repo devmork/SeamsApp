@@ -13,18 +13,28 @@ namespace SeamsApp.Data.Repositories
 {
     public class StudentRepository : IStudentRepository
     {
-        // 1 - Active
-        // 0 - Deleted
+        // 1 - Pending, 2 - Approved, 3 - Rejected, 4 - Deleted
 
         private readonly string _connectionString;
         public StudentRepository(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")!;
         }
-        public async Task<IEnumerable<Student>> GetAllStudentAsync() 
+        public async Task<IEnumerable<Student>> GetAllPendingStudentAsync() 
         {
             string query = @"SELECT * FROM Students
                              WHERE Status = 1";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                return await connection.QueryAsync<Student>(query);
+            }
+        }
+        public async Task<IEnumerable<Student>> GetAllApprovedStudentAsync()
+        {
+            string query = @"SELECT * FROM Students
+                             WHERE Status = 2";
 
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -49,7 +59,7 @@ namespace SeamsApp.Data.Repositories
                              VALUES (
                                     @FirstName, 
                                     @MiddleName, 
-                                    @LastName, 
+                                    @LastName,
                                     @Suffix,   
                                     @Email,
                                     @SchoolStudentId, 
