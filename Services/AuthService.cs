@@ -10,18 +10,15 @@ namespace SeamsApp.Services
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IUserRoleRepository _userRoleRepository;
         private readonly IJwtService _jwtService;
         private readonly IMapper _mapper;
         private readonly IPasswordHasher<User> _passwordHasher;
         public AuthService(IUserRepository userRepository,
-                            IUserRoleRepository userRoleRepository,
                             IJwtService jwtService,
                             IMapper mapper,
                             IPasswordHasher<User> passwordHasher)
         {
             _userRepository = userRepository;
-            _userRoleRepository = userRoleRepository;
             _jwtService = jwtService;
             _mapper = mapper;
             _passwordHasher = passwordHasher;
@@ -89,14 +86,14 @@ namespace SeamsApp.Services
             return _mapper.Map<UserDTO>(user);
         } 
         
-        public async Task AssignRoleAsync(int userId, int roleId)
-        {
-            var user = await _userRepository.GetUserByIdAsync(userId);
-            if (user == null) throw new ArgumentException ("User not found.");
+        //public async Task AssignRoleAsync(int userId, int roleId)
+        //{
+        //    var user = await _userRepository.GetUserByIdAsync(userId);
+        //    if (user == null) throw new ArgumentException ("User not found.");
 
-            //Assign role to user
-            var newRole = new UserRole { UserId = userId, RoleId = roleId };
-            await _userRoleRepository.AssignRoleAsync(newRole);
-        }
+        //    //Assign role to user
+        //    var newRole = new UserRole { UserId = userId, RoleId = roleId };
+        //    await _userRoleRepository.AssignRoleAsync(newRole);
+        //}
     }
 }
