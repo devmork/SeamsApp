@@ -26,17 +26,16 @@ namespace SeamsApp.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="studentCreationDTO"></param>
         /// <returns></returns>
-        [HttpPost]
-        [Authorize(Roles ="Admin")]
-        [ProducesResponseType(typeof(StudentCreationDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> CreateStudent([FromBody] StudentCreationDTO studentCreationDTO)
+        [HttpGet("PendingStudents")]
+        [Authorize(Roles = "Admin, Officer")]
+[OutputCache]
+        [ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
+                [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetPendingStudents()
         {
-            var product = await _studentService.RegisterStudentAsync(studentCreationDTO);
-            return Ok(product);
+            var students = await _studentService.GetAllPendingStudentAsync();
+            return Ok(students);
         }
 
         /// <summary>
