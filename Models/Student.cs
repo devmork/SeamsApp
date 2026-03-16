@@ -27,8 +27,9 @@ namespace SeamsApp.Models.Base
         public string? PhotoUrl { get; set; }
         public byte[]? QRCode { get; set; }
         public int Status { get; set; } = 1; // 1 - Pending, 2 - Approved, 3 - Rejected, 4 - Deleted
-        public DateTime AddedAt { get; set; } = DateTime.UtcNow;
+        public DateTime SubmmittedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime ApprovedAt { get; set; } = DateTime.UtcNow;
 
     }
 }
