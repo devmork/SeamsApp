@@ -77,5 +77,10 @@ namespace SeamsApp.Data.Repositories
                 return user!;
             }
         }
+
+        public Task<int> RegisterUserAsync(User user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
