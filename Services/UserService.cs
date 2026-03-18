@@ -7,7 +7,7 @@ using SeamsApp.Models;
 
 namespace SeamsApp.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IJwtService _jwtService;

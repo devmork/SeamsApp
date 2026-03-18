@@ -2,11 +2,11 @@
 
 namespace SeamsApp.Interfaces.Services
 {
-    public interface IAuthService
+    public interface IUserService
     {
         Task<UserDTO> GetUserByEmailAsync(string email);
         Task<UserDTO> GetUserByIdAsync(int userId);
-        //Task<RegisterUserDTO> CreateUserAsync(RegisterUserDTO createUserDTO);
+        Task<RegisterUserDTO> RegisterUserAsync(RegisterUserDTO registerUserDTO);
         Task<IEnumerable<UserDTO>> GetAllUsersAsync();
         Task<LoginResponseDTO> LoginAsync(string email, string password);
     }
