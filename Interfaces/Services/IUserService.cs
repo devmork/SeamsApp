@@ -1,4 +1,5 @@
 ﻿using SeamsApp.DTOs.Auth;
+using SeamsApp.DTOs.Student;
 
 namespace SeamsApp.Interfaces.Services
 {
@@ -6,7 +7,6 @@ namespace SeamsApp.Interfaces.Services
     {
         Task<UserDTO> GetUserByEmailAsync(string email);
         Task<UserDTO> GetUserByIdAsync(int userId);
-        Task<RegisterUserDTO> RegisterUserAsync(RegisterUserDTO registerUserDTO);
         Task<IEnumerable<UserDTO>> GetAllUsersAsync();
         Task<LoginResponseDTO> LoginAsync(string email, string password);
     }

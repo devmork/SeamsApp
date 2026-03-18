@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using SeamsApp.DTOs.Auth;
+using SeamsApp.DTOs.Student;
 using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Interfaces.Services;
 using SeamsApp.Models;
@@ -23,26 +24,6 @@ namespace SeamsApp.Services
             _mapper = mapper;
             _passwordHasher = passwordHasher;
         }
-
-        //public async Task<RegisterUserDTO> CreateUserAsync(RegisterUserDTO createUserDTO)
-        //{
-        //    var existingUser = await _userRepository.GetUserByEmailAsync(createUserDTO.Email);
-        //    if (existingUser != null)
-        //    {
-        //        throw new ArgumentException("User already exists.");
-        //    }
-
-        //    var user = _mapper.Map<User>(createUserDTO);
-        //    user.PasswordHash = _passwordHasher.HashPassword(user, createUserDTO.Password);
-
-        //    int userId = await _userRepository.CreateUserAsync(user);
-        //    user.UserId = userId;
-
-        //    var userRole = new UserRole { UserId = user.UserId, RoleId = 3 };
-        //    await _userRoleRepository.AssignRoleAsync(userRole);
-
-        //    return _mapper.Map<RegisterUserDTO>(user);
-        //}
         public async Task<LoginResponseDTO> LoginAsync(string email, string password)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
@@ -85,20 +66,5 @@ namespace SeamsApp.Services
             var user = await _userRepository.GetUserByIdAsync(userId);
             return _mapper.Map<UserDTO>(user);
         }
-
-        public Task<RegisterUserDTO> RegisterUserAsync(RegisterUserDTO registerUserDTO)
-        {
-            throw new NotImplementedException();
-        }
-
-        //public async Task AssignRoleAsync(int userId, int roleId)
-        //{
-        //    var user = await _userRepository.GetUserByIdAsync(userId);
-        //    if (user == null) throw new ArgumentException ("User not found.");
-
-        //    //Assign role to user
-        //    var newRole = new UserRole { UserId = userId, RoleId = roleId };
-        //    await _userRoleRepository.AssignRoleAsync(newRole);
-        //}
     }
 }
