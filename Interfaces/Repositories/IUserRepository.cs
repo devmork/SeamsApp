@@ -1,4 +1,5 @@
 ﻿using SeamsApp.Models;
+using SeamsApp.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,6 @@ namespace SeamsApp.Interfaces.Repositories
     {
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserByIdAsync(int userId);
-        Task<int> RegisterUserAsync(User user);
         Task<IEnumerable<User>> GetAllUsersAsync();
     }
 }
