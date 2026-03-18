@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Models;
+using SeamsApp.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,33 +20,6 @@ namespace SeamsApp.Data.Repositories
             _connectionString = configuration.GetConnectionString("DefaultConnection")!;
 
         }
-        //public async Task<int> CreateUserAsync(User user)
-        //{
-        //    var sql = @"INSERT INTO Users (
-        //                        UserName, 
-        //                        Email, 
-        //                        PasswordHash,
-        //                        CreatedAt) 
-        //                VALUES (
-        //                        @UserName, 
-        //                        @Email, 
-        //                        @PasswordHash,
-        //                        @CreatedAt);
-        //                SELECT CAST(SCOPE_IDENTITY() as int)";
-
-        //    var parameters = new DynamicParameters();
-        //    parameters.Add("UserName", user.UserName);
-        //    parameters.Add("Email", user.Email);
-        //    parameters.Add("PasswordHash", user.PasswordHash);
-        //    parameters.Add("CreatedAt", user.CreatedAt);
-
-
-        //    using (var connection = new SqlConnection(_connectionString))
-        //    {
-        //        return await connection.ExecuteScalarAsync<int>(sql, parameters);
-        //    }
-        //}
-
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             var sql = @"SELECT * FROM Users";
@@ -67,7 +41,6 @@ namespace SeamsApp.Data.Repositories
                 return user!;
             }
         }
-
         public async Task<User> GetUserByIdAsync(int userId)
         {
             var sql = @"SELECT * FROM Users WHERE UserId = @UserId";
@@ -76,11 +49,6 @@ namespace SeamsApp.Data.Repositories
                 var user = await connection.QueryFirstOrDefaultAsync<User>(sql, new { UserId = userId });
                 return user!;
             }
-        }
-
-        public Task<int> RegisterUserAsync(User user)
-        {
-            throw new NotImplementedException();
         }
     }
 }
