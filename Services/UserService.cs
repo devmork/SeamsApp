@@ -7,13 +7,13 @@ using SeamsApp.Models;
 
 namespace SeamsApp.Services
 {
-    public class AuthService : IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IJwtService _jwtService;
         private readonly IMapper _mapper;
         private readonly IPasswordHasher<User> _passwordHasher;
-        public AuthService(IUserRepository userRepository,
+        public UserService(IUserRepository userRepository,
                             IJwtService jwtService,
                             IMapper mapper,
                             IPasswordHasher<User> passwordHasher)
@@ -84,8 +84,13 @@ namespace SeamsApp.Services
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
             return _mapper.Map<UserDTO>(user);
-        } 
-        
+        }
+
+        public Task<RegisterUserDTO> RegisterUserAsync(RegisterUserDTO registerUserDTO)
+        {
+            throw new NotImplementedException();
+        }
+
         //public async Task AssignRoleAsync(int userId, int roleId)
         //{
         //    var user = await _userRepository.GetUserByIdAsync(userId);
