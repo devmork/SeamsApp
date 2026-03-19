@@ -14,6 +14,7 @@ namespace SeamsApp.Utilities
             // STUDENT
             CreateMap<Student, StudentDTO>();
             CreateMap<StudentUpdateDTO, Student>();
+            CreateMap<Student, StudentUpdateDTO>();
 
 
             // Auth
