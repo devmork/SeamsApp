@@ -1,8 +1,10 @@
 using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SeamsApp.Data.Models;
 using SeamsApp.Data.Repositories;
 using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Interfaces.Services;
@@ -28,7 +30,7 @@ builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<IPasswordHasher<SeamsApp.Models.User>, PasswordHasher<SeamsApp.Models.User>>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 
 
@@ -38,6 +40,8 @@ builder.Services.AddOutputCache(options =>
 {
     options.DefaultExpirationTimeSpan = TimeSpan.FromSeconds(15); 
 });
+
+builder.Services.AddDbContext<SeamsDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddCors(options =>
 {
