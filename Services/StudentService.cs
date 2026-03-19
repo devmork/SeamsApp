@@ -47,9 +47,11 @@ namespace SeamsApp.Services
             return _studentRepository.UpdateStudentByIdAsync(product);
         }
 
-        public Task<CreateStudentDTO> CreateStudent(CreateStudentDTO createStudentDTO)
+        public async Task<CreateStudentDTO> CreateStudent(CreateStudentDTO createStudentDTO)
         {
-            throw new NotImplementedException();
+            var student = _mapper.Map<Student>(createStudentDTO);
+            var createdStudent = await _studentRepository.CreateStudentAsync(student);
+            return _mapper.Map<CreateStudentDTO>(createdStudent);
         }
     }
 }
