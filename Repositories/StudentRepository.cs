@@ -42,7 +42,7 @@ namespace SeamsApp.Data.Repositories
                 return await connection.QueryAsync<Student>(query);
             }
         }
-        public async Task<Student> RegisterStudentAsync(Student student)
+        public async Task<Student> CreateStudentAsync(Student student)
         {
             string query = @"INSERT INTO Students (
                                     FirstName, 
