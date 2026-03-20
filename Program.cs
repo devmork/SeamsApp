@@ -28,7 +28,7 @@ builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 // REGISTER SERVICES
 
 builder.Services.AddScoped<IStudentService, StudentService>();
-builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPasswordHasher<SeamsApp.Models.User>, PasswordHasher<SeamsApp.Models.User>>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();

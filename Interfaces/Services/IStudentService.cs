@@ -7,6 +7,7 @@ namespace SeamsApp.Interfaces.Services
     {
         Task<IEnumerable<StudentDTO>> GetAllPendingStudentAsync();
         Task<IEnumerable<StudentDTO>> GetAllApprovedStudentAsync();
+        Task<CreateStudentDTO> CreateStudent(CreateStudentDTO createStudentDTO);
         Task<int> UpdateStudentByIdAsync(StudentUpdateDTO studentUpdateDTO, int studentId);
         Task<int> DeleteStudentByIdAsync(int studentId);
         Task<StudentDTO> GetStudentByIdAsync(int studentId);

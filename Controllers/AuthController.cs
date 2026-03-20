@@ -12,9 +12,9 @@ namespace SeamsApp.Controllers
     [Authorize]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly IUserService _authService;
 
-        public AuthController(IAuthService service)
+        public AuthController(IUserService service)
         {
             _authService = service;
         }

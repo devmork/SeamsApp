@@ -13,7 +13,8 @@ namespace SeamsApp.Utilities
         {
             // STUDENT
             CreateMap<Student, StudentDTO>();
-            CreateMap<StudentUpdateDTO, Student>();
+            CreateMap<StudentUpdateDTO, Student>().ReverseMap();
+            CreateMap<Student, CreateStudentDTO>().ReverseMap();
 
 
             // Auth
