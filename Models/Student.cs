@@ -20,7 +20,7 @@ namespace SeamsApp.Models.Base
 
         // SCHOOL INFORMATION
         public string? SchoolStudentId { get; set; }
-        public string? YearLevel { get; set; }
+        public int YearLevel { get; set; }
         public string? Course { get; set; }
 
         // PHOTO URL
