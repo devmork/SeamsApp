@@ -20,12 +20,10 @@ public partial class Student
     [StringLength(250)]
     public string LastName { get; set; } = null!;
 
-    [StringLength(8)]
+    [StringLength(9)]
     public string SchoolStudentId { get; set; } = null!;
 
-    [StringLength(4)]
-    [Unicode(false)]
-    public string YearLevel { get; set; } = null!;
+    public int YearLevel { get; set; }
 
     [StringLength(250)]
     public string Course { get; set; } = null!;
@@ -35,15 +33,15 @@ public partial class Student
 
     [Column("QRCode")]
     [StringLength(500)]
-    public string Qrcode { get; set; } = null!;
+    public string? Qrcode { get; set; }
 
     public int Status { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime SubmittedAt { get; set; }
+    public DateTime? SubmittedAt { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     [StringLength(10)]
     public string? Suffix { get; set; }

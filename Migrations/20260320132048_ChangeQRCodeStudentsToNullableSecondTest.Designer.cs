@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeamsApp.Data.Models;
 
@@ -11,9 +12,11 @@ using SeamsApp.Data.Models;
 namespace SeamsApp.Migrations
 {
     [DbContext(typeof(SeamsDbContext))]
-    partial class SeamsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260320132048_ChangeQRCodeStudentsToNullableSecondTest")]
+    partial class ChangeQRCodeStudentsToNullableSecondTest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,24 +169,27 @@ namespace SeamsApp.Migrations
 
                     b.Property<string>("SchoolStudentId")
                         .IsRequired()
-                        .HasMaxLength(9)
-                        .HasColumnType("nvarchar(9)");
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("SubmittedAt")
+                    b.Property<DateTime>("SubmittedAt")
                         .HasColumnType("datetime");
 
                     b.Property<string>("Suffix")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("YearLevel")
-                        .HasColumnType("int");
+                    b.Property<string>("YearLevel")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(4)");
 
                     b.HasKey("StudentId");
 
