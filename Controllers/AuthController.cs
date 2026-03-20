@@ -13,31 +13,11 @@ namespace SeamsApp.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _authService;
-
+    
         public AuthController(IUserService service)
         {
             _authService = service;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        //[AllowAnonymous]
-        //[HttpPost("Register")]
-        //public async Task<IActionResult> Register([FromBody] RegisterUserDTO dto)
-        //{
-        //    try
-        //    {
-        //        var user = await _authService.CreateUserAsync(dto);
-        //        return Ok(new { Message = "User registered successfully", User = user });
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return BadRequest(new { Error = ex.Message });
-        //    }
-        //}
 
         /// <summary>
         /// 
