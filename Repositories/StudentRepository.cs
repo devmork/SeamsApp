@@ -55,7 +55,7 @@ namespace SeamsApp.Data.Repositories
                                     Course, 
                                     PhotoUrl,
                                     Status,
-                                    AddedAt)
+                                    SubmittedAt)
                              VALUES (
                                     @FirstName, 
                                     @MiddleName, 
@@ -67,7 +67,7 @@ namespace SeamsApp.Data.Repositories
                                     @Course, 
                                     @PhotoUrl,
                                     @Status,
-                                    @AddedAt)";
+                                    @SubmittedAt)";
 
             var parameters = new DynamicParameters();
             parameters.Add("@FirstName", student.FirstName);
