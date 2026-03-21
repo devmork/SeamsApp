@@ -20,7 +20,7 @@ public partial class User
     [Column(TypeName = "datetime")]
     public DateTime? UpdatedAt { get; set; }
 
-    public int? StudentId { get; set; }
+    // public int? StudentId { get; set; }
 
     [StringLength(100)]
     public string UserRole { get; set; } = null!;

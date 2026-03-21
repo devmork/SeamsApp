@@ -31,9 +31,12 @@ public partial class Student
     [StringLength(250)]
     public string Email { get; set; } = null!;
 
-    [Column("QRCode")]
-    [StringLength(500)]
-    public string? Qrcode { get; set; }
+    // [Column("QRCode")]
+    // [StringLength(500)]
+    // public string? Qrcode { get; set; }
+
+    [Column(TypeName ="varbinary(max)")]
+    public byte[]? QRCode {get;set;} 
 
     public int Status { get; set; }
 
