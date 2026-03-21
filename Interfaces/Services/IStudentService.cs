@@ -12,6 +12,5 @@ namespace SeamsApp.Interfaces.Services
         Task<int> DeleteStudentByIdAsync(int studentId);
         Task<StudentDTO> GetStudentByIdAsync(int studentId);
         Task<StudentDTO> GetStudentQRCodeAsync(string schoolStudentId);
-
     }
 }
