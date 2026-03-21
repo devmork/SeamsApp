@@ -1,19 +1,34 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using QRCoder;
+using SeamsApp.Data.Repositories;
 using SeamsApp.DTOs.Student;
 using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Interfaces.Services;
+using SeamsApp.Models;
 using SeamsApp.Models.Base;
+using SeamsApp.Utilities;
 
 namespace SeamsApp.Services
 {
     public class StudentService : IStudentService
     {
         private readonly IStudentRepository _studentRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public StudentService(IStudentRepository studentRepository, IMapper mapper)
+        private readonly IPasswordHasher<User> _passwordHasher;
+
+        public StudentService(
+            IStudentRepository studentRepository,
+            IUserRepository userRepository,
+            IMapper mapper,
+            IPasswordHasher<User> passwordHasher)
         {
             _studentRepository = studentRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
+            _passwordHasher = passwordHasher;
+
         }
         public async Task<int> DeleteStudentByIdAsync(int studentId)
         {
@@ -52,6 +67,44 @@ namespace SeamsApp.Services
             var student = _mapper.Map<Student>(createStudentDTO);
             var createdStudent = await _studentRepository.CreateStudentAsync(student);
             return _mapper.Map<CreateStudentDTO>(createdStudent);
+        }
+
+        public async Task<StudentDTO> ApprovedStudentAsync(int studentId)
+        {
+            var student = await _studentRepository.GetStudentByIdAsync(studentId);
+            if (student == null)
+                throw new ArgumentException("Student not found");
+
+            var firstName = student.FirstName ?? "";
+            var middleName = student.MiddleName ?? "";
+            var lastName = student.LastName ?? "";
+            var schoolStudentId = student.SchoolStudentId ?? "";
+
+            student.QRCode = QRCodeUtility.GenerateQRCode(firstName, middleName, lastName, schoolStudentId);
+
+            await _studentRepository.UpdateStudentStatusAsync(studentId, 2, student.QRCode);
+
+            var user = new User
+            {
+                Email = student.Email,
+                UserRole = "Student"
+            };
+
+            user.PasswordHash = _passwordHasher.HashPassword(user, lastName.ToUpper());
+            await _userRepository.CreateUserAsync(user);
+
+            return _mapper.Map<StudentDTO>(student);
+        }
+
+        public async Task<StudentDTO> RejectStudentAsync(int studentId)
+        {
+            var student = await _studentRepository.GetStudentByIdAsync(studentId);
+            if (student == null)
+                throw new ArgumentException("Student not found");
+
+            await _studentRepository.UpdateStudentStatusAsync(studentId, 3, null);
+
+            return _mapper.Map<StudentDTO>(student);
         }
     }
 }
