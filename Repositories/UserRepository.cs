@@ -20,6 +20,34 @@ namespace SeamsApp.Data.Repositories
             _connectionString = configuration.GetConnectionString("DefaultConnection")!;
 
         }
+        public async Task<User> CreateUserAsync(User user)
+        {
+            var sql = @"INSERT INTO Users (
+                            Email, 
+                            PasswordHash,
+                            UserRole,
+                            CreatedAt )
+                        VALUES (
+                            @Email, 
+                            @PasswordHash,
+                            @UserRole,
+                            @CreatedAt);
+                        SELECT CAST(SCOPE_IDENTITY() as int)";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@Email", user.Email);
+            parameters.Add("@UserRole", user.UserRole);
+            parameters.Add("@PasswordHash", user.PasswordHash);
+            parameters.Add("@CreatedAt", user.CreatedAt);
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var userId = await connection.ExecuteScalarAsync<int>(sql, parameters);
+                user.UserId = userId;
+                return user;
+            }
+        }
+
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             var sql = @"SELECT * FROM Users";
