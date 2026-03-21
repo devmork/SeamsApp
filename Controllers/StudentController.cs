@@ -114,5 +114,52 @@ namespace SeamsApp.Controllers
             var student = await _studentService.UpdateStudentByIdAsync(studentUpdateDTO, studentId);
             return Ok(student);
         }
+
+        /// <summary>
+        /// Approve a pending student registration
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <returns></returns>
+        [HttpPut("Approve/{studentId:int}")]
+        [Authorize(Roles = "Admin, Officer")]
+        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ApproveStudent(int studentId)
+        {
+            try
+            {
+                var student = await _studentService.ApprovedStudentAsync(studentId);
+                return Ok(new { Message = "Student approved successfully", Student = student });
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(new { Error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Reject a pending student registration
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <returns></returns>
+        [HttpPut("Reject/{studentId:int}")]
+        [Authorize(Roles = "Admin, Officer")]
+        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> RejectStudent(int studentId)
+        {
+            try
+            {
+                var student = await _studentService.RejectStudentAsync(studentId);
+                return Ok(new { Message = "Student rejected", Student = student });
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(new { Error = ex.Message });
+            }
+        }
+
     }
 }
