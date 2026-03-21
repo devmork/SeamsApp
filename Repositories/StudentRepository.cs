@@ -160,5 +160,25 @@ namespace SeamsApp.Data.Repositories
                 return connection.ExecuteScalarAsync<int>(query, new { StudentId = studentId });
             }
         }
+        public async Task UpdateStudentStatusAsync(int studentId, int status, byte[]? qrCode)
+        {
+            string query = @"UPDATE Students 
+                             SET Status = @Status, 
+                                 QRCode = @QRCode,
+                                 UpdatedAt = @UpdatedAt 
+                             WHERE StudentId = @StudentId";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@StudentId", studentId);
+            parameters.Add("@Status", status);
+            parameters.Add("@QRCode", qrCode);
+            parameters.Add("@UpdatedAt", DateTime.UtcNow);
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                await connection.ExecuteAsync(query, parameters);
+            }
+        }
     }
 }
