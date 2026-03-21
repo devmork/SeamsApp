@@ -12,10 +12,10 @@ public partial class User
     public int UserId { get; set; }
 
     [StringLength(250)]
-    public string? Email { get; set; }
+    public string Email { get; set; } = null!;
 
     [StringLength(250)]
-    public string? PasswordHash { get; set; }
+    public string PasswordHash { get; set; } = null!;
 
     [Column(TypeName = "datetime")]
     public DateTime? UpdatedAt { get; set; }
@@ -23,8 +23,8 @@ public partial class User
     public int? StudentId { get; set; }
 
     [StringLength(100)]
-    public string? UserRole { get; set; }
+    public string UserRole { get; set; } = null!;
 
     [Column(TypeName = "datetime")]
-    public DateTime? AssignedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 }
