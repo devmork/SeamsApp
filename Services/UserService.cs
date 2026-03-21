@@ -24,6 +24,24 @@ namespace SeamsApp.Services
             _mapper = mapper;
             _passwordHasher = passwordHasher;
         }
+        public async Task<CreateAdminDTO> CreateUserAsync(CreateAdminDTO createAdminDTO)
+        {
+            var existingUser = await _userRepository.GetUserByEmailAsync(createAdminDTO.Email);
+            if (existingUser != null)
+            {
+                throw new ArgumentException("User with this email already exists.");
+            }
+
+            // Map DTO to User model
+            var user = _mapper.Map<User>(createAdminDTO);
+            user.UserRole = "Admin";
+
+            // Hash the password
+            user.PasswordHash = _passwordHasher.HashPassword(user, createAdminDTO.PasswordHash);
+
+            var createdUser = await _userRepository.CreateUserAsync(user);
+            return _mapper.Map<CreateAdminDTO>(createdUser);
+        }
         public async Task<LoginResponseDTO> LoginAsync(string email, string password)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
