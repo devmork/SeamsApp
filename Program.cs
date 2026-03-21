@@ -32,6 +32,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPasswordHasher<SeamsApp.Models.User>, PasswordHasher<SeamsApp.Models.User>>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<IFileUploadService,FileUploadService>();
 
 
 builder.Services.AddControllers();
@@ -110,6 +111,7 @@ builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
+app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
