@@ -11,7 +11,6 @@ namespace SeamsApp.Models
     {
         [Key]
         public int UserId { get; set; }
-        public int StudentId { get; set; }
         public string? Email { get; set; }
         public string? PasswordHash { get; set; }
         public string? UserRole { get; set; }
