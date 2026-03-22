@@ -8,6 +8,7 @@ using SeamsApp.Interfaces.Services;
 using SeamsApp.Models;
 using SeamsApp.Models.Base;
 using SeamsApp.Utilities;
+using System.Runtime.Versioning;
 
 namespace SeamsApp.Services
 {
@@ -69,6 +70,7 @@ namespace SeamsApp.Services
             return _mapper.Map<CreateStudentDTO>(createdStudent);
         }
 
+        [SupportedOSPlatform("windows")]
         public async Task<StudentDTO> ApprovedStudentAsync(int studentId)
         {
             var student = await _studentRepository.GetStudentByIdAsync(studentId);
@@ -82,7 +84,7 @@ namespace SeamsApp.Services
 
             student.QRCode = QRCodeUtility.GenerateQRCode(firstName, middleName, lastName, schoolStudentId);
 
-            await _studentRepository.UpdateStudentStatusAsync(studentId, 2, student.QRCode);
+            await _studentRepository.UpdateStudentStatusToApprovedAsync(studentId, 2, student.QRCode);
 
             var user = new User
             {
@@ -102,7 +104,7 @@ namespace SeamsApp.Services
             if (student == null)
                 throw new ArgumentException("Student not found");
 
-            await _studentRepository.UpdateStudentStatusAsync(studentId, 3, null);
+            await _studentRepository.UpdateStudentStatusToRejectAsync(studentId, 3);
 
             return _mapper.Map<StudentDTO>(student);
         }
