@@ -17,6 +17,7 @@ namespace SeamsApp.Interfaces.Repositories
         Task<int> DeleteStudentByIdAsync(int studentId);
         Task<Student> GetStudentByIdAsync(int studentId);
         Task<Student> GetStudentQRCodeAsync(string schoolStudentId);
-        Task UpdateStudentStatusAsync(int studentId, int status, byte[]? qrCode);
+        Task UpdateStudentStatusToApprovedAsync(int studentId, int status, byte[]? qrCode);
+        Task<int> UpdateStudentStatusToRejectAsync(int studentId, int status);
     }
 }
