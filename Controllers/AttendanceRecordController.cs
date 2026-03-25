@@ -52,6 +52,7 @@ namespace SeamsApp.Controllers
         // }
 
         [HttpPost("record-attendance")]
+        [Authorize(Roles = "Officer")]
         public async Task<ActionResult> RecordStudentAttendance([FromBody] CreateAttendanceRecordDTO createAttendanceRecordDTO) 
         {
             await _attendanceRecordService.CreateAttendanceRecordAsync(createAttendanceRecordDTO);
