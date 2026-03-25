@@ -22,6 +22,7 @@ SqlMapper.AddTypeHandler(new TimeOnlyHandler());
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+builder.Services.AddScoped<IAttendanceRecordRepository,AttendanceRecordRepository>();
 
 // REGISTER SERVICES
 
@@ -30,6 +31,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<IAttendanceRecordService,AttendanceRecordService>();
 
 
 builder.Services.AddControllers();
