@@ -10,7 +10,7 @@ namespace SeamsApp.Models
     {
         public int AttendanceRecordID { get; set; }
         public int AttendanceID { get; set; }
-        public int StudentID { get; set; }
+        public string SchoolStudentID { get; set; } = null!;
         public DateTime Timestamp { get; set; } // Used for when attendance was logged
         public int Status { get; set; } // Added usage in service
         // Removed RecordedAt: Not in DB; use Timestamp instead

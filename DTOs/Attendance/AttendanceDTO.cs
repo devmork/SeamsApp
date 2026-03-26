@@ -4,6 +4,7 @@ namespace SeamsApp.DTOs.Attendance
 {
     public class AttendanceDTO
     {
+        public int AttendanceId {get;set;}
          [Required]
 [StringLength(200, MinimumLength = 1)]
 public string? Name { get; set; }
