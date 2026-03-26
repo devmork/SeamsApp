@@ -80,9 +80,10 @@ namespace SeamsApp.Services
             var firstName = student.FirstName ?? "";
             var middleName = student.MiddleName ?? "";
             var lastName = student.LastName ?? "";
+            var suffix = student.Suffix ?? "";
             var schoolStudentId = student.SchoolStudentId ?? "";
 
-            student.QRCode = QRCodeUtility.GenerateQRCode(firstName, middleName, lastName, schoolStudentId);
+            student.QRCode = QRCodeUtility.GenerateQRCode(firstName, middleName, lastName, suffix, schoolStudentId);
 
             await _studentRepository.UpdateStudentStatusToApprovedAsync(studentId, 2, student.QRCode);
 

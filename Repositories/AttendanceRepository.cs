@@ -65,8 +65,20 @@ namespace SeamsApp.Data.Repositories
 
         public async Task<IEnumerable<Attendance>> GetAllAttendance()
         {
-            const string query = @"SELECT * FROM Attendance
-                                   WHERE Status = 1";                   
+            // const string query = @"SELECT * FROM Attendance
+            //                        WHERE Status = 1";       
+            const string query = @"
+                 SELECT * FROM Attendance
+        WHERE Status = 1 
+          AND (
+              Date > CONVERT(DATE, GETDATE())
+              OR (
+                  Date = CONVERT(DATE, GETDATE())
+                  AND CONVERT(TIME, EndTime) > CONVERT(TIME, GETDATE())
+              )
+          )
+        ORDER BY Date DESC, StartTime DESC
+            ";           
 
             using (var connection = new SqlConnection(_connectionString))
             {
