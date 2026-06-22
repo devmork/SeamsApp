@@ -1,13 +1,15 @@
 using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SeamsApp.Data.Repositories;
-using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Data;
+using SeamsApp.Data.Seeders;
+using SeamsApp.Interfaces.Repositories.Queries;
 using SeamsApp.Interfaces.Services;
 using SeamsApp.Models;
-using SeamsApp.Repositories;
+using SeamsApp.Repositories.Queries;
 using SeamsApp.Services;
 using SeamsApp.Utilities;
 using System.Text;
@@ -104,9 +106,20 @@ builder.Services.AddAutoMapper(option =>
 {
     option.AddProfile<AutoMapperProfiles>();
 });
+
+builder.Services.AddDbContext<SeamsDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    AdminSeeder.SeedAdmin(services);
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();

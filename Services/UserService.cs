@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using SeamsApp.DTOs.Auth;
 using SeamsApp.DTOs.Student;
-using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Interfaces.Repositories.Queries;
 using SeamsApp.Interfaces.Services;
 using SeamsApp.Models;
 

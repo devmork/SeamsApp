@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
-using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Interfaces.Repositories.Queries;
 using SeamsApp.Models;
 using SeamsApp.Models.Base;
 using System;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Dapper.SqlMapper;
 
-namespace SeamsApp.Data.Repositories
+namespace SeamsApp.Repositories.Queries
 {
     public class UserRepository : IUserRepository
     {
