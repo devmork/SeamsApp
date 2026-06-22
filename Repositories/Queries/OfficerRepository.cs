@@ -2,10 +2,10 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using SeamsApp.DTOs.Officer;
-using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Interfaces.Repositories.Queries;
 using SeamsApp.Models.Base;
 
-namespace SeamsApp.Repositories
+namespace SeamsApp.Repositories.Queries
 {
     public class OfficerRepository : IOfficerRepository
     {

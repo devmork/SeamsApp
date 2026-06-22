@@ -22,6 +22,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Interfaces\Repositories\Commands\" />
+		<Folder Include="Repositories\Commands\" />
 		<Folder Include="Validations\" />
 	</ItemGroup>
 

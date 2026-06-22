@@ -2,7 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using SeamsApp.DTOs.Attendance;
-using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Interfaces.Repositories.Queries;
 using SeamsApp.Models;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SeamsApp.Repositories
+namespace SeamsApp.Repositories.Queries
 {
     public class AttendanceRecordRepository : IAttendanceRecordRepository
     {
