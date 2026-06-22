@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SeamsApp.Data;
+using SeamsApp.Data.Seeders;
 using SeamsApp.Interfaces.Repositories.Queries;
 using SeamsApp.Interfaces.Services;
 using SeamsApp.Models;
@@ -113,6 +114,12 @@ builder.Services.AddDbContext<SeamsDbContext>(options =>
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    AdminSeeder.SeedAdmin(services);
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();
