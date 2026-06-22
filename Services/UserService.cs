@@ -34,7 +34,7 @@ namespace SeamsApp.Services
 
             // Map DTO to User model
             var user = _mapper.Map<User>(createAdminDTO);
-            user.UserRole = "Admin";
+            user.Role = "Admin";
 
             // Hash the password
             user.PasswordHash = _passwordHasher.HashPassword(user, createAdminDTO.PasswordHash);

@@ -24,9 +24,9 @@ namespace SeamsApp.Services
                 new(ClaimTypes.Email, user.Email ?? "")
             };
 
-            if (!string.IsNullOrEmpty(user.UserRole))
+            if (!string.IsNullOrEmpty(user.Role))
             {
-                claims.Add(new Claim(ClaimTypes.Role, user.UserRole));
+                claims.Add(new Claim(ClaimTypes.Role, user.Role));
             }
 
 

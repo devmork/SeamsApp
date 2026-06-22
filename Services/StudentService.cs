@@ -89,7 +89,7 @@ namespace SeamsApp.Services
             var user = new User
             {
                 Email = student.Email,
-                UserRole = "Student"
+                Role = "Student"
             };
 
             user.PasswordHash = _passwordHasher.HashPassword(user, lastName.ToUpper());

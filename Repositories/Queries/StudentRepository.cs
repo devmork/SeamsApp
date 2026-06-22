@@ -80,8 +80,6 @@ namespace SeamsApp.Repositories.Queries
             parameters.Add("@YearLevel", student.YearLevel);
             parameters.Add("@Course", student.Course);
             parameters.Add("@PhotoUrl", student.PhotoUrl);
-            parameters.Add("@Status", student.Status);
-            parameters.Add("@SubmittedAt", student.SubmmittedAt);
 
             using (var connection = new SqlConnection(_connectionString))
             {
