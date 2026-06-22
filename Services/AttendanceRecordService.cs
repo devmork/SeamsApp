@@ -1,6 +1,6 @@
 using AutoMapper;
 using SeamsApp.DTOs.Attendance;
-using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Interfaces.Repositories.Queries;
 using SeamsApp.Interfaces.Services;
 using SeamsApp.Models;
 using System;
