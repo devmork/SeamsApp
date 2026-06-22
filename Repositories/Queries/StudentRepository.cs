@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Interfaces.Repositories.Queries;
 using SeamsApp.Models.Base;
 
-namespace SeamsApp.Data.Repositories
+namespace SeamsApp.Repositories.Queries
 {
     public class StudentRepository : IStudentRepository
     {

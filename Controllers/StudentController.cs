@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
-using SeamsApp.Data.Repositories;
 using SeamsApp.DTOs.Student;
 using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Interfaces.Services;

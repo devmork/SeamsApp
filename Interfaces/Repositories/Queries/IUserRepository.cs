@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SeamsApp.Interfaces.Repositories
+namespace SeamsApp.Interfaces.Repositories.Queries
 {
     public interface IUserRepository
     {
