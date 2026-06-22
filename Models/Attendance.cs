@@ -10,9 +10,8 @@ namespace SeamsApp.Models.Base
     public class Attendance
     {
         public int AttendanceId { get; set; }
-        [Required]
-        public string? Name { get; set; }
-        public string? Note { get; set; }
+        public int EventId { get; set; }
+        public string? Title { get; set; }
         public DateTime Date { get; set; }
         public string? LogType { get; set; }  
         public int Semester { get; set; }
