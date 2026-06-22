@@ -9,6 +9,7 @@ namespace SeamsApp.Models.Base
 {
     public class Attendance
     {
+        [Key]
         public int AttendanceId { get; set; }
         public int EventId { get; set; }
         public string? Title { get; set; }

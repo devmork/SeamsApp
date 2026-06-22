@@ -9,6 +9,7 @@ namespace SeamsApp.Models.Base
 {
     public class Student
     {
+        [Key]
         public int StudentId { get; set; }
         public int UserId { get; set; }
         // PERSONAL INFORMATION

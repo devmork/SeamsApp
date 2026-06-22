@@ -1,7 +1,10 @@
-﻿namespace SeamsApp.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SeamsApp.Models
 {
     public class StudentApplication
     {
+        [Key]
         public int ApplicationId { get; set; }
         public string? FirstName { get; set; }
         public string? MiddleName { get; set; }
