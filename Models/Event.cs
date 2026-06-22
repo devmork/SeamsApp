@@ -1,7 +1,10 @@
-﻿namespace SeamsApp.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SeamsApp.Models
 {
     public class Event
     {
+        [Key]
         public int EventId { get; set; }
         public string? Title { get; set; }
         public string? LogType { get; set; }
