@@ -36,7 +36,7 @@ namespace SeamsApp.Repositories.Queries
 
             var parameters = new DynamicParameters();
             parameters.Add("@Email", user.Email);
-            parameters.Add("@UserRole", user.UserRole);
+            parameters.Add("@UserRole", user.Role);
             parameters.Add("@PasswordHash", user.PasswordHash);
             parameters.Add("@CreatedAt", user.CreatedAt);
 

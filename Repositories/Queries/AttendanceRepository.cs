@@ -47,8 +47,7 @@ namespace SeamsApp.Repositories.Queries
                                         @CreatedAt)";
 
             var parameters = new DynamicParameters();
-            parameters.Add("Name", attendance.Name);
-            parameters.Add("Note", attendance.Note);
+            parameters.Add("Name", attendance.Title);
             parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
             parameters.Add("LogType", attendance.LogType);
             parameters.Add("Semester", attendance.Semester);
@@ -125,8 +124,7 @@ namespace SeamsApp.Repositories.Queries
 
             var parameters = new DynamicParameters();
             parameters.Add("AttendanceId", attendance.AttendanceId);
-            parameters.Add("Name", attendance.Name);
-            parameters.Add("Note", attendance.Note);
+            parameters.Add("Name", attendance.Title);
             parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
             parameters.Add("LogType", attendance.LogType);
             parameters.Add("Semester", attendance.Semester);
