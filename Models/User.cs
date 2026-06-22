@@ -13,8 +13,8 @@ namespace SeamsApp.Models
         public int UserId { get; set; }
         public string? Email { get; set; }
         public string? PasswordHash { get; set; }
-        public string? UserRole { get; set; }
-
+        public string? Role { get; set; }
+        public int IsActive { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
