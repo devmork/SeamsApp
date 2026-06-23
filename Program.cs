@@ -34,6 +34,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IAttendanceRecordService,AttendanceRecordService>();
+builder.Services.AddScoped<IStudentApplicationService, StudentApplicationService>();
 
 
 builder.Services.AddControllers();
