@@ -2,6 +2,7 @@
 using SeamsApp.DTOs.Attendance;
 using SeamsApp.DTOs.Auth;
 using SeamsApp.DTOs.Student;
+using SeamsApp.DTOs.StudentApplication;
 using SeamsApp.Models;
 using SeamsApp.Models.Base;
 
@@ -29,6 +30,9 @@ namespace SeamsApp.Utilities
             CreateMap<Attendance, UpdateAttendanceDTO>();
             CreateMap<Attendance, UpdateAttendanceDTO>().ReverseMap();
             CreateMap<AttendanceRecord, CreateAttendanceRecordDTO>().ReverseMap();
+
+            // Student Application
+            CreateMap<StudentApplication, CreateStudentApplicationRequest>().ReverseMap();
 
         }
     }
