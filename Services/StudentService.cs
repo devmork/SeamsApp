@@ -88,7 +88,7 @@ namespace SeamsApp.Services
 
             var user = new User
             {
-                Email = student.Email,
+                //Email = student.Email,
                 Role = "Student"
             };
 
