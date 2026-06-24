@@ -33,6 +33,7 @@ namespace SeamsApp.Utilities
 
             // Student Application
             CreateMap<StudentApplication, CreateStudentApplicationRequest>().ReverseMap();
+            CreateMap<StudentApplication, StudentApplicationResponse>().ReverseMap();
 
         }
     }
