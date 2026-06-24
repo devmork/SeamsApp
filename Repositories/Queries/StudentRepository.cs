@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using SeamsApp.Interfaces.Repositories.Queries;
+using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Models.Base;
 
 namespace SeamsApp.Repositories.Queries
@@ -74,7 +74,7 @@ namespace SeamsApp.Repositories.Queries
             parameters.Add("@MiddleName", student.MiddleName);
             parameters.Add("@LastName", student.LastName);
             parameters.Add("@Suffix", student.Suffix);
-            //parameters.Add("@Email", student.Email);
+            parameters.Add("@Email", student.Email);
 
             parameters.Add("@SchoolStudentId", student.SchoolStudentId);
             parameters.Add("@YearLevel", student.YearLevel);
@@ -110,7 +110,7 @@ namespace SeamsApp.Repositories.Queries
             parameters.Add("@SchoolStudentId", student.SchoolStudentId);
             parameters.Add("@Course", student.Course);
             parameters.Add("@YearLevel", student.YearLevel);
-            //parameters.Add("@Email", student.Email);
+            parameters.Add("@Email", student.Email);
             parameters.Add("@QRCode", student.QRCode);
             parameters.Add("@UpdatedAt", student.UpdatedAt);
 
