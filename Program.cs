@@ -10,6 +10,7 @@ using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Interfaces.Services.Queries;
 using SeamsApp.Models;
 using SeamsApp.Repositories.Queries;
+using SeamsApp.Seeders;
 using SeamsApp.Services.Commands;
 using SeamsApp.Services.Queries;
 using SeamsApp.Utilities;
