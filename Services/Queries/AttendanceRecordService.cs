@@ -1,11 +1,11 @@
 using AutoMapper;
 using SeamsApp.DTOs.Attendance;
 using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services;
+using SeamsApp.Interfaces.Services.Queries;
 using SeamsApp.Models;
 using System;
 
-namespace SeamsApp.Services
+namespace SeamsApp.Services.Queries
 {
     public class AttendanceRecordService : IAttendanceRecordService
     {

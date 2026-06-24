@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SeamsApp.Data;
-using SeamsApp.Data.Seeders;
 using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services;
+using SeamsApp.Interfaces.Services.Commands;
+using SeamsApp.Interfaces.Services.Queries;
 using SeamsApp.Models;
 using SeamsApp.Repositories.Queries;
-using SeamsApp.Services;
+using SeamsApp.Services.Commands;
+using SeamsApp.Services.Queries;
 using SeamsApp.Utilities;
 using System.Text;
 

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using SeamsApp.DTOs.Student;
 using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services;
+using SeamsApp.Interfaces.Services.Queries;
 using SeamsApp.Models.Base;
 using System.Threading.Tasks;
 

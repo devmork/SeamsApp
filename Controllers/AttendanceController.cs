@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SeamsApp.DTOs.Attendance;
-using SeamsApp.Interfaces.Services;
+using SeamsApp.Interfaces.Services.Queries;
 
 namespace SeamsApp.Controllers
 {

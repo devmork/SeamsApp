@@ -29,7 +29,6 @@
 
 	<ItemGroup>
 		<Folder Include="Migrations\" />
-		<Folder Include="Repositories\Commands\" />
 		<Folder Include="Validations\" />
 	</ItemGroup>
 

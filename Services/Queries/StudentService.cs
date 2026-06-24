@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Identity;
 using QRCoder;
 using SeamsApp.DTOs.Student;
 using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services;
+using SeamsApp.Interfaces.Services.Queries;
 using SeamsApp.Models;
 using SeamsApp.Models.Base;
 using SeamsApp.Utilities;
 using System.Runtime.Versioning;
 
-namespace SeamsApp.Services
+namespace SeamsApp.Services.Queries
 {
     public class StudentService : IStudentService
     {

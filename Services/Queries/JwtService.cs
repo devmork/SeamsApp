@@ -1,12 +1,12 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services;
+using SeamsApp.Interfaces.Services.Queries;
 using SeamsApp.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace SeamsApp.Services
+namespace SeamsApp.Services.Queries
 {
     public class JwtService : IJwtService
     {

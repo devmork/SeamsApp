@@ -1,7 +1,7 @@
 ﻿using SeamsApp.DTOs.Attendance;
 using SeamsApp.Models.Base;
 
-namespace SeamsApp.Interfaces.Services
+namespace SeamsApp.Interfaces.Services.Queries
 {
     public interface IAttendanceService
     {
