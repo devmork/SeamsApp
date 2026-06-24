@@ -34,6 +34,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IAttendanceRecordService,AttendanceRecordService>();
+builder.Services.AddScoped<IStudentApplicationService, StudentApplicationService>();
 
 
 builder.Services.AddControllers();
@@ -112,6 +113,7 @@ builder.Services.AddDbContext<SeamsDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddProblemDetails();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
