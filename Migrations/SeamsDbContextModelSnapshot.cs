@@ -120,9 +120,6 @@ namespace SeamsApp.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
@@ -150,8 +147,8 @@ namespace SeamsApp.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("YearLevel")
-                        .HasColumnType("int");
+                    b.Property<string>("YearLevel")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StudentId");
 
