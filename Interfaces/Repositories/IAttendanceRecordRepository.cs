@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SeamsApp.Interfaces.Repositories.Queries
+namespace SeamsApp.Interfaces.Repositories
 {
     public interface IAttendanceRecordRepository
     {

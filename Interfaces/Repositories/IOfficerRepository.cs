@@ -1,7 +1,7 @@
 ﻿using SeamsApp.DTOs.Officer;
 using SeamsApp.Models.Base;
 
-namespace SeamsApp.Interfaces.Repositories.Queries
+namespace SeamsApp.Interfaces.Repositories
 {
     public interface IOfficerRepository
     {

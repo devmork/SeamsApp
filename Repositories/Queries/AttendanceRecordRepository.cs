@@ -2,7 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using SeamsApp.DTOs.Attendance;
-using SeamsApp.Interfaces.Repositories.Queries;
+using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Models;
 using System;
 using System.Collections.Generic;

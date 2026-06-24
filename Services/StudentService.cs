@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using QRCoder;
 using SeamsApp.DTOs.Student;
-using SeamsApp.Interfaces.Repositories.Queries;
+using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Interfaces.Services;
 using SeamsApp.Models;
 using SeamsApp.Models.Base;
@@ -88,7 +88,7 @@ namespace SeamsApp.Services
 
             var user = new User
             {
-                //Email = student.Email,
+                Email = student.Email,
                 Role = "Student"
             };
 

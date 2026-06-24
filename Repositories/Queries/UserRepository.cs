@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
-using SeamsApp.Interfaces.Repositories.Queries;
+using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Models;
 using SeamsApp.Models.Base;
 using System;
