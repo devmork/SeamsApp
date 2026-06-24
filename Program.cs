@@ -113,6 +113,7 @@ builder.Services.AddDbContext<SeamsDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddProblemDetails();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
