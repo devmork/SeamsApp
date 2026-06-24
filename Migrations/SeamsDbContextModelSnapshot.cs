@@ -172,14 +172,8 @@ namespace SeamsApp.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<TimeOnly>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("LogType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeOnly?>("StartTime")
-                        .HasColumnType("time");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
