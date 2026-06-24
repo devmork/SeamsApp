@@ -6,10 +6,11 @@ namespace SeamsApp.Interfaces.Services
     {
         Task<CreateStudentApplicationRequest> CreateStudentApplication(CreateStudentApplicationRequest createStudentApplicationRequest);
         Task<int> ApproveStundetApplication(int studentApplicationId);
-        Task<int> RejectStundetApplication(int studentApplicationId);      
+        Task<int> RejectStudentApplication(int studentApplicationId);      
         Task<IEnumerable<StudentApplicationResponse>> GetAllStudentApplicationsAsync();
         Task<IEnumerable<StudentApplicationResponse>> GetAllPendingStudentApplicationsAsync();
-        Task<IEnumerable<StudentApplicationResponse>> GetAllApproveStudentApplicationsAsync();
+        Task<IEnumerable<StudentApplicationResponse>> GetAllRejectedStudentApplicationsAsync();
+        Task<IEnumerable<StudentApplicationResponse>> GetAllApprovedStudentApplicationsAsync();
         
     }
 }
