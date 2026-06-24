@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using SeamsApp.DTOs.Auth;
 using SeamsApp.DTOs.Student;
 using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services;
+using SeamsApp.Interfaces.Services.Queries;
 using SeamsApp.Models;
 
-namespace SeamsApp.Services
+namespace SeamsApp.Services.Queries
 {
     public class UserService : IUserService
     {

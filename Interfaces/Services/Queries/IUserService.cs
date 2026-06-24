@@ -1,7 +1,7 @@
 ﻿using SeamsApp.DTOs.Auth;
 using SeamsApp.DTOs.Student;
 
-namespace SeamsApp.Interfaces.Services
+namespace SeamsApp.Interfaces.Services.Queries
 {
     public interface IUserService
     {

@@ -1,6 +1,6 @@
 ﻿using SeamsApp.DTOs.StudentApplication;
 
-namespace SeamsApp.Interfaces.Services
+namespace SeamsApp.Interfaces.Services.Commands
 {
     public interface IStudentApplicationService
     {

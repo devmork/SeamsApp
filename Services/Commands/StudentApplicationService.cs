@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using QRCoder;
 using SeamsApp.Data;
 using SeamsApp.DTOs.StudentApplication;
-using SeamsApp.Interfaces.Services;
+using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Models;
 using SeamsApp.Models.Base;
 using SeamsApp.Utilities;
 
-namespace SeamsApp.Services
+namespace SeamsApp.Services.Commands
 {
     public class StudentApplicationService : IStudentApplicationService
     {

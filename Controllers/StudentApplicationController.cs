@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SeamsApp.DTOs.Student;
 using SeamsApp.DTOs.StudentApplication;
-using SeamsApp.Interfaces.Services;
+using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Models;
 
 namespace SeamsApp.Controllers

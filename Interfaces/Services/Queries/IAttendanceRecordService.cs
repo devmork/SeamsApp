@@ -1,6 +1,6 @@
 using SeamsApp.DTOs.Attendance;
 
-namespace SeamsApp.Interfaces.Services
+namespace SeamsApp.Interfaces.Services.Queries
 {
     public interface IAttendanceRecordService
     {
