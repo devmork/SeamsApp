@@ -1,4 +1,5 @@
 using SeamsApp.DTOs.Attendance;
+using SeamsApp.DTOs.AttendanceRecords;
 
 namespace SeamsApp.Interfaces.Services.Queries
 {

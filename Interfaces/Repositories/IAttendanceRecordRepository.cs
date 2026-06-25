@@ -1,4 +1,4 @@
-﻿using SeamsApp.DTOs.Attendance;
+﻿using SeamsApp.DTOs.AttendanceRecords;
 using SeamsApp.Models;
 using System;
 using System.Collections.Generic;

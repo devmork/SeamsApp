@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using SeamsApp.DTOs.Attendance;
+using SeamsApp.DTOs.AttendanceRecords;
 using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Models;
 using System;
