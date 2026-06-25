@@ -31,6 +31,9 @@ namespace SeamsApp.Utilities
             CreateMap<Attendance, UpdateAttendanceDTO>().ReverseMap();
             CreateMap<AttendanceRecord, CreateAttendanceRecordDTO>().ReverseMap();
 
+            CreateMap<Attendance, AttendanceResponse>().ReverseMap();
+            CreateMap<Attendance, AttendanceRequest>().ReverseMap();
+
             // STUDENT APPLICATION
             CreateMap<StudentApplication, CreateStudentApplicationRequest>().ReverseMap();
             CreateMap<StudentApplication, StudentApplicationResponse>().ReverseMap();
