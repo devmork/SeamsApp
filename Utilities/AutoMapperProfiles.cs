@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SeamsApp.DTOs.Attendance;
 using SeamsApp.DTOs.Auth;
+using SeamsApp.DTOs.Event;
 using SeamsApp.DTOs.Student;
 using SeamsApp.DTOs.StudentApplication;
 using SeamsApp.Models;
@@ -17,12 +18,11 @@ namespace SeamsApp.Utilities
             CreateMap<StudentUpdateDTO, Student>().ReverseMap();
             CreateMap<Student, CreateStudentDTO>().ReverseMap();
 
-
-            // Auth
+            // AUTH
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, CreateAdminDTO>().ReverseMap();
 
-            //Attendance
+            // ATTENDANCE
             CreateMap<Attendance, AttendanceDTO>();
             CreateMap<Attendance, AttendanceDTO>().ReverseMap();
             CreateMap<Attendance, CreateAttendanceDTO>();
@@ -31,9 +31,13 @@ namespace SeamsApp.Utilities
             CreateMap<Attendance, UpdateAttendanceDTO>().ReverseMap();
             CreateMap<AttendanceRecord, CreateAttendanceRecordDTO>().ReverseMap();
 
-            // Student Application
+            // STUDENT APPLICATION
             CreateMap<StudentApplication, CreateStudentApplicationRequest>().ReverseMap();
             CreateMap<StudentApplication, StudentApplicationResponse>().ReverseMap();
+
+            // EVENT
+            CreateMap<Event, EventRequest>().ReverseMap();
+            CreateMap<Event, EventResponse>().ReverseMap();
 
         }
     }
