@@ -17,7 +17,7 @@ namespace SeamsApp.Controllers
             _eventService = eventService;
         }
 
-        [HttpGet("all-events")]
+        [HttpGet]
         [OutputCache]
         [Authorize(Roles ="Admin, Officer, Student")]
         [ProducesResponseType(typeof(EventRequest), StatusCodes.Status200OK)]
