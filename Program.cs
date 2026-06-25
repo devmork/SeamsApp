@@ -30,14 +30,14 @@ builder.Services.AddScoped<IAttendanceRecordRepository,AttendanceRecordRepositor
 
 // REGISTER SERVICES
 
-builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IAttendaceService, AttendanceService>();
 builder.Services.AddScoped<IAttendanceRecordService,AttendanceRecordService>();
 builder.Services.AddScoped<IStudentApplicationService, StudentApplicationService>();
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 
 builder.Services.AddControllers();
