@@ -89,9 +89,6 @@ namespace SeamsApp.Migrations
                     b.Property<string>("LogType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Semester")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
