@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SeamsApp.DTOs.Attendance;
-using SeamsApp.Interfaces.Services.Queries;
+using SeamsApp.DTOs.Event;
+using SeamsApp.Interfaces.Services.Commands;
 
 namespace SeamsApp.Controllers
 {
@@ -10,40 +11,36 @@ namespace SeamsApp.Controllers
     [Authorize]
     public class AttendanceController : ControllerBase
     {
-        private readonly IAttendanceService _attendanceService;
+        private readonly IAttendaceService _attendanceService;
 
-        public AttendanceController(IAttendanceService attendanceService)
+        public AttendanceController(IAttendaceService attendanceService)
         {
             _attendanceService = attendanceService;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         [Authorize(Roles = "Admin, Officer, Student")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<AttendanceDTO>), 200)]
-        [ProducesResponseType(500)]
-        public async Task<ActionResult<List<AttendanceDTO>>> GetAllAttendance()
+        [ProducesResponseType(typeof(AttendanceResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<AttendanceResponse>>> GetAllAttendance()
         {
-            var attendanceList = await _attendanceService.GetAllAttendanceAsync();
-            return Ok(attendanceList);
+            var attendances = await _attendanceService.GetAllAttendanceAsync();
+            if (attendances == null)
+            {
+                return NotFound();
+            }
+            return Ok(attendances);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [Authorize(Roles = "Admin, Officer")]
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(AttendanceDTO), 200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
-        public async Task<ActionResult<AttendanceDTO>> GetAttendanceById(int id)
+        [HttpGet("{attendanceId:int}")]
+        [ProducesResponseType(typeof(AttendanceResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AttendanceResponse>> GetAttendanceById(int attendanceId)
         {
-            var attendance = await _attendanceService.GetAttendanceByIdAsync(id);
+            var attendance = await _attendanceService.GetAttendanceByIdAsync(attendanceId);
             if (attendance == null)
             {
                 return NotFound();
@@ -51,68 +48,52 @@ namespace SeamsApp.Controllers
             return Ok(attendance);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="createAttendanceDTO"></param>
-        /// <returns></returns>
         [Authorize(Roles = "Admin")]
-        [HttpPost("create-attendance")]
+        [HttpPost("{eventId:int}/attendances")]
         [ProducesResponseType(typeof(int), 201)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(500)]
-        public async Task<ActionResult<int>> CreateAttendance([FromBody] CreateAttendanceDTO createAttendanceDTO)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AttendanceRequest>> CreateAttendance(int eventId, [FromBody] AttendanceRequest attendanceRequest)
         {
-            try
+            var newAttendance = await _attendanceService.CreateAttendanceAsync(eventId, attendanceRequest);
+            if (newAttendance == null)
             {
-                var newId = await _attendanceService.CreateAttendanceAsync(createAttendanceDTO);
-                return Ok(newId);
+                return BadRequest();
             }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { Error = ex.Message });
-            }
+
+            return Ok(newAttendance);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="updateAttendanceDTO"></param>
-        /// <returns></returns>
         [Authorize(Roles = "Admin")]
-        [HttpPut("{id}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
-        public async Task<ActionResult> UpdateAttendance(int id, [FromBody] UpdateAttendanceDTO updateAttendanceDTO)
+        [HttpPut("{attendanceId:int}")]
+        [ProducesResponseType(typeof(AttendanceRequest), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AttendanceRequest>> UpdateAttendance(int attendanceId, [FromBody] AttendanceRequest attendanceRequest)
         {
-            var success = await _attendanceService.UpdateAttendanceAsync(id, updateAttendanceDTO);
-            if (!success)
+            var attendance = await _attendanceService.UpdateAttendanceAsync(attendanceId, attendanceRequest);
+            if (attendance == null)
             {
                 return NotFound();
             }
-            return NoContent();
+
+            return Ok(attendance);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [Authorize(Roles = "Admin")]
-        [HttpDelete("{id}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
-        public async Task<ActionResult> DeleteAttendance(int id)
+        [HttpDelete("{attendanceId:int}")]
+        [ProducesResponseType(typeof(AttendanceResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AttendanceResponse>> DeleteAttendance(int attendanceId)
         {
-            var success = await _attendanceService.DeleteAttendanceAsync(id);
-            if (!success)
+            var attendance = await _attendanceService.DeleteAttendanceAsync(attendanceId);
+            if (attendance == null)
             {
                 return NotFound();
             }
-            return NoContent();
-        }        
+
+            return Ok(attendance);
+        }
     }
 }
