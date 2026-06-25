@@ -5,12 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SeamsApp.Data;
-using SeamsApp.Interfaces.Repositories.Queries;
-using SeamsApp.Interfaces.Services;
+using SeamsApp.Interfaces.Repositories;
+using SeamsApp.Interfaces.Services.Commands;
+using SeamsApp.Interfaces.Services.Queries;
 using SeamsApp.Models;
 using SeamsApp.Repositories.Queries;
 using SeamsApp.Seeders;
-using SeamsApp.Services;
+using SeamsApp.Services.Commands;
+using SeamsApp.Services.Queries;
 using SeamsApp.Utilities;
 using System.Text;
 
@@ -23,18 +25,19 @@ SqlMapper.AddTypeHandler(new TimeOnlyHandler());
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();  
 builder.Services.AddScoped<IAttendanceRecordRepository,AttendanceRecordRepository>();
 
 // REGISTER SERVICES
 
-builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IAttendaceService, AttendanceService>();
 builder.Services.AddScoped<IAttendanceRecordService,AttendanceRecordService>();
 builder.Services.AddScoped<IStudentApplicationService, StudentApplicationService>();
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 
 builder.Services.AddControllers();
