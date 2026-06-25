@@ -77,7 +77,13 @@ namespace SeamsApp.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EndTime")
@@ -89,8 +95,8 @@ namespace SeamsApp.Migrations
                     b.Property<string>("LogType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Semester")
-                        .HasColumnType("int");
+                    b.Property<string>("Session")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -172,14 +178,14 @@ namespace SeamsApp.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<TimeOnly>("EndTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("LogType")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<TimeOnly?>("StartTime")
-                        .HasColumnType("time");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
