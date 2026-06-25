@@ -50,7 +50,7 @@ namespace SeamsApp.Repositories.Queries
             parameters.Add("Name", attendance.Title);
             parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
             parameters.Add("LogType", attendance.LogType);
-            parameters.Add("Semester", attendance.Semester);
+            //parameters.Add("Semester", attendance.Semester);
             parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm")); 
             parameters.Add("EndTime", attendance.EndTime.ToString("HH:mm"));
             parameters.Add("Status", attendance.Status);
@@ -127,7 +127,7 @@ namespace SeamsApp.Repositories.Queries
             parameters.Add("Name", attendance.Title);
             parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
             parameters.Add("LogType", attendance.LogType);
-            parameters.Add("Semester", attendance.Semester);
+            //parameters.Add("Semester", attendance.Semester);
             parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm"));
             parameters.Add("EndTime", attendance.EndTime.ToString("HH:mm"));
             parameters.Add("UpdatedAt", attendance.UpdatedAt);
