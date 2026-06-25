@@ -14,13 +14,16 @@ namespace SeamsApp.Models.Base
         public int EventId { get; set; }
         public string? Title { get; set; }
         public DateTime Date { get; set; }
+        public string? Session { get; set; }
         public string? LogType { get; set; }  
         [Required]
         public DateTime StartTime { get; set; }
         [Required]
         public DateTime EndTime { get; set; }
         public int Status { get; set; }
+        public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime DeletedAt { get; set; } = DateTime.UtcNow;
     }
 }
