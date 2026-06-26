@@ -1,0 +1,71 @@
+﻿using AutoMapper;
+using SeamsApp.Data;
+using SeamsApp.DTOs.AttendanceRecords;
+using SeamsApp.DTOs.Officer;
+using SeamsApp.Interfaces.Services.Commands;
+using SeamsApp.Models;
+using SeamsApp.Utilities;
+
+namespace SeamsApp.Services.Commands
+{
+    public class OfficerService : IOfficerService
+    {
+        private readonly SeamsDbContext _dbContext;
+        private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public OfficerService(SeamsDbContext dbContext,
+                              IMapper mapper,
+                              IHttpContextAccessor httpContextAccessor)
+        {
+            _dbContext = dbContext; 
+            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
+        }
+        public async Task<int> CreateOfficerAsync(int userId, OfficerRequest officerRequest)
+        {
+            var adminId = ClaimsUtility.GetUserIdFromClaims(_httpContextAccessor.HttpContext!);
+
+            var user = await _dbContext.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return 0;
+            }
+
+            user.Role = "Officer";
+            _dbContext.Users.Update(user);
+
+            var newOfficer = _mapper.Map<Officer>(officerRequest);
+            newOfficer.UserId = user.UserId;
+            newOfficer.AddedBy = adminId;
+            await _dbContext.AddAsync(newOfficer);
+            await _dbContext.SaveChangesAsync();
+
+            return newOfficer.OfficerId;
+
+        }
+        public async Task<int> RemoveOfficerAsync(int userId)
+        {
+            var user = await _dbContext.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return 0;
+            }
+
+            user.Role = "Student";
+            _dbContext.Users.Update(user);
+
+            var officer = _dbContext.Officers.FirstOrDefault(o => o.UserId == userId);
+            if (officer == null)
+            {
+                return 0;
+            }
+
+            _dbContext.Officers.Remove(officer);
+            await _dbContext.SaveChangesAsync();
+
+            return officer.OfficerId;
+
+        }
+    }
+}
