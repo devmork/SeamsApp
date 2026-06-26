@@ -12,7 +12,7 @@ namespace SeamsApp.Interfaces.Repositories
     {
         Task<int> RecordStudentAttendance(AttendanceRecord attendanceRecord);
         Task<bool> CheckDuplicateAttendance(int attendanceID, string schoolStudentID);
-        Task<List<AttendanceRecordDTO>> GetListOfAttendanceRecordByAttendanceEventName(
+        Task<List<AttendanceRecordResponse>> GetListOfAttendanceRecordByAttendanceEventName(
             string attendanceEventName,
             string logType,
             int semester,
