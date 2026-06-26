@@ -11,9 +11,9 @@ namespace SeamsApp.Controllers
     [Authorize]
     public class AttendanceController : ControllerBase
     {
-        private readonly IAttendaceService _attendanceService;
+        private readonly IAttendanceService _attendanceService;
 
-        public AttendanceController(IAttendaceService attendanceService)
+        public AttendanceController(IAttendanceService attendanceService)
         {
             _attendanceService = attendanceService;
         }

@@ -8,7 +8,7 @@ using SeamsApp.Utilities;
 
 namespace SeamsApp.Services.Commands
 {
-    public class AttendanceService : IAttendaceService
+    public class AttendanceService : IAttendanceService
     {
         private readonly SeamsDbContext _dbContext;
         private readonly IMapper _mapper;

@@ -75,7 +75,7 @@ namespace SeamsApp.Repositories.Queries
             }
         }
 
-        public async Task<List<AttendanceRecordDTO>> GetListOfAttendanceRecordByAttendanceEventName(
+        public async Task<List<AttendanceRecordResponse>> GetListOfAttendanceRecordByAttendanceEventName(
             string attendanceEventName,
             string logType,
             int semester,
@@ -111,7 +111,7 @@ namespace SeamsApp.Repositories.Queries
 
             using(var connection = new SqlConnection(_connectionString))
             {
-                var attendanceRecords = await connection.QueryAsync<AttendanceRecordDTO>(sql, parameters);
+                var attendanceRecords = await connection.QueryAsync<AttendanceRecordResponse>(sql, parameters);
                 return attendanceRecords.ToList();
             }
         }
