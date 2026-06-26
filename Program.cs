@@ -18,8 +18,6 @@ using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
-SqlMapper.AddTypeHandler(new DateOnlyHandler());
-SqlMapper.AddTypeHandler(new TimeOnlyHandler());
 
 // REGISTER REPOSITORIES
 
@@ -32,7 +30,7 @@ builder.Services.AddScoped<IAttendanceRecordRepository,AttendanceRecordRepositor
 
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
-builder.Services.AddScoped<IAttendaceService, AttendanceService>();
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IOfficerService, OfficerService>();
 builder.Services.AddScoped<IAttendanceRecordService,AttendanceRecordService>();
 builder.Services.AddScoped<IStudentApplicationService, StudentApplicationService>();
