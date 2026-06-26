@@ -7,6 +7,7 @@ namespace SeamsApp.Models
         [Key]
         public int OfficerId { get; set; }
         public int UserId { get; set; }
+        public string?  Position { get; set; }
         public int AddedBy { get; set; }
         public DateTime AddedAt { get; set; } = DateTime.UtcNow;
     }
