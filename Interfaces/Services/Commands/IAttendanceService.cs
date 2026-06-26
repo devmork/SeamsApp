@@ -2,7 +2,7 @@
 
 namespace SeamsApp.Interfaces.Services.Commands
 {
-    public interface IAttendaceService
+    public interface IAttendanceService
     {
         Task<AttendanceRequest> CreateAttendanceAsync(int eventId, AttendanceRequest attendanceRequest);
         Task<IEnumerable<AttendanceResponse>> GetAllAttendanceAsync();
