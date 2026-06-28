@@ -5,15 +5,11 @@ namespace SeamsApp.Interfaces.Services.Queries
 {
     public interface IStudentService
     {
-        Task<IEnumerable<StudentDTO>> GetAllPendingStudentAsync();
-        Task<IEnumerable<StudentDTO>> GetAllApprovedStudentAsync();
-        Task<CreateStudentDTO> CreateStudent(CreateStudentDTO createStudentDTO);
-        Task<int> UpdateStudentByIdAsync(StudentUpdateDTO studentUpdateDTO, int studentId);
+        Task<IEnumerable<StudentResponse>> GetAllActiveStudentAsync();
+        Task<int> UpdateStudentByIdAsync(int studentId, StudentRequest studentRequest);
         Task<int> DeleteStudentByIdAsync(int studentId);
-        Task<StudentDTO> GetStudentByIdAsync(int studentId);
-        Task<StudentDTO> GetStudentQRCodeAsync(string schoolStudentId);
-        Task<StudentDTO> ApprovedStudentAsync(int studentId);
-        Task<StudentDTO> RejectStudentAsync(int studentId);
+        Task<StudentResponse> GetStudentByIdAsync(int studentId);
+        Task<StudentResponse> GetStudentQRCodeInfoAsync(string schoolStudentId);
 
     }
 }
