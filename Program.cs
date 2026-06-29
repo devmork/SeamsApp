@@ -21,15 +21,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // REGISTER REPOSITORIES
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();  
 builder.Services.AddScoped<IAttendanceRecordRepository,AttendanceRecordRepository>();
 
 // REGISTER SERVICES
 
-builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IOfficerService, OfficerService>();
 builder.Services.AddScoped<IAttendanceRecordService,AttendanceRecordService>();
@@ -48,13 +45,12 @@ builder.Services.AddOutputCache(options =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
-        });
+    options.AddPolicy("FrontendPolicy", policy =>
+    {
+        policy.WithOrigins("https://seamsweb.vercel.app")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -122,13 +118,20 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    AdminSeeder.SeedAdmin(services);
+    try
+    {
+        AdminSeeder.SeedAdmin(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Admin seeding failed");
+    }
 }
-
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
-app.UseCors("AllowAll");
+app.UseCors("FrontendPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseOutputCache();
