@@ -1,6 +1,6 @@
 ﻿using SeamsApp.Models;
 
-namespace SeamsApp.Interfaces.Services.Queries
+namespace SeamsApp.Interfaces.Services.Helper
 {
     public interface IJwtService
     {
