@@ -27,8 +27,6 @@ builder.Services.AddScoped<IAttendanceRecordRepository,AttendanceRecordRepositor
 
 // REGISTER SERVICES
 
-builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IOfficerService, OfficerService>();
 builder.Services.AddScoped<IAttendanceRecordService,AttendanceRecordService>();
