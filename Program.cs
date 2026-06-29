@@ -21,7 +21,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // REGISTER REPOSITORIES
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();  
 builder.Services.AddScoped<IAttendanceRecordRepository,AttendanceRecordRepository>();
@@ -121,9 +120,16 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    AdminSeeder.SeedAdmin(services);
+    try
+    {
+        AdminSeeder.SeedAdmin(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Admin seeding failed");
+    }
 }
-
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
