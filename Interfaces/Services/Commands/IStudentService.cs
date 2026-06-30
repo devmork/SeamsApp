@@ -1,7 +1,7 @@
 ﻿using SeamsApp.DTOs.Student;
 using SeamsApp.Models.Base;
 
-namespace SeamsApp.Interfaces.Services.Queries
+namespace SeamsApp.Interfaces.Services.Commands
 {
     public interface IStudentService
     {
