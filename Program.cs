@@ -5,11 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SeamsApp.Data;
-using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Interfaces.Services.Commands;
- using SeamsApp.Interfaces.Services.Helper;
+using SeamsApp.Interfaces.Services.Helper;
 using SeamsApp.Models;
-using SeamsApp.Repositories.Queries;
 using SeamsApp.Seeders;
 using SeamsApp.Services.Commands;
 using SeamsApp.Services.Helper;
@@ -18,12 +16,6 @@ using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
-// REGISTER REPOSITORIES
-
-builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();  
-builder.Services.AddScoped<IAttendanceRecordRepository,AttendanceRecordRepository>();
 
 // REGISTER SERVICES
 
