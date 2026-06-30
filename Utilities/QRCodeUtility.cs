@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Xml;
 using SkiaSharp.QrCode.Image;
 
 namespace SeamsApp.Utilities
@@ -22,6 +23,11 @@ namespace SeamsApp.Utilities
 
             // Generate QR code
             return QRCodeImageBuilder.GetPngBytes(qrContent);
+        }
+
+        public static GetQRCode(string schoolStudentId)
+        {
+
         }
     }
 }
