@@ -4,13 +4,13 @@ using QRCoder;
 using SeamsApp.Data;
 using SeamsApp.DTOs.Student;
 using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services.Queries;
+using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Models;
 using SeamsApp.Models.Base;
 using SeamsApp.Utilities;
 using System.Runtime.Versioning;
 
-namespace SeamsApp.Services.Queries
+namespace SeamsApp.Services.Commands
 {
     public class StudentService : IStudentService
     {
