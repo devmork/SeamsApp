@@ -1,5 +1,4 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Interfaces.Services.Helper;
 using SeamsApp.Models;
 using System.IdentityModel.Tokens.Jwt;
