@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SeamsApp.DTOs.Auth;
-using SeamsApp.Interfaces.Services.Queries;
+using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Utilities;
 
 namespace SeamsApp.Controllers
@@ -46,7 +46,7 @@ namespace SeamsApp.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO dto)
+        public async Task<IActionResult> Login([FromBody] LoginRequest dto)
         {
             try
             {
