@@ -18,46 +18,26 @@ namespace SeamsApp.Controllers
         {
             _authService = service;
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] CreateAdminDTO dto)
-        {
-            try
-            {
-                var response = await _authService.CreateUserAsync(dto);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Error = ex.Message });
-            }
-        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [AllowAnonymous]
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest dto)
-        {
-            try
-            {
-                var response = await _authService.LoginAsync(dto.Email, dto.Password);
-                return Ok(response);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { Error = ex.Message });
-            }
-        }
+        //[AllowAnonymous]
+        //[HttpPost("Login")]
+        //public async Task<IActionResult> Login([FromBody] LoginRequest dto)
+        //{
+        //    try
+        //    {
+        //        var response = await _authService.LoginAsync(dto.Email, dto.Password);
+        //        return Ok(response);
+        //    }
+        //    catch (UnauthorizedAccessException ex)
+        //    {
+        //        return Unauthorized(new { Error = ex.Message });
+        //    }
+        //}
         
         /// <summary>
         /// 
