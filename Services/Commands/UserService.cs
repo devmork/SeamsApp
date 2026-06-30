@@ -18,11 +18,6 @@ namespace SeamsApp.Services.Commands
             _jwtService = jwtService;
             _mapper = mapper;
         }
-        public Task<CreateAdminDTO> CreateUserAsync(CreateAdminDTO createAdminDTO)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<IEnumerable<UserDTO>> GetAllUsersAsync()
         {
             throw new NotImplementedException();
