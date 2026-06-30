@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using QRCoder;
 using SeamsApp.Data;
 using SeamsApp.DTOs.Student;
-using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Models;
 using SeamsApp.Models.Base;
@@ -27,24 +27,58 @@ namespace SeamsApp.Services.Commands
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public Task<int> DeleteStudentByIdAsync(int studentId)
+        public async Task<int> DeleteStudentByIdAsync(int studentId)
         {
-            throw new NotImplementedException();
+            var student = await _dbContext.Students.FindAsync(studentId);
+            if (student == null) return 0;
+
+            _dbContext.Students.Update(student);
+            return await _dbContext.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<StudentResponse>> GetAllActiveStudentAsync()
+        public async Task<IEnumerable<StudentResponse>> GetAllActiveStudentAsync()
         {
-            throw new NotImplementedException();
+            var students = await _dbContext.Students.ToListAsync();
+            if (students == null)
+            {
+                return null!;
+            }
+            return _mapper.Map<IEnumerable<StudentResponse>>(students);
         }
 
-        public Task<StudentResponse> GetStudentByIdAsync(int studentId)
+        public async Task<StudentResponse> GetStudentByIdAsync(int studentId)
         {
-            throw new NotImplementedException();
+            var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.StudentId == studentId);
+            if (student == null)
+            {
+                return null!;
+            }
+            
+            var response = _mapper.Map<StudentResponse>(student);
+            return response;
         }
 
-        public Task<StudentResponse> GetStudentQRCodeInfoAsync(string schoolStudentId)
+        public async Task<StudentResponse> GetStudentQRCodeInfoAsync(string schoolStudentId)
         {
-            throw new NotImplementedException();
+            // Find student by schoolStudentId
+            var student = await _dbContext.Students
+                .FirstOrDefaultAsync(s => s.SchoolStudentId == schoolStudentId);
+
+            if (student == null)
+            {
+                return null!;
+            }
+
+            // Generate QR code
+            var qrGenerator = new QRCodeGenerator();
+            var qrData = qrGenerator.CreateQrCode(student.SchoolStudentId!, QRCodeGenerator.ECCLevel.Q);
+            var qrCode = new Base64QRCode(qrData).GetGraphic(20);
+
+            // Map to response DTO
+            var response = _mapper.Map<StudentResponse>(student);
+            response. = qrCode; // ensure StudentResponse has this property
+
+            return response;
         }
 
         public Task<int> UpdateStudentByIdAsync(int studentId, StudentRequest studentRequest)
