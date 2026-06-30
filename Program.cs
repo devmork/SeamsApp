@@ -7,12 +7,12 @@ using Microsoft.OpenApi.Models;
 using SeamsApp.Data;
 using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Interfaces.Services.Commands;
-using SeamsApp.Interfaces.Services.Queries;
+ using SeamsApp.Interfaces.Services.Helper;
 using SeamsApp.Models;
 using SeamsApp.Repositories.Queries;
 using SeamsApp.Seeders;
 using SeamsApp.Services.Commands;
-using SeamsApp.Services.Queries;
+using SeamsApp.Services.Helper;
 using SeamsApp.Utilities;
 using System.Text;
 
