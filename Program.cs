@@ -21,6 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IOfficerService, OfficerService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IAttendanceRecordService,AttendanceRecordService>();
 builder.Services.AddScoped<IStudentApplicationService, StudentApplicationService>();
 builder.Services.AddScoped<IEventService, EventService>();
