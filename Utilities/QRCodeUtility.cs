@@ -25,9 +25,9 @@ namespace SeamsApp.Utilities
             return QRCodeImageBuilder.GetPngBytes(qrContent);
         }
 
-        public static GetQRCode(string schoolStudentId)
-        {
+        //public static GetQRCode(string schoolStudentId)
+        //{
 
-        }
+        //}
     }
 }
