@@ -15,13 +15,11 @@ namespace SeamsApp.Utilities
         public AutoMapperProfiles()
         {
             // STUDENT
-            CreateMap<Student, StudentDTO>();
-            CreateMap<StudentUpdateDTO, Student>().ReverseMap();
-            CreateMap<Student, CreateStudentDTO>().ReverseMap();
+            CreateMap<Student, StudentRequest>().ReverseMap();
+            CreateMap<Student, StudentResponse>().ReverseMap();
 
             // AUTH
             CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<User, CreateAdminDTO>().ReverseMap();
 
             // ATTENDANCE
             CreateMap<Attendance, AttendanceResponse>().ReverseMap();
