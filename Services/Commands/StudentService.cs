@@ -60,7 +60,6 @@ namespace SeamsApp.Services.Commands
 
         public async Task<StudentResponse> GetStudentQRCodeInfoAsync(string schoolStudentId)
         {
-            // Find student by schoolStudentId
             var student = await _dbContext.Students
                 .FirstOrDefaultAsync(s => s.SchoolStudentId == schoolStudentId);
 
@@ -69,14 +68,11 @@ namespace SeamsApp.Services.Commands
                 return null!;
             }
 
-            // Generate QR code
             var qrGenerator = new QRCodeGenerator();
             var qrData = qrGenerator.CreateQrCode(student.SchoolStudentId!, QRCodeGenerator.ECCLevel.Q);
             var qrCode = new Base64QRCode(qrData).GetGraphic(20);
 
-            // Map to response DTO
             var response = _mapper.Map<StudentResponse>(student);
-            response. = qrCode; // ensure StudentResponse has this property
 
             return response;
         }
