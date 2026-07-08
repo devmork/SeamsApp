@@ -4,6 +4,6 @@ namespace SeamsApp.Interfaces.Services.Queries
 {
     public interface IJwtService
     {
-        Task<string> GenerateTokenAsync(User user);
+        string GenerateTokenAsync(User user);
     }
 }

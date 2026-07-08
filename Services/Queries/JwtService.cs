@@ -16,7 +16,7 @@ namespace SeamsApp.Services.Queries
         {
             _configuration = configuration;
         }
-        public async Task<string> GenerateTokenAsync(User user)
+        public string GenerateTokenAsync(User user)
         {
             var claims = new List<Claim>
             {
@@ -42,5 +42,6 @@ namespace SeamsApp.Services.Queries
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }
