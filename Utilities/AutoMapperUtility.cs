@@ -35,7 +35,6 @@ namespace SeamsApp.Utilities
             CreateMap<Event, EventRequest>().ReverseMap();
             CreateMap<Event, EventResponse>().ReverseMap();
 
-
             // OFFICER
             CreateMap<Officer, OfficerRequest>().ReverseMap();
             CreateMap<Officer, OfficerResponse>().ReverseMap();

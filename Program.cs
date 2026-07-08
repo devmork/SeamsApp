@@ -22,14 +22,14 @@ var builder = WebApplication.CreateBuilder(args);
 // REGISTER REPOSITORIES
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();  
-builder.Services.AddScoped<IAttendanceRecordRepository,AttendanceRecordRepository>();
+builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+builder.Services.AddScoped<IAttendanceRecordRepository, AttendanceRecordRepository>();
 
 // REGISTER SERVICES
 
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IOfficerService, OfficerService>();
-builder.Services.AddScoped<IAttendanceRecordService,AttendanceRecordService>();
+builder.Services.AddScoped<IAttendanceRecordService, AttendanceRecordService>();
 builder.Services.AddScoped<IStudentApplicationService, StudentApplicationService>();
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -40,14 +40,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOutputCache(options =>
 {
-    options.DefaultExpirationTimeSpan = TimeSpan.FromSeconds(15); 
+    options.DefaultExpirationTimeSpan = TimeSpan.FromSeconds(15);
 });
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins("https://seamsweb.vercel.app")
+        var allowedOrigins = new List<string>
+        {
+            "http://localhost:5173",
+            "https://seams-web.vercel.app"
+        };
+
+        policy.WithOrigins(allowedOrigins.ToArray())
               .AllowAnyHeader()
               .AllowAnyMethod();
     });

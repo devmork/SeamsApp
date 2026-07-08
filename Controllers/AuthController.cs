@@ -12,33 +12,13 @@ namespace SeamsApp.Controllers
     [Authorize]
     public class AuthController : ControllerBase
     {
-        private readonly IUserService _authService;
+        private readonly IAuthService _authService;
     
-        public AuthController(IUserService service)
+        public AuthController(IAuthService authService)
         {
-            _authService = service;
+            _authService = authService;
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] CreateAdminDTO dto)
-        {
-            try
-            {
-                var response = await _authService.CreateUserAsync(dto);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Error = ex.Message });
-            }
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -57,44 +37,6 @@ namespace SeamsApp.Controllers
             {
                 return Unauthorized(new { Error = ex.Message });
             }
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("All Users")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsers() 
-        {
-            var users = await _authService.GetAllUsersAsync();
-            return Ok(users);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("Id")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserById()
-        {
-            var userId = ClaimsUtility.GetUserIdFromClaims(HttpContext);
-            var user = await _authService.GetUserByIdAsync(userId);
-            return Ok(user);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("Email")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByEmail()
-        {
-            var userEmail = ClaimsUtility.GetUserEmailFromClaims(HttpContext);
-            var user = await _authService.GetUserByEmailAsync(userEmail!);
-            return Ok(user);
         }
     }
 }
