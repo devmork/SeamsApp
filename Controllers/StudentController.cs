@@ -34,7 +34,7 @@ namespace SeamsApp.Controllers
         public async Task<ActionResult<int>> DeleteStudent(int studentId)
         {
 
-            var studentToDelete = await _studentService.DeleteStudentByIdAsync(studentId)
+            var studentToDelete = await _studentService.DeleteStudentByIdAsync(studentId);
             if (studentId == 0)
             {
                 return NotFound();
@@ -43,36 +43,36 @@ namespace SeamsApp.Controllers
             return Ok(studentToDelete);
         }
 
-        [HttpPut("{studentId:int}")]
-        [Authorize(Roles = "Admin")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> UpdateStudent(int studentId, [FromBody] StudentRequest studentRequest)
-        {
-            //var eventToUpdate = await _eventService.UpdateEventAsync(eventId, eventRequest);
-            //if (eventId! == 0)
-            //{
-            //    return NoContent();
-            //}
+        //[HttpPut("{studentId:int}")]
+        //[Authorize(Roles = "Admin")]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<ActionResult<int>> UpdateStudent(int studentId, [FromBody] StudentRequest studentRequest)
+        //{
+        //    //var eventToUpdate = await _eventService.UpdateEventAsync(eventId, eventRequest);
+        //    //if (eventId! == 0)
+        //    //{
+        //    //    return NoContent();
+        //    //}
 
-            //return Ok(eventToUpdate);
-        }
+        //    //return Ok(eventToUpdate);
+        //}
 
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        [HttpGet("ApprovedStudents")]
-        [Authorize(Roles = "Admin, Officer")]
-        [OutputCache]
-        [ProducesResponseType(typeof(IEnumerable<StudentResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<StudentResponse>>> GetAllActiveStudent()
-        {
-            var students = await _studentService.GetAllApprovedStudentAsync();
-            return Ok(students);
-        }
+        //[HttpGet("ApprovedStudents")]
+        //[Authorize(Roles = "Admin, Officer")]
+        //[OutputCache]
+        //[ProducesResponseType(typeof(IEnumerable<StudentResponse>), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<ActionResult<IEnumerable<StudentResponse>>> GetAllActiveStudent()
+        //{
+        //    var students = await _studentService.GetAllApprovedStudentAsync();
+        //    return Ok(students);
+        //}
 
         ///// <summary>
         ///// 
