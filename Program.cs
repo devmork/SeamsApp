@@ -14,23 +14,34 @@ using SeamsApp.Services.Helper;
 using SeamsApp.Utilities;
 using System.Text;
 
-
 var builder = WebApplication.CreateBuilder(args);
-
-// REGISTER SERVICES
-
-builder.Services.AddScoped<IAttendanceService, AttendanceService>();
-builder.Services.AddScoped<IOfficerService, OfficerService>();
-builder.Services.AddScoped<IStudentService, StudentService>();
-builder.Services.AddScoped<IAttendanceRecordService,AttendanceRecordService>();
-builder.Services.AddScoped<IStudentApplicationService, StudentApplicationService>();
-builder.Services.AddScoped<IEventService, EventService>();
-builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.Scan(scan => scan
+    .FromAssemblyOf<Program>()
+
+    .AddClasses(classes => classes.AssignableTo<IServiceCollection>())
+        .AsImplementedInterfaces()
+        .WithScopedLifetime()
+
+    .AddClasses(classes => classes
+        .WithAttribute<TransientServiceAttribute>())
+        .AsImplementedInterfaces()
+        .WithScopedLifetime()
+
+     .AddClasses(classes => classes
+        .WithAttribute<ScopedServiceAttribute>())
+        .AsImplementedInterfaces()
+        .WithScopedLifetime()
+
+     .AddClasses(classes => classes
+        .WithAttribute<SingletonServiceAttribute>())
+        .AsImplementedInterfaces()
+        .WithScopedLifetime()
+ );
+
 builder.Services.AddOutputCache(options =>
 {
     options.DefaultExpirationTimeSpan = TimeSpan.FromSeconds(15); 
@@ -52,7 +63,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = true,
+            ValidateLifetime = true,    
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
