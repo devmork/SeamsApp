@@ -5,8 +5,8 @@ namespace SeamsApp.Interfaces.Services.Commands
 {
     public interface IUserService
     {
-        Task<UserDTO> GetUserByEmailAsync(string email);
-        Task<UserDTO> GetUserByIdAsync(int userId);
-        Task<IEnumerable<UserDTO>> GetAllUsersAsync();
+        Task<UserRequest> GetUserByEmailAsync(string email);
+        Task<UserRequest> GetUserByIdAsync(int userId);
+        Task<IEnumerable<UserRequest>> GetAllUsersAsync();
     }
 }

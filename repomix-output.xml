@@ -44,6 +44,7 @@ The content is organized as follows:
 .gitattributes
 .gitignore
 appsettings.json
+appsettings.Production.json
 Controllers/AttendanceController.cs
 Controllers/AttendanceRecordController.cs
 Controllers/AuthController.cs
@@ -51,37 +52,33 @@ Controllers/EventController.cs
 Controllers/OfficerController.cs
 Controllers/StudentApplicationController.cs
 Controllers/StudentController.cs
+Controllers/UserController.cs
 Data/SeamsDbContext.cs
 DTOs/Attendance/AttendanceRequest.cs
 DTOs/Attendance/AttendanceResponse.cs
 DTOs/AttendanceRecords/AttendanceRecordRequest.cs
 DTOs/AttendanceRecords/AttendanceRecordResponse.cs
+DTOs/Auth/LoginRequest.cs
+DTOs/Auth/LoginResponse.cs
 DTOs/Event/EventRequest.cs
 DTOs/Event/EventResponse.cs
 DTOs/Officer/OfficerRequest.cs
 DTOs/Officer/OfficerResponse.cs
-DTOs/Student/CreateStudentDTO.cs
-DTOs/Student/CreateStudentRequest.cs
-DTOs/Student/StudentDTO.cs
-DTOs/Student/StudentUpdateDTO.cs
+DTOs/Student/StudentRequest.cs
+DTOs/Student/StudentResponse.cs
 DTOs/StudentApplication/CreateStudentApplicationRequest.cs
 DTOs/StudentApplication/StudentApplicationResponse.cs
-DTOs/User/CreateAdminDTO.cs
-DTOs/User/LoginRequestDTO.cs
-DTOs/User/LoginResponseDTO.cs
-DTOs/User/UserDTO.cs
-Interfaces/Repositories/IAttendanceRecordRepository.cs
-Interfaces/Repositories/IAttendanceRepository.cs
-Interfaces/Repositories/IStudentRepository.cs
-Interfaces/Repositories/IUserRepository.cs
+DTOs/User/UserRequest.cs
+DTOs/User/UserResponse.cs
 Interfaces/Services/Commands/IAttendanceRecordService.cs
 Interfaces/Services/Commands/IAttendanceService.cs
+Interfaces/Services/Commands/IAuthService.cs
 Interfaces/Services/Commands/IEventService.cs
 Interfaces/Services/Commands/IOfficerService.cs
 Interfaces/Services/Commands/IStudentApplicationService.cs
-Interfaces/Services/Queries/IJwtService.cs
-Interfaces/Services/Queries/IStudentService.cs
-Interfaces/Services/Queries/IUserService.cs
+Interfaces/Services/Commands/IStudentService.cs
+Interfaces/Services/Commands/IUserService.cs
+Interfaces/Services/Helper/IJwtService.cs
 Migrations/20260622142734_Init.cs
 Migrations/20260622142734_Init.Designer.cs
 Migrations/20260624074907_ChangeStudentYearLevelProperty.cs
@@ -116,25 +113,23 @@ Properties/launchSettings.json
 Properties/serviceDependencies.json
 Properties/serviceDependencies.local.json
 README.md
-Repositories/AttendanceRecordRepository.cs
-Repositories/AttendanceRepository.cs
-Repositories/StudentRepository.cs
-Repositories/UserRepository.cs
 SeamsApp.csproj
 SeamsApp.http
 SeamsApp.sln
 Seeders/AdminSeeder.cs
 Services/Commands/AttendanceRecordService.cs
 Services/Commands/AttendanceService.cs
+Services/Commands/AuthService.cs
 Services/Commands/EventService.cs
 Services/Commands/OfficerService.cs
 Services/Commands/StudentApplicationService.cs
-Services/Queries/JwtService.cs
-Services/Queries/StudentService.cs
-Services/Queries/UserService.cs
+Services/Commands/StudentService.cs
+Services/Commands/UserService.cs
+Services/Helper/JwtService.cs
 Utilities/AutoMapperUtility.cs
 Utilities/ClaimsUtility.cs
 Utilities/QRCodeUtility.cs
+Utilities/ServiceAttribute.cs
 </directory_structure>
 
 <files>
@@ -578,602 +573,6 @@ MigrationBackup/
 FodyWeavers.xsd
 </file>
 
-<file path="DTOs/Student/CreateStudentDTO.cs">
-namespace SeamsApp.DTOs.Student
-{
-    public class CreateStudentDTO
-    {
-        // PERSONAL INFORMATION
-        public string? FirstName { get; set; }
-        public string? MiddleName { get; set; }
-        public string? LastName { get; set; }
-        public string? Suffix { get; set; }
-        public string? Email { get; set; }
-
-        // SCHOOL INFORMATION
-        public string? SchoolStudentId { get; set; }
-        public int YearLevel { get; set; }
-        public string? Course { get; set; }
-
-        // PHOTO URL
-        public string? PhotoUrl { get; set; }
-
-    }
-}
-</file>
-
-<file path="DTOs/Student/StudentDTO.cs">
-using System.ComponentModel.DataAnnotations;
-
-namespace SeamsApp.DTOs.Student
-{
-    public class StudentDTO
-    {
-       // PERSONAL INFORMATION
-        public int StudentId { get; set; }
-        public string? FirstName { get; set; }
-        public string? MiddleName { get; set; }
-        public string? LastName { get; set; }
-        public string? Suffix { get; set; }
-        public string? Email { get; set; }
-
-        // SCHOOL INFORMATION
-        public string? SchoolStudentId { get; set; }
-        public int YearLevel { get; set; }
-        public string? Course { get; set; }
-
-        // PHOTO URL
-        public string? PhotoUrl { get; set; }
-        public byte[]? QRCode { get; set; }
-    }
-}
-</file>
-
-<file path="DTOs/Student/StudentUpdateDTO.cs">
-using System.ComponentModel.DataAnnotations;
-
-namespace SeamsApp.DTOs.Student
-{
-    public class StudentUpdateDTO
-    {
-        [Required]
-        public string? FirstName { get; set; }
-        public string? MiddleName { get; set; }
-        [Required]
-        public string? LastName { get; set; }
-        [Required]
-        public string? SchoolStudentId { get; set; }
-        [Required]
-        public string? YearLevel { get; set; }
-        [Required]
-        public string? Course { get; set; }
-        [EmailAddress]
-        public string? Email { get; set; }
-    }
-}
-</file>
-
-<file path="DTOs/User/CreateAdminDTO.cs">
-using System.ComponentModel.DataAnnotations;
-
-namespace SeamsApp.DTOs.Auth
-{
-    public class CreateAdminDTO
-    {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; } = null!;
-        [Required]
-        public string PasswordHash { get; set; } = null!;
-    }
-}
-</file>
-
-<file path="DTOs/User/LoginRequestDTO.cs">
-namespace SeamsApp.DTOs.Auth
-{
-    public class LoginRequestDTO
-    {
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
-}
-</file>
-
-<file path="DTOs/User/LoginResponseDTO.cs">
-namespace SeamsApp.DTOs.Auth
-{
-    public class LoginResponseDTO
-    {
-        public string Token { get; set; } = "";
-        public UserDTO User { get; set; } = null!;
-    }
-}
-</file>
-
-<file path="DTOs/User/UserDTO.cs">
-namespace SeamsApp.DTOs.Auth
-{
-    public class UserDTO
-    {
-        public string? UserName { get; set; }
-        public string? Email { get; set; }
-    }
-}
-</file>
-
-<file path="Properties/launchSettings.json">
-{
-  "$schema": "https://json.schemastore.org/launchsettings.json",
-  "profiles": {
-    "http": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5035",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "https": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7122;http://localhost:5035",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    }
-  }
-}
-</file>
-
-<file path="README.md">
-## Project Folder Structure
-
-```
-
-```
-</file>
-
-<file path="SeamsApp.http">
-@SeamsApp_HostAddress = http://localhost:5035
-
-GET {{SeamsApp_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
-</file>
-
-<file path="SeamsApp.sln">
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeamsApp", "SeamsApp.csproj", "{91E2FBB9-81EF-44AD-8249-CE0B405937E1}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{91E2FBB9-81EF-44AD-8249-CE0B405937E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91E2FBB9-81EF-44AD-8249-CE0B405937E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91E2FBB9-81EF-44AD-8249-CE0B405937E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91E2FBB9-81EF-44AD-8249-CE0B405937E1}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B233E3E4-7D44-4784-ACC7-28667B53B965}
-	EndGlobalSection
-EndGlobal
-</file>
-
-<file path="Utilities/ClaimsUtility.cs">
-using System.Security.Claims;
-
-namespace SeamsApp.Utilities
-{
-    public static class ClaimsUtility
-    {
-        /// <summary>
-        /// Extracts and validates the UserId from the JWT token claims.
-        /// </summary>
-        /// <param name="httpContext">The current HttpContext.</param>
-        /// <returns>The UserId as an integer, or throws UnauthorizedAccessException if invalid.</returns>
-        public static int GetUserIdFromClaims(HttpContext httpContext)
-        {
-            var userIdClaim = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
-            {
-                throw new UnauthorizedAccessException("Invalid user token.");
-            }
-            return userId;
-        }
-
-        /// <summary>
-        /// Extracts the user's roles from the JWT token claims.
-        /// </summary>
-        /// <param name="httpContext">The current HttpContext.</param>
-        /// <returns>A list of role names.</returns>
-        public static List<string> GetUserRolesFromClaims(HttpContext httpContext)
-        {
-            var roleClaims = httpContext.User.FindAll(ClaimTypes.Role);
-            return roleClaims.Select(c => c.Value).ToList();
-        }
-
-        /// <summary>
-        /// Checks if the user has a specific role.
-        /// </summary>
-        /// <param name="httpContext">The current HttpContext.</param>
-        /// <param name="role">The role to check.</param>
-        /// <returns>True if the user has the role, otherwise false.</returns>
-        public static bool HasRole(HttpContext httpContext, string role)
-        {
-            return httpContext.User.IsInRole(role);
-        }
-
-        /// <summary>
-        /// Extracts the user's email from the JWT token claims.
-        /// </summary>
-        /// <param name="httpContext">The current HttpContext.</param>
-        /// <returns>The user's email, or null if not found.</returns>
-        public static string? GetUserEmailFromClaims(HttpContext httpContext)
-        {
-            return httpContext.User.FindFirstValue(ClaimTypes.Email);
-        }
-    }
-}
-</file>
-
-<file path=".config/dotnet-tools.json">
-{
-  "version": 1,
-  "isRoot": true,
-  "tools": {
-    "dotnet-ef": {
-      "version": "10.0.9",
-      "commands": [
-        "dotnet-ef"
-      ],
-      "rollForward": false
-    },
-    "microsoft.dotnet-msidentity": {
-      "version": "2.0.8",
-      "commands": [
-        "dotnet-msidentity"
-      ],
-      "rollForward": false
-    }
-  }
-}
-</file>
-
-<file path="Controllers/AuthController.cs">
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using SeamsApp.DTOs.Auth;
-using SeamsApp.Interfaces.Services.Queries;
-using SeamsApp.Utilities;
-
-namespace SeamsApp.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
-    public class AuthController : ControllerBase
-    {
-        private readonly IUserService _authService;
-    
-        public AuthController(IUserService service)
-        {
-            _authService = service;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] CreateAdminDTO dto)
-        {
-            try
-            {
-                var response = await _authService.CreateUserAsync(dto);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Error = ex.Message });
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO dto)
-        {
-            try
-            {
-                var response = await _authService.LoginAsync(dto.Email, dto.Password);
-                return Ok(response);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { Error = ex.Message });
-            }
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("All Users")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsers() 
-        {
-            var users = await _authService.GetAllUsersAsync();
-            return Ok(users);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("Id")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserById()
-        {
-            var userId = ClaimsUtility.GetUserIdFromClaims(HttpContext);
-            var user = await _authService.GetUserByIdAsync(userId);
-            return Ok(user);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("Email")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserByEmail()
-        {
-            var userEmail = ClaimsUtility.GetUserEmailFromClaims(HttpContext);
-            var user = await _authService.GetUserByEmailAsync(userEmail!);
-            return Ok(user);
-        }
-    }
-}
-</file>
-
-<file path="Controllers/OfficerController.cs">
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using SeamsApp.DTOs.Event;
-using SeamsApp.DTOs.Officer;
-using SeamsApp.Interfaces.Services.Commands;
-
-namespace SeamsApp.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
-    public class OfficerController : ControllerBase
-    {
-        private readonly IOfficerService _officerService;
-        public OfficerController(IOfficerService officerService)
-        {
-            _officerService = officerService;
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        [ProducesResponseType(typeof(EventRequest), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> CreateOfficer(int userId, OfficerRequest officerRequest)
-        {
-            var newOfficer = await _officerService.CreateOfficerAsync(userId, officerRequest);
-            if (userId == 0)
-            {
-                return NotFound();
-            }
-
-            return Ok(newOfficer);
-        }
-
-        [HttpPatch("{userId:int}")]
-        [Authorize(Roles = "Admin")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> RemoveOfficer(int userId)
-        { 
-            var officer = await _officerService.RemoveOfficerAsync(userId);
-            return Ok(officer);
-        }
-    }
-}
-</file>
-
-<file path="Controllers/StudentController.cs">
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OutputCaching;
-using SeamsApp.DTOs.Student;
-using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services.Queries;
-using SeamsApp.Models.Base;
-using System.Threading.Tasks;
-
-namespace SeamsApp.Controllers
-{
-    [Route("api/[controller]")]
-    [Produces("application/json")]
-    [ApiController]
-    [Authorize]
-    public class StudentController : ControllerBase
-    {
-        private readonly IStudentService _studentService;
-
-        public StudentController(IStudentService studentService)
-        {
-            _studentService = studentService;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="createStudentDTO"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(CreateStudentDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<CreateStudentDTO>> CreateStudent(CreateStudentDTO createStudentDTO)
-        {
-            var student = await _studentService.CreateStudent(createStudentDTO);
-            return Ok(student);
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("PendingStudents")]
-        [Authorize(Roles = "Admin, Officer")]
-        [OutputCache]
-        [ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetPendingStudents()
-        {
-            var students = await _studentService.GetAllPendingStudentAsync();
-            return Ok(students);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("ApprovedStudents")]
-        [Authorize(Roles = "Admin, Officer")]
-        [OutputCache]
-        [ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetApprovedStudents()
-        {
-            var students = await _studentService.GetAllApprovedStudentAsync();
-            return Ok(students);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="studentId"></param>
-        /// <returns></returns>
-        [HttpDelete("ById/{studentId:int}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<int>> DeleteStudent(int studentId)
-        {
-            var student = await _studentService.DeleteStudentByIdAsync(studentId);
-            return Ok(student);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="studentId"></param>
-        /// <returns></returns>
-        [HttpGet("ById")]
-        [Authorize(Roles = "Admin, Officer")]
-        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> GetStudentById(int studentId)
-        {
-            var student = await _studentService.GetStudentByIdAsync(studentId);
-            return Ok(student);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="studentUpdateDTO"></param>
-        /// <param name="studentId"></param>
-        /// <returns></returns>
-        [HttpPut("ById/{studentId:int}")]
-        [Authorize(Roles = "Admin")]
-        [ProducesResponseType(typeof(StudentUpdateDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> UpdateStudent(StudentUpdateDTO studentUpdateDTO, int studentId)
-        {
-            var student = await _studentService.UpdateStudentByIdAsync(studentUpdateDTO, studentId);
-            return Ok(student);
-        }
-
-        /// <summary>
-        /// Approve a pending student registration
-        /// </summary>
-        /// <param name="studentId"></param>
-        /// <returns></returns>
-        [HttpPut("Approve/{studentId:int}")]
-        [Authorize(Roles = "Admin, Officer")]
-        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ApproveStudent(int studentId)
-        {
-            try
-            {
-                var student = await _studentService.ApprovedStudentAsync(studentId);
-                return Ok(new { Message = "Student approved successfully", Student = student });
-            }
-            catch (ArgumentException ex)
-            {
-                return NotFound(new { Error = ex.Message });
-            }
-        }
-
-        /// <summary>
-        /// Reject a pending student registration
-        /// </summary>
-        /// <param name="studentId"></param>
-        /// <returns></returns>
-        [HttpPut("Reject/{studentId:int}")]
-        [Authorize(Roles = "Admin, Officer")]
-        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RejectStudent(int studentId)
-        {
-            try
-            {
-                var student = await _studentService.RejectStudentAsync(studentId);
-                return Ok(new { Message = "Student rejected", Student = student });
-            }
-            catch (ArgumentException ex)
-            {
-                return NotFound(new { Error = ex.Message });
-            }
-        }
-
-    }
-}
-</file>
-
 <file path="Data/SeamsDbContext.cs">
 using Microsoft.EntityFrameworkCore;
 using SeamsApp.Models;
@@ -1199,119 +598,23 @@ namespace SeamsApp.Data
 }
 </file>
 
-<file path="DTOs/Attendance/AttendanceRequest.cs">
-using System.ComponentModel.DataAnnotations;
-
-namespace SeamsApp.DTOs.Attendance
+<file path="DTOs/Auth/LoginRequest.cs">
+namespace SeamsApp.DTOs.Auth
 {
-    public class AttendanceRequest
+    public class LoginRequest
     {
-        public string? Title { get; set; }
-        public DateTime Date { get; set; }
-        public string? Session { get; set; }
-        public string? LogType { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 }
 </file>
 
-<file path="DTOs/Attendance/AttendanceResponse.cs">
-using System.ComponentModel.DataAnnotations;
-
-namespace SeamsApp.DTOs.Attendance
+<file path="DTOs/Auth/LoginResponse.cs">
+namespace SeamsApp.DTOs.Auth
 {
-    public class AttendanceResponse
+    public class LoginResponse
     {
-        public string? Title { get; set; }
-        public DateTime Date { get; set; }
-        public string? Session { get; set; }
-        public string? LogType { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-    }
-}
-</file>
-
-<file path="DTOs/AttendanceRecords/AttendanceRecordRequest.cs">
-namespace SeamsApp.DTOs.AttendanceRecords
-{
-    public class AttendanceRecordRequest
-    {
-    }
-}
-</file>
-
-<file path="DTOs/AttendanceRecords/AttendanceRecordResponse.cs">
-namespace SeamsApp.DTOs.AttendanceRecords
-{
-    public class AttendanceRecordResponse
-    {
-        public string FullName {get;set;} = null!;
-        public string SchoolStudentId {get;set;} = null!;
-    }
-}
-</file>
-
-<file path="DTOs/Event/EventRequest.cs">
-namespace SeamsApp.DTOs.Event
-{
-    public class EventRequest
-    {
-        public string? Title { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-    }
-}
-</file>
-
-<file path="DTOs/Event/EventResponse.cs">
-namespace SeamsApp.DTOs.Event
-{
-    public class EventResponse
-    {
-        public string? Title { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-    }
-}
-</file>
-
-<file path="DTOs/Officer/OfficerRequest.cs">
-namespace SeamsApp.DTOs.Officer
-{
-    public class OfficerRequest
-    {
-        public string? Position { get; set; }
-
-    }
-}
-</file>
-
-<file path="DTOs/Officer/OfficerResponse.cs">
-namespace SeamsApp.DTOs.Officer
-{
-    public class OfficerResponse
-    {
-        public string? FirstName { get; set; }
-        public string? MiddleName { get; set; }
-        public string? LastName { get; set; }
-        public string? Suffix { get; set; }
-        public string? SchoolStudentId { get; set; }
-        public string? YearLevel { get; set; }
-        public string? Course { get; set; }
-        public string? Position { get; set; }
-        public string? PhotoUrl { get; set; }
-    }
-}
-</file>
-
-<file path="DTOs/Student/CreateStudentRequest.cs">
-namespace SeamsApp.DTOs.Student
-{
-    public class CreateStudentRequest
-    {
-
+        public string Token { get; set; } = "";
     }
 }
 </file>
@@ -1354,130 +657,22 @@ namespace SeamsApp.DTOs.StudentApplication
 }
 </file>
 
-<file path="Interfaces/Repositories/IAttendanceRepository.cs">
-using SeamsApp.Models;
-using SeamsApp.Models.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SeamsApp.Interfaces.Repositories
+<file path="DTOs/User/UserRequest.cs">
+namespace SeamsApp.DTOs.Auth
 {
-    public interface IAttendanceRepository
+    public class UserRequest
     {
-        Task<int> AddAttendance(Attendance attendance);
-        Task<IEnumerable<Attendance>> GetAllAttendance();
-        Task<Attendance?> GetAttendanceById(int attendanceId);
-        Task<int> DeleteAttendance(int attendanceId);
-        Task<int> UpdateAttendance(Attendance attendance);
+        public string? UserName { get; set; }
+        public string? Email { get; set; }
     }
 }
 </file>
 
-<file path="Interfaces/Repositories/IStudentRepository.cs">
-using SeamsApp.Models.Base;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SeamsApp.Interfaces.Repositories
+<file path="DTOs/User/UserResponse.cs">
+namespace SeamsApp.DTOs.User
 {
-    public interface IStudentRepository
+    public class UserResponse
     {
-        Task<IEnumerable<Student>> GetAllPendingStudentAsync();
-        Task<IEnumerable<Student>> GetAllApprovedStudentAsync();
-        Task<Student> CreateStudentAsync(Student student);
-        Task<int> UpdateStudentByIdAsync(Student student);
-        Task<int> DeleteStudentByIdAsync(int studentId);
-        Task<Student> GetStudentByIdAsync(int studentId);
-        Task<Student> GetStudentQRCodeAsync(string schoolStudentId);
-        Task UpdateStudentStatusToApprovedAsync(int studentId, int status, byte[]? qrCode);
-        Task<int> UpdateStudentStatusToRejectAsync(int studentId, int status);
-    }
-}
-</file>
-
-<file path="Interfaces/Repositories/IUserRepository.cs">
-using SeamsApp.Models;
-using SeamsApp.Models.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SeamsApp.Interfaces.Repositories
-{
-    public interface IUserRepository
-    {
-        Task<User> GetUserByEmailAsync(string email);
-        Task<User> GetUserByIdAsync(int userId);
-        Task<IEnumerable<User>> GetAllUsersAsync();
-        Task<User> CreateUserAsync(User user);
-    }
-}
-</file>
-
-<file path="Interfaces/Services/Commands/IAttendanceRecordService.cs">
-using SeamsApp.DTOs.Attendance;
-
-namespace SeamsApp.Interfaces.Services.Commands
-{
-    public interface IAttendanceRecordService
-    {
-       
-    }
-}
-</file>
-
-<file path="Interfaces/Services/Commands/IAttendanceService.cs">
-using SeamsApp.DTOs.Attendance;
-
-namespace SeamsApp.Interfaces.Services.Commands
-{
-    public interface IAttendanceService
-    {
-        Task<AttendanceRequest> CreateAttendanceAsync(int eventId, AttendanceRequest attendanceRequest);
-        Task<IEnumerable<AttendanceResponse>> GetAllAttendanceAsync();
-        Task<AttendanceResponse> GetAttendanceByIdAsync(int attendanceId);
-        Task<AttendanceResponse> DeleteAttendanceAsync(int attendanceId);
-        Task<AttendanceResponse> UpdateAttendanceAsync(int attendanceId, AttendanceRequest attendanceRequest);
-
-    }
-}
-</file>
-
-<file path="Interfaces/Services/Commands/IEventService.cs">
-using SeamsApp.DTOs.Event;
-
-namespace SeamsApp.Interfaces.Services.Commands
-{
-    public interface IEventService
-    {
-        Task<EventRequest> CreateEventAsync (EventRequest request);
-        Task<int> UpdateEventAsync (int eventId, EventRequest request);
-        Task<int> DeleteEventAsync(int eventId);
-        Task<IEnumerable<EventResponse>> GetAllEventAsync();
-        Task<EventResponse> GetEventByIdAsync(int eventId);
-    }
-}
-</file>
-
-<file path="Interfaces/Services/Commands/IOfficerService.cs">
-using SeamsApp.DTOs.AttendanceRecords;
-using SeamsApp.DTOs.Officer;
-
-namespace SeamsApp.Interfaces.Services.Commands
-{
-    public interface IOfficerService
-    {
-        Task<int> CreateOfficerAsync(int userId, OfficerRequest officerRequest);
-        Task<int> RemoveOfficerAsync(int userId);
     }
 }
 </file>
@@ -1497,57 +692,6 @@ namespace SeamsApp.Interfaces.Services.Commands
         Task<IEnumerable<StudentApplicationResponse>> GetAllRejectedStudentApplicationsAsync();
         Task<IEnumerable<StudentApplicationResponse>> GetAllApprovedStudentApplicationsAsync();
         
-    }
-}
-</file>
-
-<file path="Interfaces/Services/Queries/IJwtService.cs">
-using SeamsApp.Models;
-
-namespace SeamsApp.Interfaces.Services.Queries
-{
-    public interface IJwtService
-    {
-        Task<string> GenerateTokenAsync(User user);
-    }
-}
-</file>
-
-<file path="Interfaces/Services/Queries/IStudentService.cs">
-using SeamsApp.DTOs.Student;
-using SeamsApp.Models.Base;
-
-namespace SeamsApp.Interfaces.Services.Queries
-{
-    public interface IStudentService
-    {
-        Task<IEnumerable<StudentDTO>> GetAllPendingStudentAsync();
-        Task<IEnumerable<StudentDTO>> GetAllApprovedStudentAsync();
-        Task<CreateStudentDTO> CreateStudent(CreateStudentDTO createStudentDTO);
-        Task<int> UpdateStudentByIdAsync(StudentUpdateDTO studentUpdateDTO, int studentId);
-        Task<int> DeleteStudentByIdAsync(int studentId);
-        Task<StudentDTO> GetStudentByIdAsync(int studentId);
-        Task<StudentDTO> GetStudentQRCodeAsync(string schoolStudentId);
-        Task<StudentDTO> ApprovedStudentAsync(int studentId);
-        Task<StudentDTO> RejectStudentAsync(int studentId);
-
-    }
-}
-</file>
-
-<file path="Interfaces/Services/Queries/IUserService.cs">
-using SeamsApp.DTOs.Auth;
-using SeamsApp.DTOs.Student;
-
-namespace SeamsApp.Interfaces.Services.Queries
-{
-    public interface IUserService
-    {
-        Task<UserDTO> GetUserByEmailAsync(string email);
-        Task<UserDTO> GetUserByIdAsync(int userId);
-        Task<IEnumerable<UserDTO>> GetAllUsersAsync();
-        Task<LoginResponseDTO> LoginAsync(string email, string password);
-        Task<CreateAdminDTO> CreateUserAsync(CreateAdminDTO createAdminDTO);
     }
 }
 </file>
@@ -3465,6 +2609,949 @@ namespace SeamsApp.Migrations
 }
 </file>
 
+<file path="Models/Admin.cs">
+using System.ComponentModel.DataAnnotations;
+
+namespace SeamsApp.Models
+{
+    public class Admin
+    {
+        [Key]
+        public int AdminId { get; set; }
+        public int UserId { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+}
+</file>
+
+<file path="Models/AttendanceRecord.cs">
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SeamsApp.Models
+{
+    public class AttendanceRecord
+    {
+        [Key]
+        public int RecordID { get; set; }
+        public int AttendanceID { get; set; }
+        public string? SchoolStudentID { get; set; }
+        public int Status { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    }
+}
+</file>
+
+<file path="Models/Student.cs">
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SeamsApp.Models.Base
+{
+    public class Student
+    {
+        [Key]
+        public int StudentId { get; set; }
+        public int UserId { get; set; }
+        // PERSONAL INFORMATION
+        public string? FirstName { get; set; }
+        public string? MiddleName { get; set; }
+        public string? LastName { get; set; }
+        public string? Suffix { get; set; }
+
+        // SCHOOL INFORMATION
+        public string? SchoolStudentId { get; set; }
+        public string? YearLevel { get; set; }
+        public string? Course { get; set; }
+
+        // PHOTO URL
+        public string? PhotoUrl { get; set; }
+        public byte[]? QRCode { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    }
+}
+</file>
+
+<file path="Models/StudentApplication.cs">
+using System.ComponentModel.DataAnnotations;
+
+namespace SeamsApp.Models
+{
+    public class StudentApplication
+    {
+        [Key]
+        public int ApplicationId { get; set; }
+        public string? FirstName { get; set; }
+        public string? MiddleName { get; set; }
+        public string? LastName { get; set; }
+        public string? Suffix { get; set; }
+        public string? Email { get; set; }
+        public string? SchoolStudentId { get; set; }
+        public string? YearLevel { get; set; }
+        public string? Course { get; set; }
+        public string? PhotoUrl { get; set; }
+        public int Status { get; set; }
+        public string? DeclineReason { get; set; }
+        public int ReviewedBy { get; set; }
+        public DateTime ReviewedAt { get; set; } = DateTime.UtcNow;
+        public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
+
+    }
+}
+</file>
+
+<file path="Models/User.cs">
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SeamsApp.Models
+{
+    public class User
+    {
+        [Key]
+        public int UserId { get; set; }
+        public string? Email { get; set; }
+        public string? PasswordHash { get; set; }
+        public string? Role { get; set; }
+        public int IsActive { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [DataType(DataType.DateTime)]
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    }
+}
+</file>
+
+<file path="Properties/launchSettings.json">
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5035",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7122;http://localhost:5035",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+</file>
+
+<file path="README.md">
+## Project Folder Structure
+
+```
+
+```
+</file>
+
+<file path="SeamsApp.http">
+@SeamsApp_HostAddress = http://localhost:5035
+
+GET {{SeamsApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+</file>
+
+<file path="SeamsApp.sln">
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeamsApp", "SeamsApp.csproj", "{91E2FBB9-81EF-44AD-8249-CE0B405937E1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91E2FBB9-81EF-44AD-8249-CE0B405937E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E2FBB9-81EF-44AD-8249-CE0B405937E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E2FBB9-81EF-44AD-8249-CE0B405937E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E2FBB9-81EF-44AD-8249-CE0B405937E1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B233E3E4-7D44-4784-ACC7-28667B53B965}
+	EndGlobalSection
+EndGlobal
+</file>
+
+<file path="Seeders/AdminSeeder.cs">
+using Microsoft.AspNetCore.Identity;
+using SeamsApp.Data;
+using SeamsApp.Models;
+
+namespace SeamsApp.Seeders
+{
+    public static class AdminSeeder
+    {
+        public static void SeedAdmin(IServiceProvider serviceProvider)
+        {
+            var context = serviceProvider.GetRequiredService<SeamsDbContext>();
+            var passwordHasher = serviceProvider.GetRequiredService<IPasswordHasher<User>>();
+
+            if (!context.Users.Any(u => u.Role == "Admin"))
+            {
+                var adminUser = new User
+                {
+                    Email = "admin@seams.local",
+                    Role = "Admin",
+                    IsActive = 1,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "Admin123");
+
+                context.Users.Add(adminUser);
+                context.SaveChanges();
+
+                var admin = new Admin
+                {
+                    UserId = adminUser.UserId,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                context.Admins.Add(admin);
+                context.SaveChanges();
+            }
+        }
+    }
+}
+</file>
+
+<file path="Services/Commands/AuthService.cs">
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SeamsApp.Data;
+using SeamsApp.DTOs.Auth;
+using SeamsApp.Interfaces.Services.Commands;
+using SeamsApp.Interfaces.Services.Helper;
+using SeamsApp.Models;
+
+namespace SeamsApp.Services.Commands
+{
+    public class AuthService : IAuthService
+    {
+        private readonly SeamsDbContext _dbContext;
+        private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IJwtService _jwtService;
+
+        public AuthService(SeamsDbContext dbContext,
+                           IMapper mapper,
+                           IHttpContextAccessor httpContextAccessor,
+                           IPasswordHasher<User> passwordHasher,
+                           IJwtService jwtService)
+        {
+            _dbContext = dbContext;
+            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
+            _passwordHasher = passwordHasher;
+            _jwtService = jwtService;
+        }
+
+        public async Task<LoginResponse> LoginAsync(string email, string password)
+        {
+            var user = await _dbContext.Users
+                .FirstOrDefaultAsync(u => u.Email == email) ?? 
+                throw new UnauthorizedAccessException("Invalid email or password.");
+
+            var passwordHasher = new PasswordHasher<User>();
+            var result = passwordHasher
+                .VerifyHashedPassword(user, user.PasswordHash!, password);
+
+            if (result == PasswordVerificationResult.Failed)
+            {
+                throw new UnauthorizedAccessException("Invalid email or password.");
+            }
+
+            var token = await _jwtService.GenerateTokenAsync(user);
+
+            return new LoginResponse
+            {
+                Token = token,
+            };
+        }
+    }
+}
+</file>
+
+<file path="Services/Commands/StudentApplicationService.cs">
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using QRCoder;
+using SeamsApp.Data;
+using SeamsApp.DTOs.StudentApplication;
+using SeamsApp.Interfaces.Services.Commands;
+using SeamsApp.Models;
+using SeamsApp.Models.Base;
+using SeamsApp.Utilities;
+
+namespace SeamsApp.Services.Commands
+{
+    public class StudentApplicationService : IStudentApplicationService
+    {
+        private readonly IMapper _mapper;
+        private readonly SeamsDbContext _dbContext;
+        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public StudentApplicationService(
+             IMapper mapper,
+             SeamsDbContext dbContext,
+             IPasswordHasher<User> passwordHasher,
+             IHttpContextAccessor httpContextAccessor)
+        {
+            _dbContext = dbContext;
+            _mapper = mapper;
+            _passwordHasher = passwordHasher;
+            _httpContextAccessor = httpContextAccessor;
+        }
+        public async Task<CreateStudentApplicationRequest> CreateStudentApplication(CreateStudentApplicationRequest createStudentApplicationRequest)
+        {
+            var studentApplication = _mapper.Map<StudentApplication>(createStudentApplicationRequest);
+            studentApplication.Status = 1; // PENDING
+
+            _dbContext.StudentApplications.Add(studentApplication);
+            await _dbContext.SaveChangesAsync();
+
+            return _mapper.Map<CreateStudentApplicationRequest>(studentApplication);
+        }
+        public async Task<int> ApproveStundetApplication(int studentApplicationId)
+        {
+            var existingStudentApplication = await _dbContext.StudentApplications.FindAsync(studentApplicationId);
+            if (existingStudentApplication == null)
+            {
+                return 0;
+            }
+
+            //var userId = ClaimsUtility.GetUserIdFromClaims(_httpContextAccessor.HttpContext!);
+
+            var user = new User
+            {
+                Email = existingStudentApplication.Email,
+                Role = "Student",
+                IsActive = 1,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            user.PasswordHash = _passwordHasher.HashPassword(user, existingStudentApplication.LastName!.ToUpper());
+
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+
+            var student = new Student
+            {
+                UserId = user.UserId,
+                FirstName = existingStudentApplication.FirstName,
+                MiddleName = existingStudentApplication.MiddleName,
+                LastName = existingStudentApplication.LastName,
+                Suffix = existingStudentApplication.Suffix,
+                SchoolStudentId = existingStudentApplication.SchoolStudentId,
+                YearLevel = existingStudentApplication.YearLevel,
+                Course = existingStudentApplication.Course,
+                PhotoUrl = existingStudentApplication.PhotoUrl,
+                QRCode = QRCodeUtility.GenerateQRCode(existingStudentApplication.FirstName!, 
+                                                      existingStudentApplication.MiddleName!, 
+                                                      existingStudentApplication.LastName, 
+                                                      existingStudentApplication.Suffix,
+                                                      existingStudentApplication.SchoolStudentId!)
+            };
+
+            _dbContext.Students.Add(student);
+
+            existingStudentApplication.Status = 2; // APPROVED
+            //existingStudentApplication.ReviewedBy = userId;
+            existingStudentApplication.ReviewedAt = DateTime.UtcNow;
+            _dbContext.StudentApplications.Update(existingStudentApplication);
+            return await _dbContext.SaveChangesAsync();
+
+        }
+        public async Task<int> RejectStudentApplication(int studentApplicationId)
+        {
+            var existingStudentApplication = await _dbContext.StudentApplications.FindAsync(studentApplicationId);
+            if (existingStudentApplication == null)
+            {
+                return 0;
+            }
+
+            existingStudentApplication.Status = 3; // REJECTED
+            _dbContext.StudentApplications.Update(existingStudentApplication);
+            return await _dbContext.SaveChangesAsync();
+        }
+        public async Task<IEnumerable<StudentApplicationResponse>> GetAllPendingStudentApplicationsAsync()
+        {
+            var approvedApplications = await _dbContext.StudentApplications.Where(app => app.Status == 1).ToListAsync();
+            var response = _mapper.Map<IEnumerable<StudentApplicationResponse>>(approvedApplications);
+            return response;
+        }
+        public async Task<IEnumerable<StudentApplicationResponse>> GetAllApprovedStudentApplicationsAsync()
+        {
+            var approvedApplications = await _dbContext.StudentApplications.Where(app => app.Status == 2).ToListAsync();
+            var response = _mapper.Map<IEnumerable<StudentApplicationResponse>>(approvedApplications);
+            return response;
+        }
+
+        public async Task<IEnumerable<StudentApplicationResponse>> GetAllRejectedStudentApplicationsAsync()
+        {
+            var rejectApplications = await _dbContext.StudentApplications.Where(app => app.Status == 3).ToListAsync();
+            var response = _mapper.Map<IEnumerable<StudentApplicationResponse>>(rejectApplications);
+            return response;
+        }
+
+        public async Task<IEnumerable<StudentApplicationResponse>> GetAllStudentApplicationsAsync()
+        {
+            var studentApplications = await _dbContext.StudentApplications.ToListAsync();
+            var response = _mapper.Map<IEnumerable<StudentApplicationResponse>>(studentApplications);
+            return response;
+        }
+
+        
+    }
+}
+</file>
+
+<file path="Utilities/ClaimsUtility.cs">
+using System.Security.Claims;
+
+namespace SeamsApp.Utilities
+{
+    public static class ClaimsUtility
+    {
+        /// <summary>
+        /// Extracts and validates the UserId from the JWT token claims.
+        /// </summary>
+        /// <param name="httpContext">The current HttpContext.</param>
+        /// <returns>The UserId as an integer, or throws UnauthorizedAccessException if invalid.</returns>
+        public static int GetUserIdFromClaims(HttpContext httpContext)
+        {
+            var userIdClaim = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+            {
+                throw new UnauthorizedAccessException("Invalid user token.");
+            }
+            return userId;
+        }
+
+        /// <summary>
+        /// Extracts the user's roles from the JWT token claims.
+        /// </summary>
+        /// <param name="httpContext">The current HttpContext.</param>
+        /// <returns>A list of role names.</returns>
+        public static List<string> GetUserRolesFromClaims(HttpContext httpContext)
+        {
+            var roleClaims = httpContext.User.FindAll(ClaimTypes.Role);
+            return roleClaims.Select(c => c.Value).ToList();
+        }
+
+        /// <summary>
+        /// Checks if the user has a specific role.
+        /// </summary>
+        /// <param name="httpContext">The current HttpContext.</param>
+        /// <param name="role">The role to check.</param>
+        /// <returns>True if the user has the role, otherwise false.</returns>
+        public static bool HasRole(HttpContext httpContext, string role)
+        {
+            return httpContext.User.IsInRole(role);
+        }
+
+        /// <summary>
+        /// Extracts the user's email from the JWT token claims.
+        /// </summary>
+        /// <param name="httpContext">The current HttpContext.</param>
+        /// <returns>The user's email, or null if not found.</returns>
+        public static string? GetUserEmailFromClaims(HttpContext httpContext)
+        {
+            return httpContext.User.FindFirstValue(ClaimTypes.Email);
+        }
+    }
+}
+</file>
+
+<file path="Controllers/OfficerController.cs">
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SeamsApp.DTOs.Event;
+using SeamsApp.DTOs.Officer;
+using SeamsApp.Interfaces.Services.Commands;
+
+namespace SeamsApp.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class OfficerController : ControllerBase
+    {
+        private readonly IOfficerService _officerService;
+        public OfficerController(IOfficerService officerService)
+        {
+            _officerService = officerService;
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(EventRequest), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<int>> CreateOfficer(int userId, OfficerRequest officerRequest)
+        {
+            var newOfficer = await _officerService.CreateOfficerAsync(userId, officerRequest);
+            if (userId == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(newOfficer);
+        }
+
+        [HttpPatch("{userId:int}")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<int>> RemoveOfficer(int userId)
+        { 
+            var officer = await _officerService.RemoveOfficerAsync(userId);
+            return Ok(officer);
+        }
+    }
+}
+</file>
+
+<file path="Controllers/StudentApplicationController.cs">
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using SeamsApp.DTOs.Student;
+using SeamsApp.DTOs.StudentApplication;
+using SeamsApp.Interfaces.Services.Commands;
+using SeamsApp.Models;
+
+namespace SeamsApp.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class StudentApplicationController : ControllerBase
+    {
+        private readonly IStudentApplicationService _studentApplicationService;
+
+        public StudentApplicationController(IStudentApplicationService studentApplicationService)
+        {
+            _studentApplicationService = studentApplicationService;
+        }
+
+        [HttpPost("regsiter")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(CreateStudentApplicationRequest), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<CreateStudentApplicationRequest>> CreateStudentApplication(CreateStudentApplicationRequest rqs)
+        {
+            var studentApplication = await _studentApplicationService.CreateStudentApplication(rqs);
+            return Ok(studentApplication);
+        }
+
+        [HttpPatch("approve-application/{studentApplicationId:int}")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<int>> ApproveStudentApplication(int studentApplicationId)
+        {
+            var result = await _studentApplicationService.ApproveStundetApplication(studentApplicationId);
+            if (result == 0)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [HttpPatch("reject-application/{studentApplicationId:int}")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<int>> RejectStudentApplication(int studentApplicationId)
+        {
+            var result = await _studentApplicationService.RejectStudentApplication(studentApplicationId);
+            if (result == 0)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+
+        [HttpGet("approved-applications")]
+        //[Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(StudentApplicationResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<StudentApplicationResponse>>> GetAllApprovedStudentApplications()
+        {
+            var approvedApplications = await _studentApplicationService.GetAllApprovedStudentApplicationsAsync();
+            if (approvedApplications == null)
+            {
+                return NotFound();
+            }
+            return Ok(approvedApplications);
+        }
+
+
+        [HttpGet("rejected-applications")]
+        //[Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(StudentApplicationResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<StudentApplicationResponse>>> GetAllRejectedStudentApplications()
+        {
+            var rejectedApplications = await _studentApplicationService.GetAllRejectedStudentApplicationsAsync();
+            if (rejectedApplications == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(rejectedApplications);
+        }
+
+        [HttpGet("pending-applications")]
+        //[Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(StudentApplicationResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<StudentApplicationResponse>>> GetAllPendingStudentApplications()
+        {
+            var pendingApplications = await _studentApplicationService.GetAllPendingStudentApplicationsAsync();
+            if (pendingApplications == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(pendingApplications);
+        }
+
+
+
+    }
+}
+</file>
+
+<file path="Controllers/UserController.cs">
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SeamsApp.DTOs.Auth;
+using SeamsApp.Interfaces.Services.Commands;
+using SeamsApp.Utilities;
+
+namespace SeamsApp.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class UserController : ControllerBase
+    {
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
+        //[HttpGet]
+        //[Authorize(Roles = "Admin")]
+        //public async Task<ActionResult<IEnumerable<UserRequest>>> GetAllUsers()
+        //{
+        //    var users = await _userService.GetAllUsersAsync();
+        //    return Ok(users);
+        //}
+
+        //[HttpGet]
+        //[Authorize(Roles = "Admin")]
+        //public async Task<ActionResult<IEnumerable<UserRequest>>> GetUserById()
+        //{
+        //    var userId = ClaimsUtility.GetUserIdFromClaims(HttpContext);
+        //    var user = await _userService.GetUserByIdAsync(userId);
+        //    return Ok(user);
+        //}
+
+        //[HttpGet]
+        //[Authorize(Roles = "Admin")]
+        //public async Task<ActionResult<IEnumerable<UserRequest>>> GetUserByEmail()
+        //{
+        //    var userEmail = ClaimsUtility.GetUserEmailFromClaims(HttpContext);
+        //    var user = await _userService.GetUserByEmailAsync(userEmail!);
+        //    return Ok(user);
+        //}
+
+    }
+}
+</file>
+
+<file path="DTOs/Attendance/AttendanceRequest.cs">
+using System.ComponentModel.DataAnnotations;
+
+namespace SeamsApp.DTOs.Attendance
+{
+    public class AttendanceRequest
+    {
+        public string? Title { get; set; }
+        public DateTime Date { get; set; }
+        public string? Session { get; set; }
+        public string? LogType { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+    }
+}
+</file>
+
+<file path="DTOs/Attendance/AttendanceResponse.cs">
+using System.ComponentModel.DataAnnotations;
+
+namespace SeamsApp.DTOs.Attendance
+{
+    public class AttendanceResponse
+    {
+        public string? Title { get; set; }
+        public DateTime Date { get; set; }
+        public string? Session { get; set; }
+        public string? LogType { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+    }
+}
+</file>
+
+<file path="DTOs/AttendanceRecords/AttendanceRecordRequest.cs">
+namespace SeamsApp.DTOs.AttendanceRecords
+{
+    public class AttendanceRecordRequest
+    {
+    }
+}
+</file>
+
+<file path="DTOs/AttendanceRecords/AttendanceRecordResponse.cs">
+namespace SeamsApp.DTOs.AttendanceRecords
+{
+    public class AttendanceRecordResponse
+    {
+        public string FullName {get;set;} = null!;
+        public string SchoolStudentId {get;set;} = null!;
+    }
+}
+</file>
+
+<file path="DTOs/Event/EventRequest.cs">
+namespace SeamsApp.DTOs.Event
+{
+    public class EventRequest
+    {
+        public string? Title { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+    }
+}
+</file>
+
+<file path="DTOs/Event/EventResponse.cs">
+namespace SeamsApp.DTOs.Event
+{
+    public class EventResponse
+    {
+        public string? Title { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+    }
+}
+</file>
+
+<file path="DTOs/Officer/OfficerRequest.cs">
+namespace SeamsApp.DTOs.Officer
+{
+    public class OfficerRequest
+    {
+        public string? Position { get; set; }
+
+    }
+}
+</file>
+
+<file path="DTOs/Officer/OfficerResponse.cs">
+namespace SeamsApp.DTOs.Officer
+{
+    public class OfficerResponse
+    {
+        public string? FirstName { get; set; }
+        public string? MiddleName { get; set; }
+        public string? LastName { get; set; }
+        public string? Suffix { get; set; }
+        public string? SchoolStudentId { get; set; }
+        public string? YearLevel { get; set; }
+        public string? Course { get; set; }
+        public string? Position { get; set; }
+        public string? PhotoUrl { get; set; }
+    }
+}
+</file>
+
+<file path="DTOs/Student/StudentRequest.cs">
+namespace SeamsApp.DTOs.Student
+{
+    public class StudentRequest
+    {
+    }
+}
+</file>
+
+<file path="DTOs/Student/StudentResponse.cs">
+namespace SeamsApp.DTOs.Student
+{
+    public class StudentResponse
+    {
+    }
+}
+</file>
+
+<file path="Interfaces/Services/Commands/IAttendanceRecordService.cs">
+using SeamsApp.DTOs.Attendance;
+
+namespace SeamsApp.Interfaces.Services.Commands
+{
+    public interface IAttendanceRecordService
+    {
+       
+    }
+}
+</file>
+
+<file path="Interfaces/Services/Commands/IAttendanceService.cs">
+using SeamsApp.DTOs.Attendance;
+
+namespace SeamsApp.Interfaces.Services.Commands
+{
+    public interface IAttendanceService
+    {
+        Task<AttendanceRequest> CreateAttendanceAsync(int eventId, AttendanceRequest attendanceRequest);
+        Task<IEnumerable<AttendanceResponse>> GetAllAttendanceAsync();
+        Task<AttendanceResponse> GetAttendanceByIdAsync(int attendanceId);
+        Task<AttendanceResponse> DeleteAttendanceAsync(int attendanceId);
+        Task<AttendanceResponse> UpdateAttendanceAsync(int attendanceId, AttendanceRequest attendanceRequest);
+
+    }
+}
+</file>
+
+<file path="Interfaces/Services/Commands/IAuthService.cs">
+using SeamsApp.DTOs.Auth;
+
+namespace SeamsApp.Interfaces.Services.Commands
+{
+    public interface IAuthService
+    {
+        Task<LoginResponse> LoginAsync(string email, string password);
+    }
+}
+</file>
+
+<file path="Interfaces/Services/Commands/IEventService.cs">
+using SeamsApp.DTOs.Event;
+
+namespace SeamsApp.Interfaces.Services.Commands
+{
+    public interface IEventService
+    {
+        Task<EventRequest> CreateEventAsync (EventRequest request);
+        Task<int> UpdateEventAsync (int eventId, EventRequest request);
+        Task<int> DeleteEventAsync(int eventId);
+        Task<IEnumerable<EventResponse>> GetAllEventAsync();
+        Task<EventResponse> GetEventByIdAsync(int eventId);
+    }
+}
+</file>
+
+<file path="Interfaces/Services/Commands/IOfficerService.cs">
+using SeamsApp.DTOs.AttendanceRecords;
+using SeamsApp.DTOs.Officer;
+
+namespace SeamsApp.Interfaces.Services.Commands
+{
+    public interface IOfficerService
+    {
+        Task<int> CreateOfficerAsync(int userId, OfficerRequest officerRequest);
+        Task<int> RemoveOfficerAsync(int userId);
+    }
+}
+</file>
+
+<file path="Interfaces/Services/Commands/IStudentService.cs">
+using SeamsApp.DTOs.Student;
+using SeamsApp.Models.Base;
+
+namespace SeamsApp.Interfaces.Services.Commands
+{
+    public interface IStudentService
+    {
+        Task<IEnumerable<StudentResponse>> GetAllActiveStudentAsync();
+        Task<int> UpdateStudentByIdAsync(int studentId, StudentRequest studentRequest);
+        Task<int> DeleteStudentByIdAsync(int studentId);
+        Task<StudentResponse> GetStudentByIdAsync(int studentId);
+        Task<StudentResponse> GetStudentQRCodeInfoAsync(string schoolStudentId);
+
+    }
+}
+</file>
+
+<file path="Interfaces/Services/Helper/IJwtService.cs">
+using SeamsApp.Models;
+
+namespace SeamsApp.Interfaces.Services.Helper
+{
+    public interface IJwtService
+    {
+        Task<string> GenerateTokenAsync(User user);
+    }
+}
+</file>
+
 <file path="Migrations/20260625060308_UpdateAttendanceModelProperties.cs">
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -5205,8 +5292,7 @@ namespace SeamsApp.Migrations
 }
 </file>
 
-<file path="Models/AttendanceRecord.cs">
-using Microsoft.EntityFrameworkCore;
+<file path="Models/Attendance.cs">
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -5214,43 +5300,63 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SeamsApp.Models
+namespace SeamsApp.Models.Base
 {
-    public class AttendanceRecord
+    public class Attendance
     {
         [Key]
-        public int RecordID { get; set; }
-        public int AttendanceID { get; set; }
-        public string? SchoolStudentID { get; set; }
+        public int AttendanceId { get; set; }
+        public int EventId { get; set; }
+        public string? Title { get; set; }
+        public DateTime Date { get; set; }
+        public string? Session { get; set; }
+        public string? LogType { get; set; }  
+        [Required]
+        public DateTime StartTime { get; set; }
+        [Required]
+        public DateTime EndTime { get; set; }
         public int Status { get; set; }
-        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+        public int CreatedBy { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime DeletedAt { get; set; } = DateTime.UtcNow;
     }
 }
 </file>
 
-<file path="Models/User.cs">
-using System;
-using System.Collections.Generic;
+<file path="Models/Event.cs">
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeamsApp.Models
 {
-    public class User
+    public class Event
     {
         [Key]
-        public int UserId { get; set; }
-        public string? Email { get; set; }
-        public string? PasswordHash { get; set; }
-        public string? Role { get; set; }
-        public int IsActive { get; set; }
-        [DataType(DataType.DateTime)]
+        public int EventId { get; set; }
+        public string? Title { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public int Status { get; set; }
+        public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        [DataType(DataType.DateTime)]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    }
+}
+</file>
+
+<file path="Models/Officer.cs">
+using System.ComponentModel.DataAnnotations;
+
+namespace SeamsApp.Models
+{
+    public class Officer
+    {
+        [Key]
+        public int OfficerId { get; set; }
+        public int UserId { get; set; }
+        public string?  Position { get; set; }
+        public int AddedBy { get; set; }
+        public DateTime AddedAt { get; set; } = DateTime.UtcNow;
     }
 }
 </file>
@@ -5283,161 +5389,6 @@ namespace SeamsApp.Models
       "dynamicId": null
     }
   }
-}
-</file>
-
-<file path="Repositories/UserRepository.cs">
-using Dapper;
-using Microsoft.Data.SqlClient;
-using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Models;
-using SeamsApp.Models.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Dapper.SqlMapper;
-
-namespace SeamsApp.Repositories.Queries
-{
-    public class UserRepository : IUserRepository
-    {
-        private readonly string _connectionString;
-        public UserRepository(IConfiguration configuration)
-        {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
-
-        }
-        public async Task<User> CreateUserAsync(User user)
-        {
-            var sql = @"INSERT INTO Users (
-                            Email, 
-                            PasswordHash,
-                            UserRole,
-                            CreatedAt )
-                        VALUES (
-                            @Email, 
-                            @PasswordHash,
-                            @UserRole,
-                            @CreatedAt);
-                        SELECT CAST(SCOPE_IDENTITY() as int)";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@Email", user.Email);
-            parameters.Add("@UserRole", user.Role);
-            parameters.Add("@PasswordHash", user.PasswordHash);
-            parameters.Add("@CreatedAt", user.CreatedAt);
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                var userId = await connection.ExecuteScalarAsync<int>(sql, parameters);
-                user.UserId = userId;
-                return user;
-            }
-        }
-
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
-        {
-            var sql = @"SELECT * FROM Users";
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                var users = await connection.QueryAsync<User>(sql);
-                return users;
-            }
-        }
-
-        public async Task<User> GetUserByEmailAsync(string email)
-        {
-            var sql = @"SELECT * FROM Users WHERE Email = @Email";
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                var user = await connection.QueryFirstOrDefaultAsync<User>(sql, new { Email = email });
-                return user!;
-            }
-        }
-        public async Task<User> GetUserByIdAsync(int userId)
-        {
-            var sql = @"SELECT * FROM Users WHERE UserId = @UserId";
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                var user = await connection.QueryFirstOrDefaultAsync<User>(sql, new { UserId = userId });
-                return user!;
-            }
-        }
-    }
-}
-</file>
-
-<file path="Seeders/AdminSeeder.cs">
-using Microsoft.AspNetCore.Identity;
-using SeamsApp.Data;
-using SeamsApp.Models;
-
-namespace SeamsApp.Seeders
-{
-    public static class AdminSeeder
-    {
-        public static void SeedAdmin(IServiceProvider serviceProvider)
-        {
-            var context = serviceProvider.GetRequiredService<SeamsDbContext>();
-            var passwordHasher = serviceProvider.GetRequiredService<IPasswordHasher<User>>();
-
-            if (!context.Users.Any(u => u.Role == "Admin"))
-            {
-                var adminUser = new User
-                {
-                    Email = "admin@seams.local",
-                    Role = "Admin",
-                    IsActive = 1,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "Admin123");
-
-                context.Users.Add(adminUser);
-                context.SaveChanges();
-
-                var admin = new Admin
-                {
-                    UserId = adminUser.UserId,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                context.Admins.Add(admin);
-                context.SaveChanges();
-            }
-        }
-    }
-}
-</file>
-
-<file path="Services/Commands/AttendanceRecordService.cs">
-using AutoMapper;
-using SeamsApp.DTOs.Attendance;
-using SeamsApp.DTOs.AttendanceRecords;
-using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services.Commands;
-using SeamsApp.Models;
-using System;
-
-namespace SeamsApp.Services.Commands
-{
-    public class AttendanceRecordService : IAttendanceRecordService
-    {
-        private readonly IMapper _mapper;
-        
-        public AttendanceRecordService
-        (
-            IMapper mapper
-        )
-        {
-            _mapper = mapper;
-        }
-
-    }
 }
 </file>
 
@@ -5604,355 +5555,140 @@ namespace SeamsApp.Services.Commands
 }
 </file>
 
-<file path="Services/Commands/StudentApplicationService.cs">
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using QRCoder;
-using SeamsApp.Data;
-using SeamsApp.DTOs.StudentApplication;
-using SeamsApp.Interfaces.Services.Commands;
-using SeamsApp.Models;
-using SeamsApp.Models.Base;
-using SeamsApp.Utilities;
-
-namespace SeamsApp.Services.Commands
+<file path="Utilities/ServiceAttribute.cs">
+namespace SeamsApp.Utilities
 {
-    public class StudentApplicationService : IStudentApplicationService
-    {
-        private readonly IMapper _mapper;
-        private readonly SeamsDbContext _dbContext;
-        private readonly IPasswordHasher<User> _passwordHasher;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    public sealed class TransientServiceAttribute : Attribute { }
 
-        public StudentApplicationService(
-             IMapper mapper,
-             SeamsDbContext dbContext,
-             IPasswordHasher<User> passwordHasher,
-             IHttpContextAccessor httpContextAccessor)
-        {
-            _dbContext = dbContext;
-            _mapper = mapper;
-            _passwordHasher = passwordHasher;
-            _httpContextAccessor = httpContextAccessor;
-        }
-        public async Task<CreateStudentApplicationRequest> CreateStudentApplication(CreateStudentApplicationRequest createStudentApplicationRequest)
-        {
-            var studentApplication = _mapper.Map<StudentApplication>(createStudentApplicationRequest);
-            studentApplication.Status = 1; // PENDING
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    public sealed class ScopedServiceAttribute : Attribute { }
 
-            _dbContext.StudentApplications.Add(studentApplication);
-            await _dbContext.SaveChangesAsync();
-
-            return _mapper.Map<CreateStudentApplicationRequest>(studentApplication);
-        }
-        public async Task<int> ApproveStundetApplication(int studentApplicationId)
-        {
-            var existingStudentApplication = await _dbContext.StudentApplications.FindAsync(studentApplicationId);
-            if (existingStudentApplication == null)
-            {
-                return 0;
-            }
-
-            //var userId = ClaimsUtility.GetUserIdFromClaims(_httpContextAccessor.HttpContext!);
-
-            var user = new User
-            {
-                Email = existingStudentApplication.Email,
-                Role = "Student",
-                IsActive = 1,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            user.PasswordHash = _passwordHasher.HashPassword(user, existingStudentApplication.LastName!.ToUpper());
-
-            _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
-
-            var student = new Student
-            {
-                UserId = user.UserId,
-                FirstName = existingStudentApplication.FirstName,
-                MiddleName = existingStudentApplication.MiddleName,
-                LastName = existingStudentApplication.LastName,
-                Suffix = existingStudentApplication.Suffix,
-                SchoolStudentId = existingStudentApplication.SchoolStudentId,
-                YearLevel = existingStudentApplication.YearLevel,
-                Course = existingStudentApplication.Course,
-                PhotoUrl = existingStudentApplication.PhotoUrl,
-                QRCode = QRCodeUtility.GenerateQRCode(existingStudentApplication.FirstName!, 
-                                                      existingStudentApplication.MiddleName!, 
-                                                      existingStudentApplication.LastName, 
-                                                      existingStudentApplication.Suffix,
-                                                      existingStudentApplication.SchoolStudentId!)
-            };
-
-            _dbContext.Students.Add(student);
-
-            existingStudentApplication.Status = 2; // APPROVED
-            //existingStudentApplication.ReviewedBy = userId;
-            existingStudentApplication.ReviewedAt = DateTime.UtcNow;
-            _dbContext.StudentApplications.Update(existingStudentApplication);
-            return await _dbContext.SaveChangesAsync();
-
-        }
-        public async Task<int> RejectStudentApplication(int studentApplicationId)
-        {
-            var existingStudentApplication = await _dbContext.StudentApplications.FindAsync(studentApplicationId);
-            if (existingStudentApplication == null)
-            {
-                return 0;
-            }
-
-            existingStudentApplication.Status = 3; // REJECTED
-            _dbContext.StudentApplications.Update(existingStudentApplication);
-            return await _dbContext.SaveChangesAsync();
-        }
-        public async Task<IEnumerable<StudentApplicationResponse>> GetAllPendingStudentApplicationsAsync()
-        {
-            var approvedApplications = await _dbContext.StudentApplications.Where(app => app.Status == 1).ToListAsync();
-            var response = _mapper.Map<IEnumerable<StudentApplicationResponse>>(approvedApplications);
-            return response;
-        }
-        public async Task<IEnumerable<StudentApplicationResponse>> GetAllApprovedStudentApplicationsAsync()
-        {
-            var approvedApplications = await _dbContext.StudentApplications.Where(app => app.Status == 2).ToListAsync();
-            var response = _mapper.Map<IEnumerable<StudentApplicationResponse>>(approvedApplications);
-            return response;
-        }
-
-        public async Task<IEnumerable<StudentApplicationResponse>> GetAllRejectedStudentApplicationsAsync()
-        {
-            var rejectApplications = await _dbContext.StudentApplications.Where(app => app.Status == 3).ToListAsync();
-            var response = _mapper.Map<IEnumerable<StudentApplicationResponse>>(rejectApplications);
-            return response;
-        }
-
-        public async Task<IEnumerable<StudentApplicationResponse>> GetAllStudentApplicationsAsync()
-        {
-            var studentApplications = await _dbContext.StudentApplications.ToListAsync();
-            var response = _mapper.Map<IEnumerable<StudentApplicationResponse>>(studentApplications);
-            return response;
-        }
-
-        
-    }
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    public sealed class SingletonServiceAttribute : Attribute { }
 }
 </file>
 
-<file path="Services/Queries/JwtService.cs">
-using Microsoft.IdentityModel.Tokens;
-using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services.Queries;
-using SeamsApp.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-
-namespace SeamsApp.Services.Queries
+<file path=".config/dotnet-tools.json">
 {
-    public class JwtService : IJwtService
-    {
-        private readonly IConfiguration _configuration;
-
-        public JwtService(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-        public async Task<string> GenerateTokenAsync(User user)
-        {
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new(ClaimTypes.Email, user.Email ?? "")
-            };
-
-            if (!string.IsNullOrEmpty(user.Role))
-            {
-                claims.Add(new Claim(ClaimTypes.Role, user.Role));
-            }
-
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? ""));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "dotnet-ef": {
+      "version": "10.0.9",
+      "commands": [
+        "dotnet-ef"
+      ],
+      "rollForward": false
+    },
+    "microsoft.dotnet-msidentity": {
+      "version": "2.0.8",
+      "commands": [
+        "dotnet-msidentity"
+      ],
+      "rollForward": false
     }
+  }
 }
 </file>
 
-<file path="Services/Queries/UserService.cs">
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using SeamsApp.DTOs.Auth;
-using SeamsApp.DTOs.Student;
-using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services.Queries;
-using SeamsApp.Models;
-
-namespace SeamsApp.Services.Queries
-{
-    public class UserService : IUserService
-    {
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtService _jwtService;
-        private readonly IMapper _mapper;
-        private readonly IPasswordHasher<User> _passwordHasher;
-        public UserService(IUserRepository userRepository,
-                            IJwtService jwtService,
-                            IMapper mapper,
-                            IPasswordHasher<User> passwordHasher)
-        {
-            _userRepository = userRepository;
-            _jwtService = jwtService;
-            _mapper = mapper;
-            _passwordHasher = passwordHasher;
-        }
-        public async Task<CreateAdminDTO> CreateUserAsync(CreateAdminDTO createAdminDTO)
-        {
-            var existingUser = await _userRepository.GetUserByEmailAsync(createAdminDTO.Email);
-            if (existingUser != null)
-            {
-                throw new ArgumentException("User with this email already exists.");
-            }
-
-            // Map DTO to User model
-            var user = _mapper.Map<User>(createAdminDTO);
-            user.Role = "Admin";
-
-            // Hash the password
-            user.PasswordHash = _passwordHasher.HashPassword(user, createAdminDTO.PasswordHash);
-
-            var createdUser = await _userRepository.CreateUserAsync(user);
-            return _mapper.Map<CreateAdminDTO>(createdUser);
-        }
-        public async Task<LoginResponseDTO> LoginAsync(string email, string password)
-        {
-            var user = await _userRepository.GetUserByEmailAsync(email);
-
-            if (user == null)
-            {
-                throw new UnauthorizedAccessException("Invalid credentials");
-            }
-
-            var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash!, password);
-
-            if (result == PasswordVerificationResult.Failed)
-            {
-                throw new UnauthorizedAccessException("Invalid credentials");
-            }
-
-            var token = await _jwtService.GenerateTokenAsync(user);
-            var userDto = _mapper.Map<UserDTO>(user);
-
-            return new LoginResponseDTO
-            {
-                Token = token,
-                User = userDto
-            };
-        }
-        public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
-        {
-            var users = await _userRepository.GetAllUsersAsync();
-            return _mapper.Map<IEnumerable<UserDTO>>(users);
-        }
-
-        public async Task<UserDTO> GetUserByEmailAsync(string email)
-        {
-            var user = await _userRepository.GetUserByEmailAsync(email);
-            return _mapper.Map<UserDTO>(user);
-        }
-
-        public async Task<UserDTO> GetUserByIdAsync(int userId)
-        {
-            var user = await _userRepository.GetUserByIdAsync(userId);
-            return _mapper.Map<UserDTO>(user);
-        }
-    }
-}
-</file>
-
-<file path="Utilities/AutoMapperUtility.cs">
-using AutoMapper;
+<file path="Controllers/AttendanceController.cs">
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SeamsApp.DTOs.Attendance;
-using SeamsApp.DTOs.Auth;
 using SeamsApp.DTOs.Event;
-using SeamsApp.DTOs.Officer;
-using SeamsApp.DTOs.Student;
-using SeamsApp.DTOs.StudentApplication;
-using SeamsApp.Models;
-using SeamsApp.Models.Base;
+using SeamsApp.Interfaces.Services.Commands;
 
-namespace SeamsApp.Utilities
+namespace SeamsApp.Controllers
 {
-    public class AutoMapperProfiles : Profile
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class AttendanceController : ControllerBase
     {
-        public AutoMapperProfiles()
+        private readonly IAttendanceService _attendanceService;
+
+        public AttendanceController(IAttendanceService attendanceService)
         {
-            // STUDENT
-            CreateMap<Student, StudentDTO>();
-            CreateMap<StudentUpdateDTO, Student>().ReverseMap();
-            CreateMap<Student, CreateStudentDTO>().ReverseMap();
-
-            // AUTH
-            CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<User, CreateAdminDTO>().ReverseMap();
-
-            // ATTENDANCE
-            CreateMap<Attendance, AttendanceResponse>().ReverseMap();
-            CreateMap<Attendance, AttendanceRequest>().ReverseMap();
-
-            // STUDENT APPLICATION
-            CreateMap<StudentApplication, CreateStudentApplicationRequest>().ReverseMap();
-            CreateMap<StudentApplication, StudentApplicationResponse>().ReverseMap();
-
-            // EVENT
-            CreateMap<Event, EventRequest>().ReverseMap();
-            CreateMap<Event, EventResponse>().ReverseMap();
-
-
-            // OFFICER
-            CreateMap<Officer, OfficerRequest>().ReverseMap();
-            CreateMap<Officer, OfficerResponse>().ReverseMap();
+            _attendanceService = attendanceService;
         }
-    }
-}
-</file>
 
-<file path="Utilities/QRCodeUtility.cs">
-using System.IO;
-using SkiaSharp.QrCode.Image;
-
-namespace SeamsApp.Utilities
-{
-    public class QRCodeUtility
-    {
-        public static byte[] GenerateQRCode(
-            string firstName, 
-            string middleName, 
-            string lastName, 
-            string? suffix,
-            string schoolStudentId)
+        [Authorize(Roles = "Admin, Officer, Student")]
+        [HttpGet]
+        [ProducesResponseType(typeof(AttendanceResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<AttendanceResponse>>> GetAllAttendance()
         {
-            string name = $"{firstName} {middleName} {lastName}".Trim();
-            
-            if (!string.IsNullOrWhiteSpace(suffix))
+            var attendances = await _attendanceService.GetAllAttendanceAsync();
+            if (attendances == null)
             {
-                name += $" {suffix}";
+                return NotFound();
             }
-                        string qrContent = $"{name} - {schoolStudentId}";
+            return Ok(attendances);
+        }
 
-            // Generate QR code
-            return QRCodeImageBuilder.GetPngBytes(qrContent);
+        [Authorize(Roles = "Admin, Officer")]
+        [HttpGet("{attendanceId:int}")]
+        [ProducesResponseType(typeof(AttendanceResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AttendanceResponse>> GetAttendanceById(int attendanceId)
+        {
+            var attendance = await _attendanceService.GetAttendanceByIdAsync(attendanceId);
+            if (attendance == null)
+            {
+                return NotFound();
+            }
+            return Ok(attendance);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("{eventId:int}/attendances")]
+        [ProducesResponseType(typeof(int), 201)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AttendanceRequest>> CreateAttendance(int eventId, [FromBody] AttendanceRequest attendanceRequest)
+        {
+            var newAttendance = await _attendanceService.CreateAttendanceAsync(eventId, attendanceRequest);
+            if (newAttendance == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(newAttendance);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{attendanceId:int}")]
+        [ProducesResponseType(typeof(AttendanceRequest), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AttendanceRequest>> UpdateAttendance(int attendanceId, [FromBody] AttendanceRequest attendanceRequest)
+        {
+            var attendance = await _attendanceService.UpdateAttendanceAsync(attendanceId, attendanceRequest);
+            if (attendance == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(attendance);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{attendanceId:int}")]
+        [ProducesResponseType(typeof(AttendanceResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AttendanceResponse>> DeleteAttendance(int attendanceId)
+        {
+            var attendance = await _attendanceService.DeleteAttendanceAsync(attendanceId);
+            if (attendance == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(attendance);
         }
     }
 }
@@ -5962,9 +5698,6 @@ namespace SeamsApp.Utilities
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SeamsApp.DTOs.Attendance;
-using SeamsApp.Interfaces.Services.Queries;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SeamsApp.Controllers
 {
@@ -5973,6 +5706,45 @@ namespace SeamsApp.Controllers
     public class AttendanceRecordController : ControllerBase
     {
         
+    }
+}
+</file>
+
+<file path="Controllers/AuthController.cs">
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SeamsApp.DTOs.Auth;
+using SeamsApp.Interfaces.Services.Commands;
+using SeamsApp.Utilities;
+
+namespace SeamsApp.Controllers
+{
+    [Route("api/auth")]
+    [ApiController]
+    [Authorize]
+    public class AuthController : ControllerBase
+    {
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService)
+        {
+            _authService = authService;
+        }
+
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginRequest rqs)
+        {
+            try
+            {
+                var response = await _authService.LoginAsync(rqs.Email, rqs.Password);
+                return Ok(response);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Error = ex.Message });
+            }
+        }
     }
 }
 </file>
@@ -6084,410 +5856,43 @@ namespace SeamsApp.Controllers
 }
 </file>
 
-<file path="Models/Admin.cs">
-using System.ComponentModel.DataAnnotations;
+<file path="Interfaces/Services/Commands/IUserService.cs">
+using SeamsApp.DTOs.Auth;
+using SeamsApp.DTOs.Student;
 
-namespace SeamsApp.Models
+namespace SeamsApp.Interfaces.Services.Commands
 {
-    public class Admin
+    public interface IUserService
     {
-        [Key]
-        public int AdminId { get; set; }
-        public int UserId { get; set; }
-        public DateTime CreatedAt { get; set; }
+        Task<UserRequest> GetUserByEmailAsync(string email);
+        Task<UserRequest> GetUserByIdAsync(int userId);
+        Task<IEnumerable<UserRequest>> GetAllUsersAsync();
     }
 }
 </file>
 
-<file path="Models/Officer.cs">
-using System.ComponentModel.DataAnnotations;
-
-namespace SeamsApp.Models
-{
-    public class Officer
-    {
-        [Key]
-        public int OfficerId { get; set; }
-        public int UserId { get; set; }
-        public string?  Position { get; set; }
-        public int AddedBy { get; set; }
-        public DateTime AddedAt { get; set; } = DateTime.UtcNow;
-    }
-}
-</file>
-
-<file path="Models/StudentApplication.cs">
-using System.ComponentModel.DataAnnotations;
-
-namespace SeamsApp.Models
-{
-    public class StudentApplication
-    {
-        [Key]
-        public int ApplicationId { get; set; }
-        public string? FirstName { get; set; }
-        public string? MiddleName { get; set; }
-        public string? LastName { get; set; }
-        public string? Suffix { get; set; }
-        public string? Email { get; set; }
-        public string? SchoolStudentId { get; set; }
-        public string? YearLevel { get; set; }
-        public string? Course { get; set; }
-        public string? PhotoUrl { get; set; }
-        public int Status { get; set; }
-        public string? DeclineReason { get; set; }
-        public int ReviewedBy { get; set; }
-        public DateTime ReviewedAt { get; set; } = DateTime.UtcNow;
-        public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
-
-    }
-}
-</file>
-
-<file path="Repositories/AttendanceRepository.cs">
-using Dapper;
-using Microsoft.Data.SqlClient;
-using SeamsApp.Interfaces.Repositories;
+<file path="Services/Commands/AttendanceRecordService.cs">
+using AutoMapper;
+using SeamsApp.DTOs.Attendance;
+using SeamsApp.DTOs.AttendanceRecords;
+using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Models;
-using SeamsApp.Models.Base;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 
-namespace SeamsApp.Repositories.Queries
+namespace SeamsApp.Services.Commands
 {
-    public class AttendanceRepository : IAttendanceRepository
+    public class AttendanceRecordService : IAttendanceRecordService
     {
-        // STATUS 0 - DELETED
-        // STATUS 1 - ACTIVE
-
-        private readonly string _connectionString;
-
-        public AttendanceRepository(IConfiguration configuration)
+        private readonly IMapper _mapper;
+        
+        public AttendanceRecordService
+        (
+            IMapper mapper
+        )
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+            _mapper = mapper;
         }
 
-        public async Task<int> AddAttendance(Attendance attendance)
-        {
-            const string query = @" INSERT INTO Attendance (
-                                        Name,
-                                        Note,
-                                        Date, 
-                                        LogType, 
-                                        Semester,                                        
-                                        StartTime, 
-                                        EndTime,
-                                        Status,
-                                        CreatedAt)
-                                    VALUES (
-                                        @Name, 
-                                        @Note, 
-                                        @Date, 
-                                        @LogType,
-                                        @Semester,  
-                                        @StartTime, 
-                                        @EndTime, 
-                                        @Status,
-                                        @CreatedAt)";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("Name", attendance.Title);
-            parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
-            parameters.Add("LogType", attendance.LogType);
-            //parameters.Add("Semester", attendance.Semester);
-            parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm")); 
-            parameters.Add("EndTime", attendance.EndTime.ToString("HH:mm"));
-            parameters.Add("Status", attendance.Status);
-            parameters.Add("CreatedAt", attendance.CreatedAt);
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                return await connection.ExecuteScalarAsync<int>(query, parameters);
-            }
-        }
-
-        public async Task<IEnumerable<Attendance>> GetAllAttendance()
-        {
-            // const string query = @"SELECT * FROM Attendance
-            //                        WHERE Status = 1";       
-            const string query = @"
-                 SELECT * FROM Attendance
-        WHERE Status = 1 
-          AND (
-              Date > CONVERT(DATE, GETDATE())
-              OR (
-                  Date = CONVERT(DATE, GETDATE())
-                  AND CONVERT(TIME, EndTime) > CONVERT(TIME, GETDATE())
-              )
-          )
-        ORDER BY Date DESC, StartTime DESC
-            ";           
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                var attendance = await connection.QueryAsync<Attendance>(query);
-                return [.. attendance];
-            }
-        }
-
-        public async Task<Attendance?> GetAttendanceById(int attendanceId)
-        {
-            const string query = @"SELECT * FROM Attendance
-                                   WHERE AttendanceId = @AttendanceId AND Status = 1";
-                    
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                return await connection.QuerySingleOrDefaultAsync<Attendance>(query, new { AttendanceId = attendanceId });
-            }
-        }
-
-        public async Task<int> DeleteAttendance(int attendanceId)
-        {
-            const string query = @"UPDATE Attendance 
-                                   SET Status = 0
-                                   WHERE AttendanceId = @AttendanceId";
-                
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                return await connection.ExecuteAsync(query, new { AttendanceId = attendanceId });
-            }
-        }
-
-        public async Task<int> UpdateAttendance(Attendance attendance)
-        {
-            const string query = @"UPDATE Attendance
-                                   SET 
-                                    Name = @Name,
-                                    Note = @Note,
-                                    Date = @Date, 
-                                    LogType = @LogType,
-                                    Semester = @Semester,
-                                    StartTime = @StartTime, 
-                                    EndTime = @EndTime
-                                WHERE AttendanceId = @AttendanceId";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("AttendanceId", attendance.AttendanceId);
-            parameters.Add("Name", attendance.Title);
-            parameters.Add("Date", attendance.Date.ToString("yyyy-MM-dd"));
-            parameters.Add("LogType", attendance.LogType);
-            //parameters.Add("Semester", attendance.Semester);
-            parameters.Add("StartTime", attendance.StartTime.ToString("HH:mm"));
-            parameters.Add("EndTime", attendance.EndTime.ToString("HH:mm"));
-            parameters.Add("UpdatedAt", attendance.UpdatedAt);
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                return await connection.ExecuteAsync(query, parameters);
-            }
-        }
-    }
-}
-</file>
-
-<file path="Repositories/StudentRepository.cs">
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
-using Microsoft.Data.SqlClient;
-using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Models.Base;
-
-namespace SeamsApp.Repositories.Queries
-{
-    public class StudentRepository : IStudentRepository
-    {
-        // 1 - Pending, 2 - Approved, 3 - Rejected, 4 - Deleted
-
-        private readonly string _connectionString;
-        public StudentRepository(IConfiguration configuration)
-        {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
-        }
-        public async Task<IEnumerable<Student>> GetAllPendingStudentAsync() 
-        {
-            string query = @"SELECT * FROM Students
-                             WHERE Status = 1";
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync<Student>(query);
-            }
-        }
-        public async Task<IEnumerable<Student>> GetAllApprovedStudentAsync()
-        {
-            string query = @"SELECT * FROM Students
-                             WHERE Status = 2";
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync<Student>(query);
-            }
-        }
-        public async Task<Student> CreateStudentAsync(Student student)
-        {
-            string query = @"INSERT INTO Students (
-                                    FirstName, 
-                                    MiddleName, 
-                                    LastName, 
-                                    Suffix,
-                                    Email,
-                                    SchoolStudentId, 
-                                    YearLevel, 
-                                    Course, 
-                                    PhotoUrl,
-                                    Status,
-                                    SubmittedAt)
-                             VALUES (
-                                    @FirstName, 
-                                    @MiddleName, 
-                                    @LastName,
-                                    @Suffix,   
-                                    @Email,
-                                    @SchoolStudentId, 
-                                    @YearLevel, 
-                                    @Course, 
-                                    @PhotoUrl,
-                                    @Status,
-                                    @SubmittedAt)";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@FirstName", student.FirstName);
-            parameters.Add("@MiddleName", student.MiddleName);
-            parameters.Add("@LastName", student.LastName);
-            parameters.Add("@Suffix", student.Suffix);
-            //parameters.Add("@Email", student.Email);
-
-            parameters.Add("@SchoolStudentId", student.SchoolStudentId);
-            parameters.Add("@YearLevel", student.YearLevel);
-            parameters.Add("@Course", student.Course);
-            parameters.Add("@PhotoUrl", student.PhotoUrl);
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                await connection.ExecuteAsync(query, parameters);
-                return student;
-            }
-        }
-        public async Task<int> UpdateStudentByIdAsync(Student student)
-        {
-            string query = @"UPDATE Students 
-                             SET FirstName = @FirstName, 
-                                 MiddleName = @MiddleName, 
-                                 LastName = @LastName, 
-                                 SchoolStudentId = @SchoolStudentId, 
-                                 Course = @Course, 
-                                 YearLevel = @YearLevel, 
-                                 Email = @Email, 
-                                 QRCode = @QRCode,
-                                 UpdatedAt = @UpdatedAt 
-                             WHERE StudentId = @StudentId";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@StudentId", student.StudentId);
-            parameters.Add("@FirstName", student.FirstName);
-            parameters.Add("@MiddleName", student.MiddleName);
-            parameters.Add("@LastName", student.LastName);
-            parameters.Add("@SchoolStudentId", student.SchoolStudentId);
-            parameters.Add("@Course", student.Course);
-            parameters.Add("@YearLevel", student.YearLevel);
-            //parameters.Add("@Email", student.Email);
-            parameters.Add("@QRCode", student.QRCode);
-            parameters.Add("@UpdatedAt", student.UpdatedAt);
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                return await connection.ExecuteScalarAsync<int>(query, parameters);
-            }
-        } 
-        public async Task<Student> GetStudentByIdAsync(int studentId)
-        {
-            string query = @"SELECT * FROM Students 
-                             WHERE StudentId = @StudentId
-                             AND Status = 1";
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var student = await connection.QueryFirstOrDefaultAsync<Student>(query, new { StudentId = studentId});
-                return student!;
-            }
-        }
-        public async Task<Student> GetStudentQRCodeAsync(string schoolStudentId)
-        {
-            string query = @"SELECT QRCode FROM Students
-                             WHERE SchoolStudentId = @SchoolStudentId
-                             AND Status = 1";
-            
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var student = await connection.QueryFirstOrDefaultAsync<Student>(query, new { SchoolStudentId = schoolStudentId});
-                return student!;
-            }
-        }
-        public Task<int> DeleteStudentByIdAsync(int studentId)
-        {
-            string query = @"UPDATE Students 
-                             SET Status = 0 
-                             WHERE StudentId = @StudentId";
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                return connection.ExecuteScalarAsync<int>(query, new { StudentId = studentId });
-            }
-        }
-        public async Task UpdateStudentStatusToApprovedAsync(int studentId, int status, byte[]? qrCode)
-        {
-            string query = @"UPDATE Students 
-                             SET Status = @Status, 
-                                 QRCode = @QRCode,
-                                 UpdatedAt = @UpdatedAt 
-                             WHERE StudentId = @StudentId";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@StudentId", studentId);
-            parameters.Add("@Status", status);
-            parameters.Add("@QRCode", qrCode);
-            parameters.Add("@UpdatedAt", DateTime.UtcNow);
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                await connection.ExecuteAsync(query, parameters);
-            }
-        }
-
-        public async Task<int> UpdateStudentStatusToRejectAsync(int studentId, int status)
-        {
-            string query = @"UPDATE Students 
-                             SET Status = @Status, 
-                                 UpdatedAt = @UpdatedAt 
-                             WHERE StudentId = @StudentId";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@StudentId", studentId);
-            parameters.Add("@Status", status);
-            parameters.Add("@UpdatedAt", DateTime.UtcNow);
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                return await connection.ExecuteAsync(query, parameters);
-            }
-        }
     }
 }
 </file>
@@ -6601,633 +6006,437 @@ namespace SeamsApp.Services.Commands
 }
 </file>
 
-<file path="Services/Queries/StudentService.cs">
+<file path="Services/Commands/UserService.cs">
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using QRCoder;
+using SeamsApp.DTOs.Auth;
 using SeamsApp.DTOs.Student;
-using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services.Queries;
+using SeamsApp.Interfaces.Services.Commands;
+using SeamsApp.Interfaces.Services.Helper;
+using SeamsApp.Models;
+
+namespace SeamsApp.Services.Commands
+{
+    public class UserService : IUserService
+    {
+        private readonly IJwtService _jwtService;
+        private readonly IMapper _mapper;
+        public UserService(IJwtService jwtService,
+                           IMapper mapper)
+        {
+            _jwtService = jwtService;
+            _mapper = mapper;
+        }
+        public Task<IEnumerable<UserRequest>> GetAllUsersAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<UserRequest> GetUserByEmailAsync(string email)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<UserRequest> GetUserByIdAsync(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<LoginResponse> LoginAsync(string email, string password)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
+</file>
+
+<file path="Services/Helper/JwtService.cs">
+using Microsoft.IdentityModel.Tokens;
+using SeamsApp.Interfaces.Services.Helper;
+using SeamsApp.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
+namespace SeamsApp.Services.Helper
+{
+    public class JwtService : IJwtService
+    {
+        private readonly IConfiguration _configuration;
+
+        public JwtService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        public async Task<string> GenerateTokenAsync(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new(ClaimTypes.Email, user.Email ?? "")
+            };
+
+            if (!string.IsNullOrEmpty(user.Role))
+            {
+                claims.Add(new Claim(ClaimTypes.Role, user.Role));
+            }
+
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? ""));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+    }
+}
+</file>
+
+<file path="Utilities/AutoMapperUtility.cs">
+using AutoMapper;
+using SeamsApp.DTOs.Attendance;
+using SeamsApp.DTOs.Auth;
+using SeamsApp.DTOs.Event;
+using SeamsApp.DTOs.Officer;
+using SeamsApp.DTOs.Student;
+using SeamsApp.DTOs.StudentApplication;
+using SeamsApp.Models;
+using SeamsApp.Models.Base;
+
+namespace SeamsApp.Utilities
+{
+    public class AutoMapperProfiles : Profile
+    {
+        public AutoMapperProfiles()
+        {
+            // STUDENT
+            CreateMap<Student, StudentRequest>().ReverseMap();
+            CreateMap<Student, StudentResponse>().ReverseMap();
+
+            // AUTH
+            CreateMap<User, UserRequest>().ReverseMap();
+
+            // ATTENDANCE
+            CreateMap<Attendance, AttendanceResponse>().ReverseMap();
+            CreateMap<Attendance, AttendanceRequest>().ReverseMap();
+
+            // STUDENT APPLICATION
+            CreateMap<StudentApplication, CreateStudentApplicationRequest>().ReverseMap();
+            CreateMap<StudentApplication, StudentApplicationResponse>().ReverseMap();
+
+            // EVENT
+            CreateMap<Event, EventRequest>().ReverseMap();
+            CreateMap<Event, EventResponse>().ReverseMap();
+
+
+            // OFFICER
+            CreateMap<Officer, OfficerRequest>().ReverseMap();
+            CreateMap<Officer, OfficerResponse>().ReverseMap();
+        }
+    }
+}
+</file>
+
+<file path="Utilities/QRCodeUtility.cs">
+using System.IO;
+using System.Xml;
+using SkiaSharp.QrCode.Image;
+
+namespace SeamsApp.Utilities
+{
+    public class QRCodeUtility
+    {
+        public static byte[] GenerateQRCode(
+            string firstName, 
+            string middleName, 
+            string lastName, 
+            string? suffix,
+            string schoolStudentId)
+        {
+            string name = $"{firstName} {middleName} {lastName}".Trim();
+            
+            if (!string.IsNullOrWhiteSpace(suffix))
+            {
+                name += $" {suffix}";
+            }
+                        string qrContent = $"{name} - {schoolStudentId}";
+
+            // Generate QR code
+            return QRCodeImageBuilder.GetPngBytes(qrContent);
+        }
+
+        //public static GetQRCode(string schoolStudentId)
+        //{
+
+        //}
+    }
+}
+</file>
+
+<file path="Controllers/StudentController.cs">
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
+using SeamsApp.DTOs.Event;
+using SeamsApp.DTOs.Student;
+using SeamsApp.Interfaces.Services.Commands;
+using SeamsApp.Models.Base;
+using SeamsApp.Services.Commands;
+using System.Threading.Tasks;
+
+namespace SeamsApp.Controllers
+{
+    [Route("api/[controller]")]
+    [Produces("application/json")]
+    [ApiController]
+    [Authorize]
+    public class StudentController : ControllerBase
+    {
+        private readonly IStudentService _studentService;
+
+        public StudentController(IStudentService studentService)
+        {
+            _studentService = studentService;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpPatch("{studentId:int}")]
+        [Authorize(Roles = "Admin")]
+        [OutputCache]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<int>> DeleteStudent(int studentId)
+        {
+
+            var studentToDelete = await _studentService.DeleteStudentByIdAsync(studentId);
+            if (studentId == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(studentToDelete);
+        }
+
+        //[HttpPut("{studentId:int}")]
+        //[Authorize(Roles = "Admin")]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<ActionResult<int>> UpdateStudent(int studentId, [FromBody] StudentRequest studentRequest)
+        //{
+        //    //var eventToUpdate = await _eventService.UpdateEventAsync(eventId, eventRequest);
+        //    //if (eventId! == 0)
+        //    //{
+        //    //    return NoContent();
+        //    //}
+
+        //    //return Ok(eventToUpdate);
+        //}
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //[HttpGet("ApprovedStudents")]
+        //[Authorize(Roles = "Admin, Officer")]
+        //[OutputCache]
+        //[ProducesResponseType(typeof(IEnumerable<StudentResponse>), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<ActionResult<IEnumerable<StudentResponse>>> GetAllActiveStudent()
+        //{
+        //    var students = await _studentService.GetAllApprovedStudentAsync();
+        //    return Ok(students);
+        //}
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="studentId"></param>
+        ///// <returns></returns>
+        //[HttpDelete("ById/{studentId:int}")]
+        //[Authorize(Roles = "Admin")]
+        //public async Task<ActionResult<int>> DeleteStudent(int studentId)
+        //{
+        //    var student = await _studentService.DeleteStudentByIdAsync(studentId);
+        //    return Ok(student);
+        //}
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="studentId"></param>
+        ///// <returns></returns>
+        //[HttpGet("ById")]
+        //[Authorize(Roles = "Admin, Officer")]
+        //[ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<ActionResult<int>> GetStudentById(int studentId)
+        //{
+        //    var student = await _studentService.GetStudentByIdAsync(studentId);
+        //    return Ok(student);
+        //}
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="studentUpdateDTO"></param>
+        ///// <param name="studentId"></param>
+        ///// <returns></returns>
+        //[HttpPut("ById/{studentId:int}")]
+        //[Authorize(Roles = "Admin")]
+        //[ProducesResponseType(typeof(StudentUpdateDTO), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<ActionResult<int>> UpdateStudent(StudentUpdateDTO studentUpdateDTO, int studentId)
+        //{
+        //    var student = await _studentService.UpdateStudentByIdAsync(studentUpdateDTO, studentId);
+        //    return Ok(student);
+        //}
+
+        ///// <summary>
+        ///// Approve a pending student registration
+        ///// </summary>
+        ///// <param name="studentId"></param>
+        ///// <returns></returns>
+        //[HttpPut("Approve/{studentId:int}")]
+        //[Authorize(Roles = "Admin, Officer")]
+        //[ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<IActionResult> ApproveStudent(int studentId)
+        //{
+        //    try
+        //    {
+        //        var student = await _studentService.ApprovedStudentAsync(studentId);
+        //        return Ok(new { Message = "Student approved successfully", Student = student });
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return NotFound(new { Error = ex.Message });
+        //    }
+        //}
+
+        ///// <summary>
+        ///// Reject a pending student registration
+        ///// </summary>
+        ///// <param name="studentId"></param>
+        ///// <returns></returns>
+        //[HttpPut("Reject/{studentId:int}")]
+        //[Authorize(Roles = "Admin, Officer")]
+        //[ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<IActionResult> RejectStudent(int studentId)
+        //{
+        //    try
+        //    {
+        //        var student = await _studentService.RejectStudentAsync(studentId);
+        //        return Ok(new { Message = "Student rejected", Student = student });
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return NotFound(new { Error = ex.Message });
+        //    }
+        //}
+
+    }
+}
+</file>
+
+<file path="Services/Commands/StudentService.cs">
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using QRCoder;
+using SeamsApp.Data;
+using SeamsApp.DTOs.Student;
+using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Models;
 using SeamsApp.Models.Base;
 using SeamsApp.Utilities;
 using System.Runtime.Versioning;
 
-namespace SeamsApp.Services.Queries
+namespace SeamsApp.Services.Commands
 {
     public class StudentService : IStudentService
     {
-        private readonly IStudentRepository _studentRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly SeamsDbContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public StudentService(
-            IStudentRepository studentRepository,
-            IUserRepository userRepository,
-            IMapper mapper,
-            IPasswordHasher<User> passwordHasher)
+        public StudentService(SeamsDbContext dbContext,
+                              IMapper mapper,
+                              IHttpContextAccessor httpContextAccessor)
         {
-            _studentRepository = studentRepository;
-            _userRepository = userRepository;
+            _dbContext = dbContext;
             _mapper = mapper;
-            _passwordHasher = passwordHasher;
-
+            _httpContextAccessor = httpContextAccessor;
         }
+
         public async Task<int> DeleteStudentByIdAsync(int studentId)
         {
-            var student = await _studentRepository.DeleteStudentByIdAsync(studentId);
-            return student;
+            var student = await _dbContext.Students.FindAsync(studentId);
+            if (student == null) return 0;
+
+            _dbContext.Students.Update(student);
+            return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<StudentDTO>> GetAllPendingStudentAsync()
+        public async Task<IEnumerable<StudentResponse>> GetAllActiveStudentAsync()
         {
-            var students = await _studentRepository.GetAllPendingStudentAsync();
-            return _mapper.Map<IEnumerable<StudentDTO>>(students);
-        }
-        public async Task<IEnumerable<StudentDTO>> GetAllApprovedStudentAsync()
-        {
-            var students = await _studentRepository.GetAllApprovedStudentAsync();
-            return _mapper.Map<IEnumerable<StudentDTO>>(students);
-        }
-        public async Task<StudentDTO> GetStudentByIdAsync(int studentId)
-        {
-            var student = await _studentRepository.GetStudentByIdAsync(studentId);
-            return _mapper.Map<StudentDTO>(student);
+            var students = await _dbContext.Students.ToListAsync();
+            if (students == null)
+            {
+                return null!;
+            }
+            return _mapper.Map<IEnumerable<StudentResponse>>(students);
         }
 
-        public Task<StudentDTO> GetStudentQRCodeAsync(string schoolStudentId)
+        public async Task<StudentResponse> GetStudentByIdAsync(int studentId)
+        {
+            var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.StudentId == studentId);
+            if (student == null)
+            {
+                return null!;
+            }
+            
+            var response = _mapper.Map<StudentResponse>(student);
+            return response;
+        }
+
+        public async Task<StudentResponse> GetStudentQRCodeInfoAsync(string schoolStudentId)
+        {
+            var student = await _dbContext.Students
+                .FirstOrDefaultAsync(s => s.SchoolStudentId == schoolStudentId);
+
+            if (student == null)
+            {
+                return null!;
+            }
+
+            var qrGenerator = new QRCodeGenerator();
+            var qrData = qrGenerator.CreateQrCode(student.SchoolStudentId!, QRCodeGenerator.ECCLevel.Q);
+            var qrCode = new Base64QRCode(qrData).GetGraphic(20);
+
+            var response = _mapper.Map<StudentResponse>(student);
+
+            return response;
+        }
+
+        public Task<int> UpdateStudentByIdAsync(int studentId, StudentRequest studentRequest)
         {
             throw new NotImplementedException();
         }
-        public Task<int> UpdateStudentByIdAsync(StudentUpdateDTO studentUpdateDTO, int studentId)
-        {
-            var product = _mapper.Map<Student>(studentUpdateDTO);
-            return _studentRepository.UpdateStudentByIdAsync(product);
-        }
-
-        public async Task<CreateStudentDTO> CreateStudent(CreateStudentDTO createStudentDTO)
-        {
-            var student = _mapper.Map<Student>(createStudentDTO);
-            var createdStudent = await _studentRepository.CreateStudentAsync(student);
-            return _mapper.Map<CreateStudentDTO>(createdStudent);
-        }
-
-        [SupportedOSPlatform("windows")]
-        public async Task<StudentDTO> ApprovedStudentAsync(int studentId)
-        {
-            var student = await _studentRepository.GetStudentByIdAsync(studentId);
-            if (student == null)
-                throw new ArgumentException("Student not found");
-
-            var firstName = student.FirstName ?? "";
-            var middleName = student.MiddleName ?? "";
-            var lastName = student.LastName ?? "";
-            var suffix = student.Suffix ?? "";
-            var schoolStudentId = student.SchoolStudentId ?? "";
-
-            student.QRCode = QRCodeUtility.GenerateQRCode(firstName, middleName, lastName, suffix, schoolStudentId);
-
-            await _studentRepository.UpdateStudentStatusToApprovedAsync(studentId, 2, student.QRCode);
-
-            var user = new User
-            {
-                //Email = student.Email,
-                Role = "Student"
-            };
-
-            user.PasswordHash = _passwordHasher.HashPassword(user, lastName.ToUpper());
-            await _userRepository.CreateUserAsync(user);
-
-            return _mapper.Map<StudentDTO>(student);
-        }
-
-        public async Task<StudentDTO> RejectStudentAsync(int studentId)
-        {
-            var student = await _studentRepository.GetStudentByIdAsync(studentId);
-            if (student == null)
-                throw new ArgumentException("Student not found");
-
-            await _studentRepository.UpdateStudentStatusToRejectAsync(studentId, 3);
-
-            return _mapper.Map<StudentDTO>(student);
-        }
     }
-}
-</file>
-
-<file path="Controllers/AttendanceController.cs">
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using SeamsApp.DTOs.Attendance;
-using SeamsApp.DTOs.Event;
-using SeamsApp.Interfaces.Services.Commands;
-
-namespace SeamsApp.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
-    public class AttendanceController : ControllerBase
-    {
-        private readonly IAttendanceService _attendanceService;
-
-        public AttendanceController(IAttendanceService attendanceService)
-        {
-            _attendanceService = attendanceService;
-        }
-
-        [Authorize(Roles = "Admin, Officer, Student")]
-        [HttpGet]
-        [ProducesResponseType(typeof(AttendanceResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<AttendanceResponse>>> GetAllAttendance()
-        {
-            var attendances = await _attendanceService.GetAllAttendanceAsync();
-            if (attendances == null)
-            {
-                return NotFound();
-            }
-            return Ok(attendances);
-        }
-
-        [Authorize(Roles = "Admin, Officer")]
-        [HttpGet("{attendanceId:int}")]
-        [ProducesResponseType(typeof(AttendanceResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AttendanceResponse>> GetAttendanceById(int attendanceId)
-        {
-            var attendance = await _attendanceService.GetAttendanceByIdAsync(attendanceId);
-            if (attendance == null)
-            {
-                return NotFound();
-            }
-            return Ok(attendance);
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpPost("{eventId:int}/attendances")]
-        [ProducesResponseType(typeof(int), 201)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AttendanceRequest>> CreateAttendance(int eventId, [FromBody] AttendanceRequest attendanceRequest)
-        {
-            var newAttendance = await _attendanceService.CreateAttendanceAsync(eventId, attendanceRequest);
-            if (newAttendance == null)
-            {
-                return BadRequest();
-            }
-
-            return Ok(newAttendance);
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpPut("{attendanceId:int}")]
-        [ProducesResponseType(typeof(AttendanceRequest), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AttendanceRequest>> UpdateAttendance(int attendanceId, [FromBody] AttendanceRequest attendanceRequest)
-        {
-            var attendance = await _attendanceService.UpdateAttendanceAsync(attendanceId, attendanceRequest);
-            if (attendance == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(attendance);
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpDelete("{attendanceId:int}")]
-        [ProducesResponseType(typeof(AttendanceResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AttendanceResponse>> DeleteAttendance(int attendanceId)
-        {
-            var attendance = await _attendanceService.DeleteAttendanceAsync(attendanceId);
-            if (attendance == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(attendance);
-        }
-    }
-}
-</file>
-
-<file path="Controllers/StudentApplicationController.cs">
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using SeamsApp.DTOs.Student;
-using SeamsApp.DTOs.StudentApplication;
-using SeamsApp.Interfaces.Services.Commands;
-using SeamsApp.Models;
-
-namespace SeamsApp.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class StudentApplicationController : ControllerBase
-    {
-        private readonly IStudentApplicationService _studentApplicationService;
-
-        public StudentApplicationController(IStudentApplicationService studentApplicationService)
-        {
-            _studentApplicationService = studentApplicationService;
-        }
-
-        [HttpPost("regsiter")]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(CreateStudentApplicationRequest), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<CreateStudentApplicationRequest>> CreateStudentApplication(CreateStudentApplicationRequest rqs)
-        {
-            var studentApplication = await _studentApplicationService.CreateStudentApplication(rqs);
-            return Ok(studentApplication);
-        }
-
-        [HttpPatch("approve-application/{studentApplicationId:int}")]
-        //[Authorize(Roles = "Admin")]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(StudentUpdateDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> ApproveStudentApplication(int studentApplicationId)
-        {
-            var result = await _studentApplicationService.ApproveStundetApplication(studentApplicationId);
-            if (result == 0)
-            {
-                return NotFound();
-            }
-            return Ok(result);
-        }
-
-        [HttpPatch("reject-application/{studentApplicationId:int}")]
-        //[Authorize(Roles = "Admin")]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(StudentUpdateDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> RejectStudentApplication(int studentApplicationId)
-        {
-            var result = await _studentApplicationService.RejectStudentApplication(studentApplicationId);
-            if (result == 0)
-            {
-                return NotFound();
-            }
-            return Ok(result);
-        }
-
-
-        [HttpGet("approved-applications")]
-        //[Authorize(Roles = "Admin")]
-        [ProducesResponseType(typeof(StudentApplicationResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<StudentApplicationResponse>>> GetAllApprovedStudentApplications()
-        {
-            var approvedApplications = await _studentApplicationService.GetAllApprovedStudentApplicationsAsync();
-            if (approvedApplications == null)
-            {
-                return NotFound();
-            }
-            return Ok(approvedApplications);
-        }
-
-
-        [HttpGet("rejected-applications")]
-        //[Authorize(Roles = "Admin")]
-        [ProducesResponseType(typeof(StudentApplicationResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<StudentApplicationResponse>>> GetAllRejectedStudentApplications()
-        {
-            var rejectedApplications = await _studentApplicationService.GetAllRejectedStudentApplicationsAsync();
-            if (rejectedApplications == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(rejectedApplications);
-        }
-
-        [HttpGet("pending-applications")]
-        //[Authorize(Roles = "Admin")]
-        [ProducesResponseType(typeof(StudentApplicationResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<StudentApplicationResponse>>> GetAllPendingStudentApplications()
-        {
-            var pendingApplications = await _studentApplicationService.GetAllPendingStudentApplicationsAsync();
-            if (pendingApplications == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(pendingApplications);
-        }
-
-
-
-    }
-}
-</file>
-
-<file path="Interfaces/Repositories/IAttendanceRecordRepository.cs">
-using SeamsApp.DTOs.AttendanceRecords;
-using SeamsApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SeamsApp.Interfaces.Repositories
-{
-    public interface IAttendanceRecordRepository
-    {
-        Task<int> RecordStudentAttendance(AttendanceRecord attendanceRecord);
-        Task<bool> CheckDuplicateAttendance(int attendanceID, string schoolStudentID);
-        Task<List<AttendanceRecordResponse>> GetListOfAttendanceRecordByAttendanceEventName(
-            string attendanceEventName,
-            string logType,
-            int semester,
-            int year
-        );
-    }
-}
-</file>
-
-<file path="Models/Attendance.cs">
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SeamsApp.Models.Base
-{
-    public class Attendance
-    {
-        [Key]
-        public int AttendanceId { get; set; }
-        public int EventId { get; set; }
-        public string? Title { get; set; }
-        public DateTime Date { get; set; }
-        public string? Session { get; set; }
-        public string? LogType { get; set; }  
-        [Required]
-        public DateTime StartTime { get; set; }
-        [Required]
-        public DateTime EndTime { get; set; }
-        public int Status { get; set; }
-        public int CreatedBy { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime DeletedAt { get; set; } = DateTime.UtcNow;
-    }
-}
-</file>
-
-<file path="Models/Event.cs">
-using System.ComponentModel.DataAnnotations;
-
-namespace SeamsApp.Models
-{
-    public class Event
-    {
-        [Key]
-        public int EventId { get; set; }
-        public string? Title { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public int Status { get; set; }
-        public int CreatedBy { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-    }
-}
-</file>
-
-<file path="Models/Student.cs">
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SeamsApp.Models.Base
-{
-    public class Student
-    {
-        [Key]
-        public int StudentId { get; set; }
-        public int UserId { get; set; }
-        // PERSONAL INFORMATION
-        public string? FirstName { get; set; }
-        public string? MiddleName { get; set; }
-        public string? LastName { get; set; }
-        public string? Suffix { get; set; }
-
-        // SCHOOL INFORMATION
-        public string? SchoolStudentId { get; set; }
-        public string? YearLevel { get; set; }
-        public string? Course { get; set; }
-
-        // PHOTO URL
-        public string? PhotoUrl { get; set; }
-        public byte[]? QRCode { get; set; }
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-    }
-}
-</file>
-
-<file path="Repositories/AttendanceRecordRepository.cs">
-using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using SeamsApp.DTOs.AttendanceRecords;
-using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SeamsApp.Repositories.Queries
-{
-    public class AttendanceRecordRepository : IAttendanceRecordRepository
-    {
-        // STATUS 0 - DELETED
-        // STATUS 1 - PRESENT
-        // STATUS 2 - ABSENT
-        // STATUS 3 - RESETTED
-
-        private readonly string _connectionString;
-        public AttendanceRecordRepository(IConfiguration configuration)
-        {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
-        }
-        public async Task<int> RecordStudentAttendance(AttendanceRecord attendanceRecord)
-        {
-            string query = @"
-                            INSERT INTO AttendanceRecords 
-                            (
-                                AttendanceID,
-                                SchoolStudentID,
-                                Timestamp,
-                                Status
-                            )
-                            VALUES 
-                            (
-                                @AttendanceID,
-                                @SchoolStudentID,
-                                @Timestamp,
-                                @Status
-                            )";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@AttendanceID", attendanceRecord.AttendanceID);
-            parameters.Add("@SchoolStudentID", attendanceRecord.SchoolStudentID);
-            parameters.Add("@Timestamp", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-            parameters.Add("@Status", 1);
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                return await connection.ExecuteScalarAsync<int>(query, parameters);
-            }
-        }
-        public async Task<bool> CheckDuplicateAttendance(int attendanceID, string schoolStudentID)
-        {
-            string sql = @"
-                SELECT COUNT(*) FROM AttendanceRecords 
-                WHERE AttendanceID = @AttendanceID 
-                AND SchoolStudentID = @SchoolStudentID 
-                AND CAST(Timestamp AS DATE) = CAST(GETDATE() AS DATE)";  // Fixed for SQL Server
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@AttendanceID", attendanceID);
-            parameters.Add("@SchoolStudentID", schoolStudentID);
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                int count = await connection.ExecuteScalarAsync<int>(sql, parameters);
-                return count > 0;
-            }
-        }
-
-        public async Task<List<AttendanceRecordResponse>> GetListOfAttendanceRecordByAttendanceEventName(
-            string attendanceEventName,
-            string logType,
-            int semester,
-            int year
-        )
-        {
-            var sql = @"
-                SELECT
-                    s.FirstName + ' ' + 
-                    COALESCE(LEFT(s.MiddleName, 1) + '. ', '') + 
-                    s.LastName + 
-                    COALESCE(' ' + s.Suffix, '') AS FullName,
-                    s.SchoolStudentId AS SchoolStudentId
-                FROM 
-                    Students s
-                    LEFT JOIN AttendanceRecords ar ON s.SchoolStudentId = ar.SchoolStudentID
-                    LEFT JOIN Attendance a ON ar.AttendanceID = a.AttendanceId  
-                        AND a.Name = @Name 
-                        AND a.LogType = @LogType
-                        AND a.Semester = @Semester
-                        AND YEAR(a.Date) = @Year
-                WHERE 
-                    ar.Status IS NULL OR ar.Status IN (1, 2)
-                ORDER BY 
-                    CASE WHEN ar.Status = 1 THEN 0 ELSE 1 END,
-                    ar.Timestamp DESC";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@Name", attendanceEventName);
-            parameters.Add("@LogType", logType);
-            parameters.Add("@Semester", semester);
-            parameters.Add("@Year", year);
-
-            using(var connection = new SqlConnection(_connectionString))
-            {
-                var attendanceRecords = await connection.QueryAsync<AttendanceRecordResponse>(sql, parameters);
-                return attendanceRecords.ToList();
-            }
-        }
-    }
-}
-</file>
-
-<file path="SeamsApp.csproj">
-<Project Sdk="Microsoft.NET.Sdk.Web">
-
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<NoWarn>$(NoWarn);1591</NoWarn>
-		<UserSecretsId>79855362-f225-414a-8777-c55e6fa1c464</UserSecretsId>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-		<PackageReference Include="Dapper" Version="2.1.79" />
-		<PackageReference Include="FluentValidation" Version="12.1.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.28" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.17" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.17" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.9">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="QRCoder" Version="1.7.0" />
-		<PackageReference Include="SkiaSharp.QrCode" Version="0.12.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
-		<PackageReference Include="System.Drawing.Common" Version="10.0.5" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Migrations\" />
-		<Folder Include="Validations\" />
-	</ItemGroup>
-
-</Project>
-</file>
-
-<file path="appsettings.json">
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=db57778.public.databaseasp.net; Database=db57778; User Id=db57778; Password=5Mp_=x8ZS3!i; Encrypt=True; TrustServerCertificate=True; MultipleActiveResultSets=True; "
-  },
-  "Jwt": {
-    "Issuer": "http://seams.runasp.net/",
-    "Audience": "https://seams-web.vercel.app/",
-    "Key": "33132a5bda005be30bd95f8b742886ab9537858c82dc57f5e1effd084078e101c9945163a7d236d3c98a8d1c512a6bd7"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  }
 }
 </file>
 
@@ -7548,6 +6757,91 @@ namespace SeamsApp.Migrations
 }
 </file>
 
+<file path="SeamsApp.csproj">
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+		<UserSecretsId>79855362-f225-414a-8777-c55e6fa1c464</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Interfaces\Repositories\**" />
+	  <Content Remove="Interfaces\Repositories\**" />
+	  <EmbeddedResource Remove="Interfaces\Repositories\**" />
+	  <None Remove="Interfaces\Repositories\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+		<PackageReference Include="Dapper" Version="2.1.79" />
+		<PackageReference Include="FluentValidation" Version="12.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.28" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.17" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.17" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.9">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="QRCoder" Version="1.7.0" />
+		<PackageReference Include="Scrutor" Version="7.0.0" />
+		<PackageReference Include="SkiaSharp.QrCode" Version="0.12.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+		<PackageReference Include="System.Drawing.Common" Version="10.0.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Migrations\" />
+		<Folder Include="Validations\" />
+	</ItemGroup>
+
+</Project>
+</file>
+
+<file path="appsettings.Production.json">
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=MARK\\SQLEXPRESS;Database=SeamsDB;User Id=sa;Password=123456;TrustServerCertificate=true"
+  },
+  "Jwt": {
+    "Issuer": "https://localhost:7122",
+    "Audience": "https://localhost:5173",
+    "Key": "33132a5bda005be30bd95f8b742886ab9537858c82dc57f5e1effd084078e101c9945163a7d236d3c98a8d1c512a6bd7"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
+</file>
+
+<file path="appsettings.json">
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=db57778.public.databaseasp.net; Database=db57778; User Id=db57778; Password=5Mp_=x8ZS3!i; Encrypt=True; TrustServerCertificate=True; MultipleActiveResultSets=True; "
+  },
+  "Jwt": {
+    "Issuer": "http://seams.runasp.net/",
+    "Audience": "https://seams-web.vercel.app/",
+    "Key": "33132a5bda005be30bd95f8b742886ab9537858c82dc57f5e1effd084078e101c9945163a7d236d3c98a8d1c512a6bd7"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
+</file>
+
 <file path="Program.cs">
 using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7556,42 +6850,30 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SeamsApp.Data;
-using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Interfaces.Services.Commands;
-using SeamsApp.Interfaces.Services.Queries;
+using SeamsApp.Interfaces.Services.Helper;
 using SeamsApp.Models;
-using SeamsApp.Repositories.Queries;
 using SeamsApp.Seeders;
 using SeamsApp.Services.Commands;
-using SeamsApp.Services.Queries;
+using SeamsApp.Services.Helper;
 using SeamsApp.Utilities;
 using System.Text;
 
-
 var builder = WebApplication.CreateBuilder(args);
-
-// REGISTER REPOSITORIES
-
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();  
-builder.Services.AddScoped<IAttendanceRecordRepository,AttendanceRecordRepository>();
-
-// REGISTER SERVICES
-
-builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddScoped<IStudentService, StudentService>();
-builder.Services.AddScoped<IAttendanceService, AttendanceService>();
-builder.Services.AddScoped<IOfficerService, OfficerService>();
-builder.Services.AddScoped<IAttendanceRecordService,AttendanceRecordService>();
-builder.Services.AddScoped<IStudentApplicationService, StudentApplicationService>();
-builder.Services.AddScoped<IEventService, EventService>();
-builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.Scan(scan => scan
+    .FromAssemblyOf<Program>()
+
+    .AddClasses(classes => classes
+        .Where(type => type.Name.EndsWith("Service")))
+        .AsImplementedInterfaces()
+        .WithScopedLifetime()
+ );
+
 builder.Services.AddOutputCache(options =>
 {
     options.DefaultExpirationTimeSpan = TimeSpan.FromSeconds(15); 
@@ -7601,11 +6883,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins("https://seamsweb.vercel.app")
+        policy.WithOrigins("https://seamsweb.vercel.app", "http://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -7613,7 +6896,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = true,
+            ValidateLifetime = true,    
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
@@ -7672,9 +6955,16 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    AdminSeeder.SeedAdmin(services);
+    try
+    {
+        AdminSeeder.SeedAdmin(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Admin seeding failed");
+    }
 }
-
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();

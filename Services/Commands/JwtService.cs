@@ -1,11 +1,11 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using SeamsApp.Interfaces.Services.Helper;
+using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace SeamsApp.Services.Helper
+namespace SeamsApp.Services.Commands
 {
     public class JwtService : IJwtService
     {
@@ -15,7 +15,7 @@ namespace SeamsApp.Services.Helper
         {
             _configuration = configuration;
         }
-        public async Task<string> GenerateTokenAsync(User user)
+        public string GenerateToken(User user)
         {
             var claims = new List<Claim>
             {
@@ -27,7 +27,6 @@ namespace SeamsApp.Services.Helper
             {
                 claims.Add(new Claim(ClaimTypes.Role, user.Role));
             }
-
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? ""));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

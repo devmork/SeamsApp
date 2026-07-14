@@ -6,38 +6,29 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SeamsApp.Data;
 using SeamsApp.Interfaces.Services.Commands;
-using SeamsApp.Interfaces.Services.Helper;
 using SeamsApp.Models;
 using SeamsApp.Seeders;
 using SeamsApp.Services.Commands;
-using SeamsApp.Services.Helper;
 using SeamsApp.Utilities;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.Scan(scan => scan
     .FromAssemblyOf<Program>()
 
-    .AddClasses(classes => classes.AssignableTo<IServiceCollection>())
-        .AsImplementedInterfaces()
-        .WithScopedLifetime()
-
     .AddClasses(classes => classes
-        .WithAttribute<TransientServiceAttribute>())
-        .AsImplementedInterfaces()
-        .WithScopedLifetime()
-
-     .AddClasses(classes => classes
-        .WithAttribute<ScopedServiceAttribute>())
-        .AsImplementedInterfaces()
-        .WithScopedLifetime()
-
-     .AddClasses(classes => classes
-        .WithAttribute<SingletonServiceAttribute>())
+        .Where(type => type.Name.EndsWith("Service")))
         .AsImplementedInterfaces()
         .WithScopedLifetime()
  );
@@ -51,11 +42,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins("https://seamsweb.vercel.app")
+        policy.WithOrigins("https://seamsweb.vercel.app", "http://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

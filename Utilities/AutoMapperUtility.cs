@@ -19,7 +19,7 @@ namespace SeamsApp.Utilities
             CreateMap<Student, StudentResponse>().ReverseMap();
 
             // AUTH
-            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, UserRequest>().ReverseMap();
 
             // ATTENDANCE
             CreateMap<Attendance, AttendanceResponse>().ReverseMap();
