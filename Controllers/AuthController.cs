@@ -2,35 +2,29 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SeamsApp.DTOs.Auth;
-using SeamsApp.Interfaces.Services.Queries;
+using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Utilities;
 
 namespace SeamsApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-    
         public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
+
+        [HttpPost("login")]
         [AllowAnonymous]
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO dto)
+        public async Task<IActionResult> Login([FromBody] LoginRequest rqs)
         {
             try
             {
-                var response = await _authService.LoginAsync(dto.Email, dto.Password);
+                var response = await _authService.LoginAsync(rqs.Email, rqs.Password);
                 return Ok(response);
             }
             catch (UnauthorizedAccessException ex)

@@ -5,39 +5,34 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SeamsApp.Data;
-using SeamsApp.Interfaces.Repositories;
 using SeamsApp.Interfaces.Services.Commands;
-using SeamsApp.Interfaces.Services.Queries;
 using SeamsApp.Models;
-using SeamsApp.Repositories.Queries;
 using SeamsApp.Seeders;
 using SeamsApp.Services.Commands;
-using SeamsApp.Services.Queries;
 using SeamsApp.Utilities;
 using System.Text;
-
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// REGISTER REPOSITORIES
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
 
-builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
-builder.Services.AddScoped<IAttendanceRecordRepository, AttendanceRecordRepository>();
-
-// REGISTER SERVICES
-
-builder.Services.AddScoped<IAttendanceService, AttendanceService>();
-builder.Services.AddScoped<IOfficerService, OfficerService>();
-builder.Services.AddScoped<IAttendanceRecordService, AttendanceRecordService>();
-builder.Services.AddScoped<IStudentApplicationService, StudentApplicationService>();
-builder.Services.AddScoped<IEventService, EventService>();
-builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-
-
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.Scan(scan => scan
+    .FromAssemblyOf<Program>()
+
+    .AddClasses(classes => classes
+        .Where(type => type.Name.EndsWith("Service")))
+        .AsImplementedInterfaces()
+        .WithScopedLifetime()
+ );
+
 builder.Services.AddOutputCache(options =>
 {
     options.DefaultExpirationTimeSpan = TimeSpan.FromSeconds(15);
@@ -47,17 +42,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        var allowedOrigins = new List<string>
-        {
-            "http://localhost:5173",
-            "https://seams-web.vercel.app"
-        };
-
-        policy.WithOrigins(allowedOrigins.ToArray())
+        policy.WithOrigins("https://seamsweb.vercel.app", "http://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -65,7 +55,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = true,
+            ValidateLifetime = true,    
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],

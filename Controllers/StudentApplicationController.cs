@@ -33,7 +33,6 @@ namespace SeamsApp.Controllers
         [HttpPatch("approve-application/{studentApplicationId:int}")]
         //[Authorize(Roles = "Admin")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(StudentUpdateDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> ApproveStudentApplication(int studentApplicationId)
@@ -49,7 +48,6 @@ namespace SeamsApp.Controllers
         [HttpPatch("reject-application/{studentApplicationId:int}")]
         //[Authorize(Roles = "Admin")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(StudentUpdateDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> RejectStudentApplication(int studentApplicationId)
