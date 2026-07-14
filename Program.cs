@@ -35,7 +35,7 @@ builder.Services.Scan(scan => scan
 
 builder.Services.AddOutputCache(options =>
 {
-    options.DefaultExpirationTimeSpan = TimeSpan.FromSeconds(15); 
+    options.DefaultExpirationTimeSpan = TimeSpan.FromSeconds(15);
 });
 
 builder.Services.AddCors(options =>

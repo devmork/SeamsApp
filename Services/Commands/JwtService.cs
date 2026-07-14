@@ -40,5 +40,6 @@ namespace SeamsApp.Services.Commands
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }
