@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SeamsApp.Data;
 using SeamsApp.DTOs.Auth;
-using SeamsApp.DTOs.Student;
-using SeamsApp.Interfaces.Services.Queries;
+using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Models;
 using SeamsApp.Utilities;
 
-namespace SeamsApp.Services.Queries
+namespace SeamsApp.Services.Commands
 {
     public class AuthService : IAuthService
     {
@@ -17,40 +16,35 @@ namespace SeamsApp.Services.Queries
         private readonly IMapper _mapper;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public AuthService(
-            SeamsDbContext dbContext,
-            IJwtService jwtService,
-            IMapper mapper,
-            IPasswordHasher<User> passwordHasher)
+        public AuthService(SeamsDbContext dbContext,
+                           IPasswordHasher<User> passwordHasher,
+                           IMapper mapper,
+                           IJwtService jwtService)
         {
             _dbContext = dbContext;
             _jwtService = jwtService;
             _mapper = mapper;
             _passwordHasher = passwordHasher;
         }
-        public async Task<LoginResponseDTO> LoginAsync(string email, string password)
+
+        public async Task<LoginResponse> LoginAsync(string email, string password)
         {
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.Email == email);
-
-            if (user == null)
-            {
-                throw new UnauthorizedAccessException("Invalid credentials");
-            }
+                .FirstOrDefaultAsync(u => u.Email == email) ?? 
+                throw new UnauthorizedAccessException("Invalid email or password.");
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash!, password);
             if (result == PasswordVerificationResult.Failed)
-            {
-                throw new UnauthorizedAccessException("Invalid credentials");
-            }
+                throw new UnauthorizedAccessException("Invalid email or password.");
 
-            var token = _jwtService.GenerateTokenAsync(user);
-            var userDto = _mapper.Map<UserDTO>(user);
+            var token = _jwtService.GenerateToken(user);
 
-            return new LoginResponseDTO
+            return new LoginResponse
             {
                 Token = token,
-                User = userDto
+                UserId = user.UserId,
+                Email = user.Email!,
+                Role = user.Role!
             };
         }
     }

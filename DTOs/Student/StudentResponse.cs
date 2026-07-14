@@ -1,7 +1,6 @@
 ﻿namespace SeamsApp.DTOs.Student
 {
-    public class CreateStudentRequest
+    public class StudentResponse
     {
-
     }
 }

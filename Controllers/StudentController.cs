@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using SeamsApp.DTOs.Event;
 using SeamsApp.DTOs.Student;
-using SeamsApp.Interfaces.Repositories;
-using SeamsApp.Interfaces.Services.Queries;
+using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Models.Base;
+using SeamsApp.Services.Commands;
 using System.Threading.Tasks;
 
 namespace SeamsApp.Controllers
@@ -15,54 +16,59 @@ namespace SeamsApp.Controllers
     [Authorize]
     public class StudentController : ControllerBase
     {
-        //private readonly IStudentService _studentService;
+        private readonly IStudentService _studentService;
 
-        //public StudentController(IStudentService studentService)
-        //{
-        //    _studentService = studentService;
-        //}
+        public StudentController(IStudentService studentService)
+        {
+            _studentService = studentService;
+        }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="createStudentDTO"></param>
-        ///// <returns></returns>
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[ProducesResponseType(typeof(CreateStudentDTO), StatusCodes.Status200OK)]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpPatch("{studentId:int}")]
+        [Authorize(Roles = "Admin")]
+        [OutputCache]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<int>> DeleteStudent(int studentId)
+        {
+
+            var studentToDelete = await _studentService.DeleteStudentByIdAsync(studentId);
+            if (studentId == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(studentToDelete);
+        }
+
+        //[HttpPut("{studentId:int}")]
+        //[Authorize(Roles = "Admin")]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<ActionResult<CreateStudentDTO>> CreateStudent(CreateStudentDTO createStudentDTO)
+        //public async Task<ActionResult<int>> UpdateStudent(int studentId, [FromBody] StudentRequest studentRequest)
         //{
-        //    var student = await _studentService.CreateStudent(createStudentDTO);
-        //    return Ok(student);
+        //    //var eventToUpdate = await _eventService.UpdateEventAsync(eventId, eventRequest);
+        //    //if (eventId! == 0)
+        //    //{
+        //    //    return NoContent();
+        //    //}
+
+        //    //return Ok(eventToUpdate);
         //}
 
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("PendingStudents")]
-        //[Authorize(Roles = "Admin, Officer")]
-        //[OutputCache]
-        //[ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<ActionResult<IEnumerable<StudentDTO>>> GetPendingStudents()
-        //{
-        //    var students = await _studentService.GetAllPendingStudentAsync();
-        //    return Ok(students);
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <returns></returns>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         //[HttpGet("ApprovedStudents")]
         //[Authorize(Roles = "Admin, Officer")]
         //[OutputCache]
-        //[ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
+        //[ProducesResponseType(typeof(IEnumerable<StudentResponse>), StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<ActionResult<IEnumerable<StudentDTO>>> GetApprovedStudents()
+        //public async Task<ActionResult<IEnumerable<StudentResponse>>> GetAllActiveStudent()
         //{
         //    var students = await _studentService.GetAllApprovedStudentAsync();
         //    return Ok(students);
