@@ -42,7 +42,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins("https://seamsweb.vercel.app", "http://localhost:5173")
+        policy.WithOrigins("https://seams-web.vercel.app", "http://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
