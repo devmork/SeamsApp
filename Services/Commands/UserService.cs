@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using SeamsApp.DTOs.Auth;
 using SeamsApp.DTOs.Student;
 using SeamsApp.Interfaces.Services.Commands;
-using SeamsApp.Interfaces.Services.Helper;
 using SeamsApp.Models;
 
 namespace SeamsApp.Services.Commands
@@ -18,17 +17,17 @@ namespace SeamsApp.Services.Commands
             _jwtService = jwtService;
             _mapper = mapper;
         }
-        public Task<IEnumerable<UserDTO>> GetAllUsersAsync()
+        public Task<IEnumerable<UserRequest>> GetAllUsersAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<UserDTO> GetUserByEmailAsync(string email)
+        public Task<UserRequest> GetUserByEmailAsync(string email)
         {
             throw new NotImplementedException();
         }
 
-        public Task<UserDTO> GetUserByIdAsync(int userId)
+        public Task<UserRequest> GetUserByIdAsync(int userId)
         {
             throw new NotImplementedException();
         }
