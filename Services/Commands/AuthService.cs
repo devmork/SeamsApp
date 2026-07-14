@@ -5,22 +5,26 @@ using SeamsApp.Data;
 using SeamsApp.DTOs.Auth;
 using SeamsApp.Interfaces.Services.Commands;
 using SeamsApp.Models;
+using SeamsApp.Utilities;
 
 namespace SeamsApp.Services.Commands
 {
     public class AuthService : IAuthService
     {
         private readonly SeamsDbContext _dbContext;
-        private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IJwtService _jwtService;
+        private readonly IMapper _mapper;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
         public AuthService(SeamsDbContext dbContext,
                            IPasswordHasher<User> passwordHasher,
+                           IMapper mapper,
                            IJwtService jwtService)
         {
             _dbContext = dbContext;
-            _passwordHasher = passwordHasher;
             _jwtService = jwtService;
+            _mapper = mapper;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<LoginResponse> LoginAsync(string email, string password)
