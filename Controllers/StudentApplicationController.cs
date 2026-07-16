@@ -9,7 +9,7 @@ using SeamsApp.Models;
 
 namespace SeamsApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/student-application")]
     [ApiController]
     public class StudentApplicationController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace SeamsApp.Controllers
             _studentApplicationService = studentApplicationService;
         }
 
-        [HttpPost("regsiter")]
+        [HttpPost("signup")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(CreateStudentApplicationRequest), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -59,6 +59,22 @@ namespace SeamsApp.Controllers
             }
             return Ok(result);
         }
+
+        [HttpGet("all-applications")]
+        //[Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(StudentApplicationResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<StudentApplicationResponse>>> GetAllStudentApplications()
+        {
+            var allApplications = await _studentApplicationService.GetAllStudentApplicationsAsync();
+            if (allApplications == null)
+            {
+                return NotFound();
+            }
+            return Ok(allApplications);
+        }
+
 
 
         [HttpGet("approved-applications")]
