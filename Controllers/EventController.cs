@@ -7,7 +7,7 @@ using SeamsApp.Interfaces.Services.Commands;
 
 namespace SeamsApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/event")]
     [ApiController]
     public class EventController : ControllerBase
     {

@@ -44,8 +44,20 @@ namespace SeamsApp.Services.Commands
             }
 
             existingEvent.Status = 0;
-            _dbContext.Events.Update(existingEvent);
-            return _dbContext.SaveChanges();
+            existingEvent.UpdatedAt = DateTime.UtcNow;
+
+            var relatedAttendances = await _dbContext.Attendances
+                .Where(a => a.EventId == eventId && a.Status == 1)
+                .ToListAsync();
+
+            foreach (var attendance in relatedAttendances)
+            {
+                attendance.Status = 0;
+                attendance.UpdatedAt = DateTime.UtcNow;
+            }
+
+            await _dbContext.SaveChangesAsync();
+            return eventId;
         }
 
         public async Task<IEnumerable<EventResponse>> GetAllEventAsync()
