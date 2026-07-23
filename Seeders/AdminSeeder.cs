@@ -16,13 +16,13 @@ namespace SeamsApp.Seeders
             {
                 var adminUser = new User
                 {
-                    Email = "admin@seams.local",
+                    Email = "admin@dmc.edu.ph",
                     Role = "Admin",
                     IsActive = 1,
                     CreatedAt = DateTime.UtcNow
                 };
 
-                adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "Admin123");
+                adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "DMC-ADMIN2026");
 
                 context.Users.Add(adminUser);
                 context.SaveChanges();
