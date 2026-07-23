@@ -78,7 +78,8 @@ namespace SeamsApp.Services.Commands
                                                       existingStudentApplication.MiddleName!, 
                                                       existingStudentApplication.LastName, 
                                                       existingStudentApplication.Suffix,
-                                                      existingStudentApplication.SchoolStudentId!)
+                                                      existingStudentApplication.SchoolStudentId!),
+                Status = 1, // ACTIVE
             };
 
             _dbContext.Students.Add(student);
