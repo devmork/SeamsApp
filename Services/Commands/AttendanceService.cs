@@ -66,6 +66,21 @@ namespace SeamsApp.Services.Commands
             return response;
         }
 
+        public async Task<IEnumerable<AttendanceResponse>> GetAttendanceByEventId(int eventId)
+        {
+            if (eventId <= 0)
+            {
+                return Enumerable.Empty<AttendanceResponse>();
+            }
+
+            var attendances = await _dbContext.Attendances
+                .Where(a => a.EventId == eventId && a.Status == 1)
+                .OrderByDescending(a => a.CreatedAt)
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<AttendanceResponse>>(attendances);
+        }
+
         public async Task<AttendanceResponse> GetAttendanceByIdAsync(int attendanceId)
         {
             var attendance = await _dbContext.Attendances

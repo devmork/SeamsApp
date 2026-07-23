@@ -6,7 +6,7 @@ using SeamsApp.Interfaces.Services.Commands;
 
 namespace SeamsApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/attendance")]
     [ApiController]
     [Authorize]
     public class AttendanceController : ControllerBase
@@ -48,8 +48,40 @@ namespace SeamsApp.Controllers
             return Ok(attendance);
         }
 
+        [HttpGet("event/{eventId}")]
+        [Authorize(Roles = "Admin,Officer")]
+        [ProducesResponseType(typeof(IEnumerable<AttendanceResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<AttendanceResponse>>> GetAttendanceByEventId(int eventId)
+        {
+            try
+            {
+                if (eventId <= 0)
+                {
+                    return BadRequest("Invalid event ID");
+                }
+
+                var attendances = await _attendanceService.GetAttendanceByEventId(eventId);
+
+                if (attendances == null || !attendances.Any())
+                {
+                    return NotFound($"No attendance records found for event ID: {eventId}");
+                }
+
+                return Ok(attendances);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here if you have logging setup
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Message = "An error occurred while retrieving attendance records.", Error = ex.Message });
+            }
+        }
+
+
         [Authorize(Roles = "Admin")]
-        [HttpPost("{eventId:int}/attendances")]
+        [HttpPost("{eventId:int}")]
         [ProducesResponseType(typeof(int), 201)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
