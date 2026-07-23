@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeamsApp.Models.Base;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,5 +21,9 @@ namespace SeamsApp.Models
 
         [DataType(DataType.DateTime)]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        public virtual Student? Student { get; set; }
+        public virtual Officer? Officer { get; set; }
+        public virtual Admin? Admin { get; set; }
     }
 }

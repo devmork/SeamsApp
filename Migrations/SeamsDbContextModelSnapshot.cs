@@ -38,6 +38,9 @@ namespace SeamsApp.Migrations
 
                     b.HasKey("AdminId");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("Admins");
                 });
 
@@ -62,6 +65,8 @@ namespace SeamsApp.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("RecordID");
+
+                    b.HasIndex("AttendanceID");
 
                     b.ToTable("AttendanceRecords");
                 });
@@ -112,6 +117,8 @@ namespace SeamsApp.Migrations
 
                     b.HasKey("AttendanceId");
 
+                    b.HasIndex("EventId");
+
                     b.ToTable("Attendances");
                 });
 
@@ -147,6 +154,9 @@ namespace SeamsApp.Migrations
                     b.Property<string>("SchoolStudentId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<string>("Suffix")
                         .HasColumnType("nvarchar(max)");
 
@@ -160,6 +170,9 @@ namespace SeamsApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StudentId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Students");
                 });
@@ -212,13 +225,16 @@ namespace SeamsApp.Migrations
                     b.Property<int>("AddedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("Position")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("OfficerId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Officers");
                 });
@@ -307,6 +323,78 @@ namespace SeamsApp.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SeamsApp.Models.Admin", b =>
+                {
+                    b.HasOne("SeamsApp.Models.User", "User")
+                        .WithOne("Admin")
+                        .HasForeignKey("SeamsApp.Models.Admin", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SeamsApp.Models.AttendanceRecord", b =>
+                {
+                    b.HasOne("SeamsApp.Models.Base.Attendance", null)
+                        .WithMany("AttendanceRecords")
+                        .HasForeignKey("AttendanceID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SeamsApp.Models.Base.Attendance", b =>
+                {
+                    b.HasOne("SeamsApp.Models.Event", "Event")
+                        .WithMany("Attendances")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("SeamsApp.Models.Base.Student", b =>
+                {
+                    b.HasOne("SeamsApp.Models.User", "User")
+                        .WithOne("Student")
+                        .HasForeignKey("SeamsApp.Models.Base.Student", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SeamsApp.Models.Officer", b =>
+                {
+                    b.HasOne("SeamsApp.Models.User", "User")
+                        .WithOne("Officer")
+                        .HasForeignKey("SeamsApp.Models.Officer", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SeamsApp.Models.Base.Attendance", b =>
+                {
+                    b.Navigation("AttendanceRecords");
+                });
+
+            modelBuilder.Entity("SeamsApp.Models.Event", b =>
+                {
+                    b.Navigation("Attendances");
+                });
+
+            modelBuilder.Entity("SeamsApp.Models.User", b =>
+                {
+                    b.Navigation("Admin");
+
+                    b.Navigation("Officer");
+
+                    b.Navigation("Student");
                 });
 #pragma warning restore 612, 618
         }
