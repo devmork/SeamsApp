@@ -1,16 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
-using SeamsApp.DTOs.Event;
 using SeamsApp.DTOs.Student;
 using SeamsApp.Interfaces.Services.Commands;
-using SeamsApp.Models.Base;
-using SeamsApp.Services.Commands;
 using System.Threading.Tasks;
 
 namespace SeamsApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/student")]
     [Produces("application/json")]
     [ApiController]
     [Authorize]
@@ -23,148 +20,67 @@ namespace SeamsApp.Controllers
             _studentService = studentService;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpPatch("{studentId:int}")]
-        [Authorize(Roles = "Admin")]
-        [OutputCache]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> DeleteStudent(int studentId)
+        [HttpGet]
+        [Authorize(Roles = "Admin,Officer")]
+        [OutputCache(Duration = 30)]
+        public async Task<ActionResult<IEnumerable<StudentResponse>>> GetAllActiveStudents()
         {
-
-            var studentToDelete = await _studentService.DeleteStudentByIdAsync(studentId);
-            if (studentId == 0)
-            {
-                return NotFound();
-            }
-
-            return Ok(studentToDelete);
+            var students = await _studentService.GetAllActiveStudentAsync();
+            return Ok(students);
         }
 
-        //[HttpPut("{studentId:int}")]
-        //[Authorize(Roles = "Admin")]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<ActionResult<int>> UpdateStudent(int studentId, [FromBody] StudentRequest studentRequest)
-        //{
-        //    //var eventToUpdate = await _eventService.UpdateEventAsync(eventId, eventRequest);
-        //    //if (eventId! == 0)
-        //    //{
-        //    //    return NoContent();
-        //    //}
+        [HttpGet("{studentId:int}")]
+        [Authorize(Roles = "Admin,Officer")]
+        public async Task<ActionResult<StudentResponse>> GetStudentById(int studentId)
+        {
+            var student = await _studentService.GetStudentByIdAsync(studentId);
 
-        //    //return Ok(eventToUpdate);
-        //}
+            if (student == null)
+                return NotFound(new { Message = $"Student with ID {studentId} not found." });
 
+            return Ok(student);
+        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        //[HttpGet("ApprovedStudents")]
-        //[Authorize(Roles = "Admin, Officer")]
-        //[OutputCache]
-        //[ProducesResponseType(typeof(IEnumerable<StudentResponse>), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<ActionResult<IEnumerable<StudentResponse>>> GetAllActiveStudent()
-        //{
-        //    var students = await _studentService.GetAllApprovedStudentAsync();
-        //    return Ok(students);
-        //}
+        [HttpGet("qr/{schoolStudentId}")]
+        [Authorize(Roles = "Admin,Officer")]
+        public async Task<ActionResult<StudentResponse>> GetStudentQRCodeInfo(string schoolStudentId)
+        {
+            if (string.IsNullOrWhiteSpace(schoolStudentId))
+                return BadRequest("School Student ID is required.");
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="studentId"></param>
-        ///// <returns></returns>
-        //[HttpDelete("ById/{studentId:int}")]
-        //[Authorize(Roles = "Admin")]
-        //public async Task<ActionResult<int>> DeleteStudent(int studentId)
-        //{
-        //    var student = await _studentService.DeleteStudentByIdAsync(studentId);
-        //    return Ok(student);
-        //}
+            var student = await _studentService.GetStudentQRCodeInfoAsync(schoolStudentId);
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="studentId"></param>
-        ///// <returns></returns>
-        //[HttpGet("ById")]
-        //[Authorize(Roles = "Admin, Officer")]
-        //[ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<ActionResult<int>> GetStudentById(int studentId)
-        //{
-        //    var student = await _studentService.GetStudentByIdAsync(studentId);
-        //    return Ok(student);
-        //}
+            if (student == null)
+                return NotFound(new { Message = $"Student with School ID {schoolStudentId} not found." });
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="studentUpdateDTO"></param>
-        ///// <param name="studentId"></param>
-        ///// <returns></returns>
-        //[HttpPut("ById/{studentId:int}")]
-        //[Authorize(Roles = "Admin")]
-        //[ProducesResponseType(typeof(StudentUpdateDTO), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<ActionResult<int>> UpdateStudent(StudentUpdateDTO studentUpdateDTO, int studentId)
-        //{
-        //    var student = await _studentService.UpdateStudentByIdAsync(studentUpdateDTO, studentId);
-        //    return Ok(student);
-        //}
+            return Ok(student);
+        }
 
-        ///// <summary>
-        ///// Approve a pending student registration
-        ///// </summary>
-        ///// <param name="studentId"></param>
-        ///// <returns></returns>
-        //[HttpPut("Approve/{studentId:int}")]
-        //[Authorize(Roles = "Admin, Officer")]
-        //[ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> ApproveStudent(int studentId)
-        //{
-        //    try
-        //    {
-        //        var student = await _studentService.ApprovedStudentAsync(studentId);
-        //        return Ok(new { Message = "Student approved successfully", Student = student });
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return NotFound(new { Error = ex.Message });
-        //    }
-        //}
+        [HttpPatch("{studentId:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<int>> DeleteStudent(int studentId)
+        {
+            var result = await _studentService.DeleteStudentByIdAsync(studentId);
 
-        ///// <summary>
-        ///// Reject a pending student registration
-        ///// </summary>
-        ///// <param name="studentId"></param>
-        ///// <returns></returns>
-        //[HttpPut("Reject/{studentId:int}")]
-        //[Authorize(Roles = "Admin, Officer")]
-        //[ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> RejectStudent(int studentId)
-        //{
-        //    try
-        //    {
-        //        var student = await _studentService.RejectStudentAsync(studentId);
-        //        return Ok(new { Message = "Student rejected", Student = student });
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return NotFound(new { Error = ex.Message });
-        //    }
-        //}
+            if (result == 0)
+                return NotFound(new { Message = $"Student with ID {studentId} not found." });
 
+            return Ok(new { Message = "Student deleted successfully.", DeletedId = studentId });
+        }
+
+        [HttpPut("{studentId:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<int>> UpdateStudent(int studentId, [FromBody] StudentRequest studentRequest)
+        {
+            if (studentRequest == null)
+                return BadRequest("Student data is required.");
+
+            var result = await _studentService.UpdateStudentByIdAsync(studentId, studentRequest);
+
+            if (result == 0)
+                return NotFound(new { Message = $"Student with ID {studentId} not found." });
+
+            return Ok(new { Message = "Student updated successfully." });
+        }
     }
 }

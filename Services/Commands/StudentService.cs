@@ -38,11 +38,26 @@ namespace SeamsApp.Services.Commands
 
         public async Task<IEnumerable<StudentResponse>> GetAllActiveStudentAsync()
         {
-            var students = await _dbContext.Students.ToListAsync();
-            if (students == null)
-            {
-                return null!;
-            }
+            var students = await _dbContext.Students
+                    .Include(s => s.User)                   
+                    .Where(s => s.Status == 1)               
+                    .Select(s => new StudentResponse
+                    {
+                        StudentId = s.StudentId,
+                        FirstName = s.FirstName,
+                        MiddleName = s.MiddleName,
+                        LastName = s.LastName,
+                        Suffix = s.Suffix,
+                        Email = s.User.Email,                
+                        SchoolStudentId = s.SchoolStudentId,
+                        YearLevel = s.YearLevel!.ToString(), 
+                        Course = s.Course,
+                        PhotoUrl = s.PhotoUrl,
+                        QRCode = s.QRCode
+                    })
+                    .OrderBy(s => s.LastName)
+                    .ToListAsync();
+
             return _mapper.Map<IEnumerable<StudentResponse>>(students);
         }
 
@@ -53,7 +68,7 @@ namespace SeamsApp.Services.Commands
             {
                 return null!;
             }
-            
+
             var response = _mapper.Map<StudentResponse>(student);
             return response;
         }
