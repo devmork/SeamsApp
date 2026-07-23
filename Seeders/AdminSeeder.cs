@@ -8,8 +8,9 @@ namespace SeamsApp.Seeders
     {
         public static void SeedAdmin(IServiceProvider serviceProvider)
         {
-            var context = serviceProvider.GetRequiredService<SeamsDbContext>();
-            var passwordHasher = serviceProvider.GetRequiredService<IPasswordHasher<User>>();
+            var scope = serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<SeamsDbContext>(); 
+            var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
 
             if (!context.Users.Any(u => u.Role == "Admin"))
             {
