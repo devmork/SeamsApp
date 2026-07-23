@@ -25,5 +25,8 @@ namespace SeamsApp.Models.Base
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public DateTime DeletedAt { get; set; } = DateTime.UtcNow;
+
+        public virtual Event Event { get; set; } = null!;
+        public virtual ICollection<AttendanceRecord> AttendanceRecords { get; set; } = new List<AttendanceRecord>();
     }
 }

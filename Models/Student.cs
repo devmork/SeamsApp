@@ -26,8 +26,11 @@ namespace SeamsApp.Models.Base
         // PHOTO URL
         public string? PhotoUrl { get; set; }
         public byte[]? QRCode { get; set; }
+        public int Status { get; set; }
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public virtual User User { get; set; } = null!;
 
     }
 }
