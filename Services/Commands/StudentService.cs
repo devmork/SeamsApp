@@ -44,6 +44,7 @@ namespace SeamsApp.Services.Commands
                     .Select(s => new StudentResponse
                     {
                         StudentId = s.StudentId,
+                        UserId = s.UserId,
                         FirstName = s.FirstName,
                         MiddleName = s.MiddleName,
                         LastName = s.LastName,
