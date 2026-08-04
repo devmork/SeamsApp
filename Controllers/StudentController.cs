@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using SeamsApp.DTOs.Student;
 using SeamsApp.Interfaces.Services.Commands;
+using SeamsApp.Utilities;
 using System.Threading.Tasks;
 
 namespace SeamsApp.Controllers
@@ -30,7 +31,7 @@ namespace SeamsApp.Controllers
         }
 
         [HttpGet("{studentId:int}")]
-        [Authorize(Roles = "Admin,Officer")]
+        [Authorize(Roles = "Admin,Officer,Student")]
         public async Task<ActionResult<StudentResponse>> GetStudentById(int studentId)
         {
             var student = await _studentService.GetStudentByIdAsync(studentId);
@@ -81,6 +82,19 @@ namespace SeamsApp.Controllers
                 return NotFound(new { Message = $"Student with ID {studentId} not found." });
 
             return Ok(new { Message = "Student updated successfully." });
+        }
+
+        [HttpGet("me")]
+        [Authorize(Roles = "Student")]
+        public async Task<ActionResult<StudentResponse>> GetMyProfile()
+        {
+            var userId = ClaimsUtility.GetUserIdFromClaims(HttpContext);
+            var profile = await _studentService.GetMyProfileAsync(userId);
+
+            if (profile == null)
+                return NotFound(new { Message = "Student profile not found." });
+
+            return Ok(profile);
         }
     }
 }

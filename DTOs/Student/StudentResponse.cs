@@ -3,6 +3,7 @@
     public class StudentResponse
     {
         public int StudentId { get; set; }
+        public int UserId { get; set; }
         public string? FirstName { get; set; }
         public string? MiddleName { get; set; }
         public string? LastName { get; set; }
@@ -13,5 +14,6 @@
         public string? Course { get; set; }
         public string? PhotoUrl { get; set; }
         public byte[]? QRCode { get; set; }
+        public int Status { get; set; }
     }
 }

@@ -16,7 +16,9 @@ namespace SeamsApp.Utilities
         {
             // STUDENT
             CreateMap<Student, StudentRequest>().ReverseMap();
-            CreateMap<Student, StudentResponse>().ReverseMap();
+            CreateMap<Student, StudentResponse>()
+                    .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User != null ? src.User.Email : null))
+                    .ReverseMap();
 
             // AUTH
             CreateMap<User, UserRequest>().ReverseMap();
