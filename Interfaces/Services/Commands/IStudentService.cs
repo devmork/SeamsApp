@@ -10,6 +10,7 @@ namespace SeamsApp.Interfaces.Services.Commands
         Task<int> DeleteStudentByIdAsync(int studentId);
         Task<StudentResponse> GetStudentByIdAsync(int studentId);
         Task<StudentResponse> GetStudentQRCodeInfoAsync(string schoolStudentId);
+        Task<StudentResponse?> GetMyProfileAsync(int userId);
 
     }
 }

@@ -20,13 +20,13 @@ namespace SeamsApp.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        [ProducesResponseType(typeof(EventRequest), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> CreateOfficer(int userId)
+        public async Task<ActionResult<int>> CreateOfficer([FromBody] OfficerRequest request)
         {
-            var newOfficer = await _officerService.CreateOfficerAsync(userId);
-            if (userId == 0)
+            var newOfficer = await _officerService.CreateOfficerAsync(request.UserId);
+            if (newOfficer == 0)
             {
                 return NotFound();
             }

@@ -2,7 +2,7 @@
 {
     public class OfficerRequest
     {
-        public string? Position { get; set; }
+        public int UserId { get; set; }
 
     }
 }

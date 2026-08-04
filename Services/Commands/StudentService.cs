@@ -39,8 +39,8 @@ namespace SeamsApp.Services.Commands
         public async Task<IEnumerable<StudentResponse>> GetAllActiveStudentAsync()
         {
             var students = await _dbContext.Students
-                    .Include(s => s.User)                   
-                    .Where(s => s.Status == 1)               
+                    .Include(s => s.User)
+                    .Where(s => s.Status == 1)
                     .Select(s => new StudentResponse
                     {
                         StudentId = s.StudentId,
@@ -48,9 +48,9 @@ namespace SeamsApp.Services.Commands
                         MiddleName = s.MiddleName,
                         LastName = s.LastName,
                         Suffix = s.Suffix,
-                        Email = s.User.Email,                
+                        Email = s.User.Email,
                         SchoolStudentId = s.SchoolStudentId,
-                        YearLevel = s.YearLevel!.ToString(), 
+                        YearLevel = s.YearLevel!.ToString(),
                         Course = s.Course,
                         PhotoUrl = s.PhotoUrl,
                         QRCode = s.QRCode
@@ -61,16 +61,32 @@ namespace SeamsApp.Services.Commands
             return _mapper.Map<IEnumerable<StudentResponse>>(students);
         }
 
+        public async Task<StudentResponse?> GetMyProfileAsync(int userId)
+        {
+            var student = await _dbContext.Students
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.UserId == userId);
+
+            if (student == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<StudentResponse>(student);
+        }
+
         public async Task<StudentResponse> GetStudentByIdAsync(int studentId)
         {
-            var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.StudentId == studentId);
+            var student = await _dbContext.Students
+                            .Include(s => s.User)
+                            .FirstOrDefaultAsync(s => s.StudentId == studentId);
+
             if (student == null)
             {
                 return null!;
             }
 
-            var response = _mapper.Map<StudentResponse>(student);
-            return response;
+            return _mapper.Map<StudentResponse>(student);
         }
 
         public async Task<StudentResponse> GetStudentQRCodeInfoAsync(string schoolStudentId)
