@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,17 +31,51 @@ namespace SeamsApp.Services.Commands
             _passwordHasher = passwordHasher;
             _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<CreateStudentApplicationRequest> CreateStudentApplication(CreateStudentApplicationRequest createStudentApplicationRequest)
+        public async Task<CreateStudentApplicationRequest> CreateStudentApplication(CreateStudentApplicationRequest request)
         {
-            var studentApplication = _mapper.Map<StudentApplication>(createStudentApplicationRequest);
+            var normalizedEmail = request.Email!.Trim().ToLowerInvariant();
+
+            var duplicateEmailApplication = await _dbContext.StudentApplications
+                        .AnyAsync(a => a.Email != null
+                                    && a.Email.ToLower() == normalizedEmail
+                                    && a.Status != 3);
+
+            if (duplicateEmailApplication)
+            {
+                throw new InvalidOperationException(
+                    "An application with this email already exists.");
+            }
+
+            var duplicateSchoolId = await _dbContext.StudentApplications
+                    .AnyAsync(a => a.SchoolStudentId == request.SchoolStudentId
+                                && a.Status != 3);
+
+            if (duplicateSchoolId)
+            {
+                throw new InvalidOperationException(
+                    "An application with this School Student ID already exists.");
+            }
+
+            var existingUser = await _dbContext.Users
+                    .AnyAsync(u => u.Email != null
+                                && u.Email.ToLower() == normalizedEmail);
+
+            if (existingUser)
+            {
+                throw new InvalidOperationException(
+                    "An account with this email already exists.");
+            }
+
+            var studentApplication = _mapper.Map<StudentApplication>(request);
             studentApplication.Status = 1; // PENDING
+            studentApplication.SubmittedAt = DateTime.UtcNow;
 
             _dbContext.StudentApplications.Add(studentApplication);
             await _dbContext.SaveChangesAsync();
 
             return _mapper.Map<CreateStudentApplicationRequest>(studentApplication);
         }
-        public async Task<int> ApproveStundetApplication(int studentApplicationId)
+        public async Task<int> ApproveStudentApplication(int studentApplicationId)
         {
             var existingStudentApplication = await _dbContext.StudentApplications.FindAsync(studentApplicationId);
             if (existingStudentApplication == null)
@@ -74,9 +109,9 @@ namespace SeamsApp.Services.Commands
                 YearLevel = existingStudentApplication.YearLevel,
                 Course = existingStudentApplication.Course,
                 PhotoUrl = existingStudentApplication.PhotoUrl,
-                QRCode = QRCodeUtility.GenerateQRCode(existingStudentApplication.FirstName!, 
-                                                      existingStudentApplication.MiddleName!, 
-                                                      existingStudentApplication.LastName, 
+                QRCode = QRCodeUtility.GenerateQRCode(existingStudentApplication.FirstName!,
+                                                      existingStudentApplication.MiddleName!,
+                                                      existingStudentApplication.LastName,
                                                       existingStudentApplication.Suffix,
                                                       existingStudentApplication.SchoolStudentId!),
                 Status = 1, // ACTIVE
@@ -130,6 +165,6 @@ namespace SeamsApp.Services.Commands
             return response;
         }
 
-        
+
     }
 }
