@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,20 +25,35 @@ namespace SeamsApp.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(CreateStudentApplicationRequest), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<CreateStudentApplicationRequest>> CreateStudentApplication(CreateStudentApplicationRequest rqs)
+        public async Task<ActionResult<CreateStudentApplicationRequest>> CreateStudentApplication([FromBody] CreateStudentApplicationRequest rqs)
         {
-            var studentApplication = await _studentApplicationService.CreateStudentApplication(rqs);
-            return Ok(studentApplication);
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            try
+            {
+                var application = await _studentApplicationService
+                    .CreateStudentApplication(rqs);
+
+                return CreatedAtAction(
+                    nameof(GetAllPendingStudentApplications),
+                    application);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { Error = ex.Message });
+            }
         }
 
         [HttpPatch("approve-application/{studentApplicationId:int}")]
-        //[Authorize(Roles = "Admin")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> ApproveStudentApplication(int studentApplicationId)
         {
-            var result = await _studentApplicationService.ApproveStundetApplication(studentApplicationId);
+            var result = await _studentApplicationService.ApproveStudentApplication(studentApplicationId);
             if (result == 0)
             {
                 return NotFound();
@@ -46,8 +62,7 @@ namespace SeamsApp.Controllers
         }
 
         [HttpPatch("reject-application/{studentApplicationId:int}")]
-        //[Authorize(Roles = "Admin")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> RejectStudentApplication(int studentApplicationId)
@@ -61,7 +76,7 @@ namespace SeamsApp.Controllers
         }
 
         [HttpGet("all-applications")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(StudentApplicationResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -78,7 +93,7 @@ namespace SeamsApp.Controllers
 
 
         [HttpGet("approved-applications")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(StudentApplicationResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -94,7 +109,7 @@ namespace SeamsApp.Controllers
 
 
         [HttpGet("rejected-applications")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(StudentApplicationResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -110,7 +125,7 @@ namespace SeamsApp.Controllers
         }
 
         [HttpGet("pending-applications")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(StudentApplicationResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -124,8 +139,5 @@ namespace SeamsApp.Controllers
 
             return Ok(pendingApplications);
         }
-
-
-
     }
 }
