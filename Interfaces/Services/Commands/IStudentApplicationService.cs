@@ -4,7 +4,7 @@ namespace SeamsApp.Interfaces.Services.Commands
 {
     public interface IStudentApplicationService
     {
-        Task<CreateStudentApplicationRequest> CreateStudentApplication(CreateStudentApplicationRequest createStudentApplicationRequest);
+        Task<StudentApplicationResponse> CreateStudentApplication(CreateStudentApplicationRequest createStudentApplicationRequest);
         Task<int> ApproveStudentApplication(int studentApplicationId);
         Task<int> RejectStudentApplication(int studentApplicationId);      
         Task<IEnumerable<StudentApplicationResponse>> GetAllStudentApplicationsAsync();
