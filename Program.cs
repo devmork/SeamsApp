@@ -1,4 +1,3 @@
-using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -106,6 +105,7 @@ builder.Services.AddDbContext<SeamsDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
 builder.Services.AddProblemDetails();
 builder.Services.AddHttpContextAccessor();
 
