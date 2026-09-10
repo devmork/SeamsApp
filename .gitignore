@@ -7,7 +7,7 @@
 appsettings.Development.json
 appsettings.Local.json
 .env
-
+repomix-output.xml
 
 # User-specific files
 *.rsuser
