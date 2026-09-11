@@ -248,18 +248,19 @@ namespace SeamsApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApplicationId"));
 
                     b.Property<string>("Course")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeclineReason")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MiddleName")
@@ -268,13 +269,14 @@ namespace SeamsApp.Migrations
                     b.Property<string>("PhotoUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ReviewedAt")
+                    b.Property<DateTime?>("ReviewedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ReviewedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("SchoolStudentId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
@@ -287,6 +289,7 @@ namespace SeamsApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("YearLevel")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ApplicationId");
