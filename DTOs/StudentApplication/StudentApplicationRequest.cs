@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SeamsApp.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace SeamsApp.DTOs.StudentApplication
 {
-    public class CreateStudentApplicationRequest
+    public class StudentApplicationRequest
     {
         [Required(ErrorMessage = "First name is required.")]
         [StringLength(100, MinimumLength = 1, ErrorMessage = "First name must be between 1 and 100 characters.")]
@@ -20,11 +21,13 @@ namespace SeamsApp.DTOs.StudentApplication
 
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email format.")]
+        [EmailDomainValidation]
         [StringLength(256, ErrorMessage = "Email cannot exceed 256 characters.")]
         public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "School Student ID is required.")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "School Student ID must be between 3 and 50 characters.")]
+        [SchoolStudentIdValidation]
         public string SchoolStudentId { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Year level is required.")]
@@ -34,9 +37,5 @@ namespace SeamsApp.DTOs.StudentApplication
         [Required(ErrorMessage = "Course is required.")]
         [StringLength(100, ErrorMessage = "Course cannot exceed 100 characters.")]
         public string Course { get; set; } = string.Empty;
-
-        [Url(ErrorMessage = "Photo URL must be a valid URL.")]
-        [StringLength(500, ErrorMessage = "Photo URL cannot exceed 500 characters.")]
-        public string? PhotoUrl { get; set; }
     }
 }
