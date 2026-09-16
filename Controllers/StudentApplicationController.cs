@@ -24,7 +24,7 @@ namespace SeamsApp.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(StudentApplicationResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<StudentApplicationResponse>> CreateStudentApplication([FromBody] CreateStudentApplicationRequest rqs)
+        public async Task<ActionResult<StudentApplicationResponse>> CreateStudentApplication([FromBody] StudentApplicationRequest rqs)
         {
             if (!ModelState.IsValid)
             {
