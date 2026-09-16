@@ -32,7 +32,10 @@ namespace SeamsApp.Services.Commands
 
             var response = await _resend.EmailSendAsync(message);
             if (!response.Success)
-                throw new InvalidOperationException($"Failed to send approval email: {response.Content}");
+            {
+                throw new InvalidOperationException(
+                    $"Failed to send verification email: {response.Exception?.Message ?? "unknown error"}");
+            }
         }
 
         public async Task SendOtpEmailAsync(string toEmail, string otpCode)
@@ -51,8 +54,10 @@ namespace SeamsApp.Services.Commands
 
             var response = await _resend.EmailSendAsync(message);
             if (!response.Success)
-                throw new InvalidOperationException($"Failed to send verification email: {response.Content}");
-
+            {
+                throw new InvalidOperationException(
+                    $"Failed to send verification email: {response.Exception?.Message ?? "unknown error"}");
+            }
         }
     }
 }
