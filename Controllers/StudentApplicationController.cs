@@ -153,5 +153,19 @@ namespace SeamsApp.Controllers
 
             return Ok(pendingApplications);
         }
+
+        [HttpGet("check-availability")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(CheckApplicationAvailabilityResponse), StatusCodes.Status200OK)]
+        public async Task<ActionResult<CheckApplicationAvailabilityResponse>> CheckAvailability([FromQuery] string email,[FromQuery] string schoolStudentId)
+        {
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(schoolStudentId))
+            {
+                return BadRequest(new { Error = "Email and school student ID are required." });
+            }
+
+            var result = await _studentApplicationService.CheckApplicationAvailabilityAsync(email, schoolStudentId);
+            return Ok(result);
+        }
     }
 }
