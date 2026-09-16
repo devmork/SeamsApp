@@ -24,7 +24,7 @@ namespace SeamsApp.Models
         public string? OtpCodeHash { get; set; }
         public DateTime? OtpExpiresAt { get; set; }
         public DateTime? OtpLastSentAt { get; set; }
-
+        public int OtpFailedAttempts { get; set; } = 0;
 
         public int ReviewedBy { get; set; }
         public DateTime? ReviewedAt { get; set; }
