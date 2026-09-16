@@ -28,7 +28,7 @@ namespace SeamsApp.Utilities
             CreateMap<Attendance, AttendanceRequest>().ReverseMap();
 
             // STUDENT APPLICATION
-            CreateMap<StudentApplication, CreateStudentApplicationRequest>().ReverseMap();
+            CreateMap<StudentApplication, StudentApplicationRequest>().ReverseMap();
             CreateMap<StudentApplication, StudentApplicationResponse>().ReverseMap();
 
             // EVENT
