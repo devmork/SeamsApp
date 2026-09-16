@@ -248,6 +248,10 @@ namespace SeamsApp.Services.Commands
             if (application.OtpExpiresAt == null || application.OtpExpiresAt < DateTime.UtcNow)
                 throw new InvalidOperationException("Verification code has expired. Please request a new one.");
 
+            if (application.OtpFailedAttempts >= 3)
+                throw new InvalidOperationException(
+                    "Too many failed attempts. Please request a new code.");
+
             if (string.IsNullOrEmpty(application.OtpCodeHash) || !EmailUtility.VerifyOtp(code, application.OtpCodeHash))
                 throw new InvalidOperationException("Invalid verification code.");
 
@@ -313,5 +317,30 @@ namespace SeamsApp.Services.Commands
             return response;
         }
 
+        public async Task<CheckApplicationAvailabilityResponse> CheckApplicationAvailabilityAsync(string email, string schoolStudentId)
+        {
+            var normalizedEmail = email.Trim().ToLowerInvariant();
+
+            var emailRegistered = await _dbContext.Users
+                .AnyAsync(u => u.Email != null && u.Email.ToLower() == normalizedEmail);
+
+            var emailPending = await _dbContext.StudentApplications
+                .AnyAsync(a => a.Email != null
+                            && a.Email.ToLower() == normalizedEmail
+                            && a.Status != 0
+                            && a.Status != 3);
+
+            var schoolStudentIdTaken = await _dbContext.StudentApplications
+                .AnyAsync(a => a.SchoolStudentId == schoolStudentId
+                            && a.Status != 0
+                            && a.Status != 3);
+
+            return new CheckApplicationAvailabilityResponse
+            {
+                EmailRegistered = emailRegistered,
+                EmailPending = emailPending,
+                SchoolStudentIdTaken = schoolStudentIdTaken
+            };
+        }
     }
 }

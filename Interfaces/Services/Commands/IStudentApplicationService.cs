@@ -13,6 +13,7 @@ namespace SeamsApp.Interfaces.Services.Commands
         Task<IEnumerable<StudentApplicationResponse>> GetAllPendingStudentApplicationsAsync();
         Task<IEnumerable<StudentApplicationResponse>> GetAllRejectedStudentApplicationsAsync();
         Task<IEnumerable<StudentApplicationResponse>> GetAllApprovedStudentApplicationsAsync();
-        
+        Task<CheckApplicationAvailabilityResponse> CheckApplicationAvailabilityAsync(string email, string schoolStudentId);
+
     }
 }
