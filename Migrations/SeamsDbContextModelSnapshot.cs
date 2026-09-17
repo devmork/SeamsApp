@@ -275,6 +275,9 @@ namespace SeamsApp.Migrations
                     b.Property<DateTime?>("OtpExpiresAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("OtpFailedAttempts")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("OtpLastSentAt")
                         .HasColumnType("datetime2");
 
