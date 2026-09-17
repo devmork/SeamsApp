@@ -4,10 +4,6 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # Ignore sensitive config files
-appsettings.Development.json
-appsettings.Local.json
-.env
-repomix-output.xml
 
 # User-specific files
 *.rsuser
@@ -367,3 +363,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
