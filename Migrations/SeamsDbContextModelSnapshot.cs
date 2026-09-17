@@ -255,6 +255,9 @@ namespace SeamsApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("EmailVerified")
+                        .HasColumnType("bit");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -265,6 +268,18 @@ namespace SeamsApp.Migrations
 
                     b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtpCodeHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("OtpExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OtpFailedAttempts")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("OtpLastSentAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PhotoUrl")
                         .HasColumnType("nvarchar(max)");
