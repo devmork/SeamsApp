@@ -32,8 +32,29 @@ namespace SeamsApp.Utilities
             CreateMap<StudentApplication, StudentApplicationResponse>().ReverseMap();
 
             // EVENT
-            CreateMap<Event, EventRequest>().ReverseMap();
-            CreateMap<Event, EventResponse>().ReverseMap();
+            CreateMap<Event, EventRequest>()
+                .ForMember(dest => dest.TargetYearLevels, opt => opt.MapFrom(src =>
+                    string.IsNullOrWhiteSpace(src.TargetYearLevels)
+                        ? new List<string>()
+                        : src.TargetYearLevels
+                            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                            .Select(s => s.Trim())
+                            .ToList()));
+
+            CreateMap<EventRequest, Event>()
+                .ForMember(dest => dest.TargetYearLevels, opt => opt.MapFrom(src =>
+                    src.TargetYearLevels != null && src.TargetYearLevels.Any()
+                        ? string.Join(',', src.TargetYearLevels)
+                        : null));
+
+            CreateMap<Event, EventResponse>()
+                .ForMember(dest => dest.TargetYearLevels, opt => opt.MapFrom(src =>
+                    string.IsNullOrWhiteSpace(src.TargetYearLevels)
+                        ? new List<string>()
+                        : src.TargetYearLevels
+                            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                            .Select(s => s.Trim())
+                            .ToList()));
 
             // OFFICER
             CreateMap<Officer, OfficerRequest>().ReverseMap();
