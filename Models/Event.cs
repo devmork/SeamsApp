@@ -10,6 +10,7 @@ namespace SeamsApp.Models
         public string? Title { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public string? TargetYearLevels { get; set; }
         public int Status { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
