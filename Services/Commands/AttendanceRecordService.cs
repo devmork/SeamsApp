@@ -91,10 +91,18 @@ namespace SeamsApp.Services.Commands
             }
 
             var now = DateTime.UtcNow;
+            var studentYearLevel = student.YearLevel?.Trim();
 
+            // Fetch active sessions + events, then filter scope in memory
+            // (string.Split on a column is not reliably translated by EF Core).
             var sessions = await _dbContext.Attendances
                 .Include(a => a.Event)
+                .Where(a => a.Event.Status == 1)
                 .ToListAsync();
+
+            var visibleSessions = sessions
+                .Where(a => EventAppliesToYearLevel(a.Event, studentYearLevel))
+                .ToList();
 
             var myRecords = await _dbContext.AttendanceRecords
                 .Where(r => r.SchoolStudentID == student.SchoolStudentId)
@@ -104,7 +112,7 @@ namespace SeamsApp.Services.Commands
                 .GroupBy(r => r.AttendanceID)
                 .ToDictionary(g => g.Key, g => g.First());
 
-            return sessions
+            return visibleSessions
                 .GroupBy(a => a.EventId)
                 .Select(g => new EventAttendanceGroupResponse
                 {
@@ -130,6 +138,22 @@ namespace SeamsApp.Services.Commands
                 })
                 .OrderByDescending(g => g.Date)
                 .ToList();
+        }
+
+        private static bool EventAppliesToYearLevel(Event ev, string? studentYearLevel)
+        {
+            // No scope ? visible to everyone.
+            if (string.IsNullOrWhiteSpace(ev.TargetYearLevels))
+                return true;
+
+            // Scoped event, but the student has no year level ? hide.
+            if (string.IsNullOrWhiteSpace(studentYearLevel))
+                return false;
+
+            return ev.TargetYearLevels
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim())
+                .Any(s => string.Equals(s, studentYearLevel.Trim(), StringComparison.OrdinalIgnoreCase));
         }
 
         public async Task<AttendanceRecordResponse> UpdateAttendanceRecordAsync(int recordId, AttendanceRecordRequest attendanceRecordRequest)
